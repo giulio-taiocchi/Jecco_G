@@ -54,7 +54,7 @@ function startup(outdir::String; remove_existing::Bool=false)
             throw(e)
         end
     end
-
+	println("Flag")
     println("-------------------------------------------------------------")
 
     println(raw"                                     _      ")
