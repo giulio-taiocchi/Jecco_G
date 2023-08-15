@@ -41,4 +41,6 @@ integration = Integration(
     tmax            = 10.0,
 )
 
+print("Hello miaow")
+
 run_model(grid, id, evoleq, integration, io)
