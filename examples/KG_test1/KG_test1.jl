@@ -17,15 +17,8 @@ potential = SquarePotential()
 evoleq = AffineNull(
     potential      = potential,
 )
- 
-"id = Sine2D(
-    kx   = 1,
-    ky   = 1,
-    Lx   = grid.x_max - grid.x_min,
-    Ly   = grid.y_max - grid.y_min,
-)"
 
-id = Uniform2D(
+id = Uniform(
    )
 
 io = InOut(
@@ -41,6 +34,5 @@ integration = Integration(
     tmax            = 0.05,
 )
 
-print("Hello miaow")
 
 run_model(grid, id, evoleq, integration, io)

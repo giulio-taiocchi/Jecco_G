@@ -49,7 +49,7 @@ export SpecCartGrid3D
 export Potential, ConstPotential, SquarePotential
 export System, SystemPartition
 export BulkEvolvedPartition, BulkConstrainedPartition, Boundary
-export Uniform2D, Sine2D, Uniform
+export Uniform2D, Sine2D, Uniform, Polinomial
 export AffineNull
 export Integration, InOut, run_model
 
