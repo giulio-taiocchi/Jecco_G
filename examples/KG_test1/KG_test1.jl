@@ -38,7 +38,9 @@ integration = Integration(
     dt              = 0.002,
     ODE_method      = KG_3_1.RK4(),
     adaptive        = false,
-    tmax            = 10.0,
+    tmax            = 0.05,
 )
+
+print("Hello miaow")
 
 run_model(grid, id, evoleq, integration, io)

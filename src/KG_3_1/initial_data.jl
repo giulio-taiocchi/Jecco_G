@@ -10,9 +10,10 @@ Base.@kwdef struct Sine2D{T} <: InitialData
     ky :: Int
 end
 
-Base.@kwdef struct Polinomial{T} <: InitialData
-    u0 :: T = 1.0
+Base.@kwdef struct Uniform{T} <: InitialData
+    phi2  :: T  = 1.0
 end
+
 
 function (id::InitialData)(bulkevols, boundary::Boundary, systems::SystemPartition)
     init_data!(boundary, systems[1], id)
@@ -48,11 +49,12 @@ function init_data!(bulk::BulkEvolved, sys::System, id::InitialData)
 end
 
 analytic_phi(u, x, y, id::Uniform2D) = id.phi2
+analytic_phi(u, x, y, id::Uniform) = id.phi2
 
 analytic_phi(u, x, y, id::Sine2D) =
    sin( 2*π * id.kx / id.Lx * x ) * sin( 2*π * id.ky / id.Ly * y )
    
-analytic_phi(u, x, y, id::Polinomial) = id.u0
+#analytic_phi(u, x, y, id::Polinomial) = id.u0
 
 
 function init_data!(boundary::Boundary, sys::System, id::InitialData)

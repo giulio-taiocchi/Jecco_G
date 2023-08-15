@@ -17,15 +17,8 @@ potential = SquarePotential()
 evoleq = AffineNull(
     potential      = potential,
 )
- 
-"id = Sine2D(
-    kx   = 1,
-    ky   = 1,
-    Lx   = grid.x_max - grid.x_min,
-    Ly   = grid.y_max - grid.y_min,
-)"
 
-id = Polinomial(
+id = Uniform(
    )
 
 io = InOut(
@@ -38,9 +31,8 @@ integration = Integration(
     dt              = 0.002,
     ODE_method      = KG_3_1.RK4(),
     adaptive        = false,
-    tmax            = 10.0,
+    tmax            = 0.05,
 )
 
-print("Hello miaow")
 
 run_model(grid, id, evoleq, integration, io)
