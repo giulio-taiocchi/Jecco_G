@@ -17,7 +17,7 @@ potential = SquarePotential()
 evoleq = AffineNull(
     potential      = potential,
 )
-
+ 
 "id = Sine2D(
     kx   = 1,
     ky   = 1,
@@ -25,7 +25,7 @@ evoleq = AffineNull(
     Ly   = grid.y_max - grid.y_min,
 )"
 
-id = Polinomial(
+id = Uniform2D(
    )
 
 io = InOut(

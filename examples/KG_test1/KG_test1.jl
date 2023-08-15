@@ -17,7 +17,7 @@ potential = SquarePotential()
 evoleq = AffineNull(
     potential      = potential,
 )
-
+ 
 "id = Sine2D(
     kx   = 1,
     ky   = 1,
@@ -26,8 +26,7 @@ evoleq = AffineNull(
 )"
 
 id = Uniform2D(
-   
-)
+   )
 
 io = InOut(
     out_bulk_every_t            = 0.04,
