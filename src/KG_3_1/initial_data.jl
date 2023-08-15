@@ -10,6 +10,12 @@ Base.@kwdef struct Sine2D{T} <: InitialData
     ky :: Int
 end
 
+Base.@kwdef struct uPolinomial3{T} <: InitialData
+    u0 :: T
+    u1 :: T
+    u2 :: T
+    u3 :: T
+end
 
 function (id::InitialData)(bulkevols, boundary::Boundary, systems::SystemPartition)
     init_data!(boundary, systems[1], id)
@@ -47,7 +53,10 @@ end
 analytic_phi(u, x, y, id::Uniform2D) = id.phi2
 
 analytic_phi(u, x, y, id::Sine2D) =
-    sin( 2*π * id.kx / id.Lx * x ) * sin( 2*π * id.ky / id.Ly * y )
+   sin( 2*π * id.kx / id.Lx * x ) * sin( 2*π * id.ky / id.Ly * y )
+   
+analytic_phi(u, x, y, id::uPolinamial3) =
+    id.u0 +id.u1 * u + id.u2 * u^2 + id.u3 u^3
 
 
 function init_data!(boundary::Boundary, sys::System, id::InitialData)

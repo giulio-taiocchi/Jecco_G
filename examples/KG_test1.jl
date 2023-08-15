@@ -18,11 +18,18 @@ evoleq = AffineNull(
     potential      = potential,
 )
 
-id = Sine2D(
+"id = Sine2D(
     kx   = 1,
-    ky   = 2,
+    ky   = 1,
     Lx   = grid.x_max - grid.x_min,
     Ly   = grid.y_max - grid.y_min,
+)"
+
+id = uPolinomial3(
+    u0   = 1,
+    u1   = 1,
+    u2   = 1,
+    u3   = 1,
 )
 
 io = InOut(
@@ -35,7 +42,7 @@ integration = Integration(
     dt              = 0.002,
     ODE_method      = KG_3_1.RK4(),
     adaptive        = false,
-    tmax            = 4.0,
+    tmax            = 10.0,
 )
 
 run_model(grid, id, evoleq, integration, io)

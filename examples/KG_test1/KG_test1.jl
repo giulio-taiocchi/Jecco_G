@@ -20,7 +20,7 @@ evoleq = AffineNull(
 
 id = Sine2D(
     kx   = 1,
-    ky   = 2,
+    ky   = 1,
     Lx   = grid.x_max - grid.x_min,
     Ly   = grid.y_max - grid.y_min,
 )
@@ -35,7 +35,7 @@ integration = Integration(
     dt              = 0.002,
     ODE_method      = KG_3_1.RK4(),
     adaptive        = false,
-    tmax            = 4.0,
+    tmax            = 10.0,
 )
 
 run_model(grid, id, evoleq, integration, io)
