@@ -56,7 +56,7 @@ analytic_phi(u, x, y, id::Sine2D) =
    sin( 2*π * id.kx / id.Lx * x ) * sin( 2*π * id.ky / id.Ly * y )
    
 analytic_phi(u, x, y, id::Polinomial) =
-    id.u0 +id.u1 * u + id.u2 * u*u + id.u3 u*u*u
+    1
 
 
 function init_data!(boundary::Boundary, sys::System, id::InitialData)

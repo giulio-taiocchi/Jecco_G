@@ -25,7 +25,7 @@ evoleq = AffineNull(
     Ly   = grid.y_max - grid.y_min,
 )"
 
-id = Uniform2D(
+id = Polinomial(
    )
 
 io = InOut(
