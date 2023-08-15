@@ -26,8 +26,7 @@ evoleq = AffineNull(
 )"
 
 id = Polinomial(
-   
-)
+   )
 
 io = InOut(
     out_bulk_every_t            = 0.04,
