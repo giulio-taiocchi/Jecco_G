@@ -11,10 +11,10 @@ Base.@kwdef struct Sine2D{T} <: InitialData
 end
 
 Base.@kwdef struct Polinomial{T} <: InitialData
-    u0 :: T
-    u1 :: T
-    u2 :: T
-    u3 :: T
+    u0 :: T = 1
+    u1 :: T = 1
+    u2 :: T = 1
+    u3 :: T = 1
 end
 
 function (id::InitialData)(bulkevols, boundary::Boundary, systems::SystemPartition)

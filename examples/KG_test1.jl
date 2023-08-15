@@ -25,11 +25,8 @@ evoleq = AffineNull(
     Ly   = grid.y_max - grid.y_min,
 )"
 
-id = uPolinomial3(
-    u0   = 1.0,
-    u1   = 1.0,
-    u2   = 1.0,
-    u3   = 1.0,
+id = Polinomial(
+   
 )
 
 io = InOut(
