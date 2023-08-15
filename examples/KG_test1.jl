@@ -18,7 +18,11 @@ evoleq = AffineNull(
     potential      = potential,
 )
 
-id = Uniform(
+id = Polinomial(
+	u0 = 1,
+	u1 = 1,
+	u2 = 1,
+	u3 = 3,
    )
 
 io = InOut(

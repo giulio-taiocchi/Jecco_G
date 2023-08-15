@@ -58,7 +58,7 @@ analytic_phi(u, x, y, id::Uniform2D) = id.phi2
 
 analytic_phi(u, x, y, id::Uniform) = id.phi2
 
-analytic_phi(u, x, y, id::Polinomial) = id.u0 + u id.u1 + u^2 id.u2 + u^3 id.u3
+analytic_phi(u, x, y, id::Polinomial) = id.u0 + u * id.u1 + u^2 * id.u2 + u^3 * id.u3
 
 analytic_phi(u, x, y, id::Sine2D) =
    sin( 2*π * id.kx / id.Lx * x ) * sin( 2*π * id.ky / id.Ly * y )
