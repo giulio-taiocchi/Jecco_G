@@ -12,9 +12,6 @@ end
 
 Base.@kwdef struct Polinomial{T} <: InitialData
     u0 :: T = 1.0
-    u1 :: T = 1.0
-    u2 :: T = 1.0
-    u3 :: T = 1.0
 end
 
 function (id::InitialData)(bulkevols, boundary::Boundary, systems::SystemPartition)
@@ -55,8 +52,7 @@ analytic_phi(u, x, y, id::Uniform2D) = id.phi2
 analytic_phi(u, x, y, id::Sine2D) =
    sin( 2*π * id.kx / id.Lx * x ) * sin( 2*π * id.ky / id.Ly * y )
    
-analytic_phi(u, x, y, id::Polinomial) =
-    1.0
+analytic_phi(u, x, y, id::Polinomial) = id.u0
 
 
 function init_data!(boundary::Boundary, sys::System, id::InitialData)
