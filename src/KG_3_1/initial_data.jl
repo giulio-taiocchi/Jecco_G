@@ -10,7 +10,7 @@ Base.@kwdef struct Sine2D{T} <: InitialData
     ky :: Int
 end
 
-Base.@kwdef struct uPolinomial3{T} <: InitialData
+Base.@kwdef struct Polinomial{T} <: InitialData
     u0 :: T
     u1 :: T
     u2 :: T
@@ -55,7 +55,7 @@ analytic_phi(u, x, y, id::Uniform2D) = id.phi2
 analytic_phi(u, x, y, id::Sine2D) =
    sin( 2*π * id.kx / id.Lx * x ) * sin( 2*π * id.ky / id.Ly * y )
    
-analytic_phi(u, x, y, id::uPolinomial3) =
+analytic_phi(u, x, y, id::Polinomial) =
     id.u0 +id.u1 * u + id.u2 * u^2 + id.u3 u^3
 
 

@@ -26,10 +26,10 @@ evoleq = AffineNull(
 )"
 
 id = uPolinomial3(
-    u0   = 1,
-    u1   = 1,
-    u2   = 1,
-    u3   = 1,
+    u0   = 1.0,
+    u1   = 1.0,
+    u2   = 1.0,
+    u3   = 1.0,
 )
 
 io = InOut(
