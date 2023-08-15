@@ -1,5 +1,5 @@
 
-Base.@kwdef struct Polinomial{T} <: InitialData
+Base.@kwdef struct Uniform2D{T} <: InitialData
     phi2  :: T  = 1.0
 end
 
@@ -10,12 +10,12 @@ Base.@kwdef struct Sine2D{T} <: InitialData
     ky :: Int
 end
 
-"Base.@kwdef struct Polinomial{T} <: InitialData
+Base.@kwdef struct Polinomial{T} <: InitialData
     u0 :: T = 1
     u1 :: T = 1
     u2 :: T = 1
     u3 :: T = 1
-end"
+end
 
 function (id::InitialData)(bulkevols, boundary::Boundary, systems::SystemPartition)
     init_data!(boundary, systems[1], id)
