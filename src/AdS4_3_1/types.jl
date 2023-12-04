@@ -57,8 +57,8 @@ Base.@kwdef struct EvolTest0{TG<:GaugeCondition} <: EvolutionEquations
     ahf            :: AHF = AHF()
 end
 
-# Took out TP<:Potential, from the argument, since here we don't have any potential. How does this change run_model?
-Base.@kwdef struct AffineNull{T,TG<:GaugeCondition} <: EvolutionEquations
+# Took out T and TP<:Potential, from the argument, since here we don't have any potential. How does this change run_model?
+Base.@kwdef struct AffineNull{TG<:GaugeCondition} <: EvolutionEquations
     #potential      :: TP  = ZeroPotential()
     gaugecondition :: TG  = ConstantAH()
     ahf            :: AHF = AHF()
