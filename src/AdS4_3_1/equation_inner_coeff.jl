@@ -96,14 +96,11 @@ function Fxy_eq_coeff!(AA::Matrix, BB::Matrix, CC::Matrix, SS::Vector, vars::Tup
     @tilde_inner("B")
     @tilde_inner("G")
     @tilde_inner("S")
-    @tilde_inner("Fx")
-    @tilde_inner("Fy")
 
     @hat_inner("B")
     @hat_inner("G")
     @hat_inner("S")
-    @hat_inner("Fx")
-    @hat_inner("Fy")
+    
 
     @bar_inner("B")
     @bar_inner("G")
@@ -114,12 +111,10 @@ function Fxy_eq_coeff!(AA::Matrix, BB::Matrix, CC::Matrix, SS::Vector, vars::Tup
     @star_inner("S")
 
     @tilde_inner("Sp")
-    @tilde_inner("Fxp")
-    @tilde_inner("Fyp")
+   
 
     @hat_inner("Sp")
-    @hat_inner("Fxp")
-    @hat_inner("Fyp")
+    
 
     @cross_inner("G")
     @cross_inner("S")
