@@ -90,7 +90,39 @@ function Fxy_eq_coeff!(AA::Matrix, BB::Matrix, CC::Matrix, SS::Vector, vars::Tup
         B_y   ,        G_y    ,       S_y    ,
         Bp_x  ,        Gp_x   ,       Sp_x   ,
         Bp_y  ,        Gp_y   ,       Sp_y   ,
+       
     ) = vars
+    
+    @tilde_inner("B")
+    @tilde_inner("G")
+    @tilde_inner("S")
+    @tilde_inner("Fx")
+    @tilde_inner("Fy")
+
+    @hat_inner("B")
+    @hat_inner("G")
+    @hat_inner("S")
+    @hat_inner("Fx")
+    @hat_inner("Fy")
+
+    @bar_inner("B")
+    @bar_inner("G")
+    @bar_inner("S")
+
+    @star_inner("B")
+    @star_inner("G")
+    @star_inner("S")
+
+    @tilde_inner("Sp")
+    @tilde_inner("Fxp")
+    @tilde_inner("Fyp")
+
+    @hat_inner("Sp")
+    @hat_inner("Fxp")
+    @hat_inner("Fyp")
+
+    @cross_inner("G")
+    @cross_inner("S")
 
     u2 = u*u
     u3 = u*u2
@@ -307,7 +339,7 @@ function Sd_eq_coeff!(ABCS::Vector, vars::Tuple, ::Inner)
         Bp_y  ,        Gp_y   ,        Sp_y   ,    Fxp_y  ,    Fyp_y  ,
         B_xx  ,        G_xx   ,        S_xx   ,
         B_yy  ,        G_yy   ,        S_yy   ,
-                        G_xy   ,        S_xy
+                        G_xy   ,        S_xy  ,   St
     ) = vars
 
     @tilde_inner("B")
