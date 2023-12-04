@@ -22,7 +22,7 @@ id   = BlackBrane(
 )
 
 evoleq = AffineNull(
-    phi0       = 0.0,
+    #phi0       = 0.0,
     #potential  = ZeroPotential(),
     gaugecondition = ConstantAH(u_AH = 1.0),
 )
