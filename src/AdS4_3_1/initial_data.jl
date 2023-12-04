@@ -27,9 +27,9 @@ end
 Base.@kwdef struct BlackBranePert{T} <: ID_ConstantAH
     energy_dens   :: T   = 1.0
     AH_pos        :: T   = 1.0
-    B1_amp        :: T   = 0.0
-    B1_nx         :: Int = 1
-    B1_ny         :: Int = 2
+    B_amp        :: T   = 0.0
+    B_nx         :: Int = 1
+    B_ny         :: Int = 2
     G_amp         :: T   = 0.0
     G_nx          :: Int = 1
     G_ny          :: Int = 2
@@ -144,7 +144,7 @@ function init_data!(bulk::BulkEvolved, gauge::Gauge, sys::System{Inner},
     yy = sys.ycoord
     uu = sys.ucoord
 
-    B1  = getB1(bulk)
+    B  = getB(bulk)
     G   = getG(bulk)
     xi  = getxi(gauge)
 
@@ -160,10 +160,10 @@ function init_data!(bulk::BulkEvolved, gauge::Gauge, sys::System{Inner},
                 aux3    = aux * aux * aux
                 aux4    = aux * aux3
                 u_old   = u / aux
-                B1_old  = analytic_B1(u_old, x, y, id)
+                B_old  = analytic_B(u_old, x, y, id)
                 G_old   = analytic_G(u_old, x, y, id)
 
-                B1[a,i,j]  = B1_old / aux4
+                B[a,i,j]  = B_old / aux4
                 G[a,i,j]   = G_old  / aux4
             end
         end
@@ -180,7 +180,7 @@ function init_data!(bulk::BulkEvolved, gauge::Gauge, sys::System{Outer},
     yy = sys.ycoord
     uu = sys.ucoord
 
-    B1  = getB1(bulk)
+    B  = getB(bulk)
     G   = getG(bulk)
     xi  = getxi(gauge)
 
@@ -195,12 +195,12 @@ function init_data!(bulk::BulkEvolved, gauge::Gauge, sys::System{Outer},
                 aux3      = aux * aux * aux
                 aux4      = aux * aux3
                 u_old     = u / aux
-                B1_old    = analytic_B1(u_old, x, y, id)
+                B_old    = analytic_B(u_old, x, y, id)
                 G_old     = analytic_G(u_old, x, y, id)
-                B1_inner  = B1_old / aux4
+                B_inner  = B_old / aux4
                 G_inner   = G_old  / aux4
 
-                B1[a,i,j]  = u^3 * B1_inner
+                B[a,i,j]  = u^3 * B_inner
                 G[a,i,j]   = u^3 * G_inner
             end
         end
@@ -214,7 +214,7 @@ end
 
 # BlackBrane_xi1
 
-analytic_B1(u, x, y, id::BlackBrane_xi1)  = 0
+analytic_B(u, x, y, id::BlackBrane_xi1)  = 0
 analytic_G(u, x, y, id::BlackBrane_xi1)   = 0
 
 function init_data!(ff::Boundary, sys::System, id::BlackBrane_xi1)
@@ -259,7 +259,7 @@ end
 
 # BlackBrane initial data
 
-analytic_B1(u, x, y, id::BlackBrane)  = 0
+analytic_B(u, x, y, id::BlackBrane)  = 0
 analytic_G(u, x, y, id::BlackBrane)   = 0
 
 function init_data!(ff::Boundary, sys::System, id::BlackBrane)
@@ -292,16 +292,16 @@ end
 # BlackBranePert initial data
 
 
-function analytic_B1(u, x, y, id::BlackBranePert)
-    # add the perturbation on B1
-    pert_amp = id.B1_amp
+function analytic_B(u, x, y, id::BlackBranePert)
+    # add the perturbation on B
+    pert_amp = id.B_amp
     xmax     = id.xmax
     xmin     = id.xmin
     ymax     = id.ymax
     ymin     = id.ymin
     # number of maxima in each direction
-    nx       = id.B1_nx
-    ny       = id.B1_ny
+    nx       = id.B_nx
+    ny       = id.B_ny
 
     pert_amp * sin( 2 * π * nx * (xmax-x)/(xmax-xmin) ) *
         sin( -2 * π * ny * (ymax-y)/(ymax-ymin) )
@@ -398,7 +398,7 @@ function init_data!(ff::Gauge, sys::System, id::BlackBranePert)
     ff
 end
 
-analytic_B1(u, x, y) = 0
+analytic_B(u, x, y) = 0
 analytic_G(u, x, y)  = 0
 
 function init_data!(ff::Boundary, sys::System)
@@ -436,7 +436,7 @@ end
 
 
 #QNM in 1D initial data
-analytic_B1(u, x, y, id::QNM_1D)  = 3/2*0.1*u^8
+analytic_B(u, x, y, id::QNM_1D)  = 3/2*0.1*u^8
 analytic_G(u, x, y, id::QNM_1D)   = 0
 
 function init_data!(ff::Boundary, sys::System, id::QNM_1D)

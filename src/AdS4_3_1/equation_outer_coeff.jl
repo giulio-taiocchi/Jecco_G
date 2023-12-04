@@ -84,12 +84,36 @@ function Fxy_eq_coeff!(AA::Matrix, BB::Matrix, CC::Matrix, SS::Vector, vars::Tup
         Bp_y  ,        Gp_y   ,        Sp_y
     ) = vars
 
-    expB1   = exp(B1)
-    sinhG   = sinh(G)
-    sinh2G  = sinh(*(2, G))
-    coshG   = cosh(G)
-    cosh2G  = cosh(*(2, G))
-    coshGsq = cosh(G)^2
+ 
+
+    @tilde_outer("B")
+    @tilde_outer("G")
+    @tilde_outer("S")
+    @tilde_outer("Fx")
+    @tilde_outer("Fy")
+
+    @hat_outer("B")
+    @hat_outer("G")
+    @hat_outer("S")
+    @hat_outer("Fx")
+    @hat_outer("Fy")
+
+    @bar_outer("B")
+    @bar_outer("G")
+    @bar_outer("S")
+
+    @star_outer("B")
+    @star_outer("G")
+    @star_outer("S")
+
+    @tilde_outer("Fxp")
+    @tilde_outer("Fyp")
+
+    @hat_outer("Fxp")
+    @hat_outer("Fyp")
+
+    @cross_outer("G")
+    @cross_outer("S")
 
 x0 = exp(B)
 x1 = S ^ 2
@@ -177,12 +201,12 @@ function Sd_eq_coeff!(ABCS::Vector, vars::Tuple, ::Outer)
     @cross_outer("G")
     @cross_outer("S")
 
-    VV = -3 -3/2 * phi^2 + phi^4*UU(phi,potential)
+    #VV = -3 -3/2 * phi^2 + phi^4*UU(phi,potential)
 
    # VVp = -3 * phi + phi^4 * UUp(phi,potential) + 4*phi^3 * UU(phi,potential) 
 
-    expB1   = exp(B1)
-    expB2   = exp(B2)
+    #expB1   = exp(B1)
+    #expB2   = exp(B2)
     sinh2G  = sinh(*(2, G))
     cosh2G  = cosh(*(2, G))
     coshGsq = cosh(G)^2
@@ -235,12 +259,12 @@ ABCS[4] = -( -12 * S ^ 4 * x0 + S * x0 * (x3 * (-Gh * x16 - Gt * x8) + x5 * (-8 
 end
 
 
-# this is another coupled equation, for B1d and Gd. the notation used is
+# this is another coupled equation, for Bd and Gd. the notation used is
 #
-# ( A11 d_uu B1d + A12 d_uu Gd + B11 d_u B1d + B12 d_u Gd + C11 B1d + C12 Gd ) = -S1
-# ( A21 d_uu B1d + A22 d_uu Gd + B21 d_u B1d + B22 d_u Gd + C21 B1d + C22 Gd ) = -S2
+# ( A11 d_uu Bd + A12 d_uu Gd + B11 d_u Bd + B12 d_u Gd + C11 Bd + C12 Gd ) = -S1
+# ( A21 d_uu Bd + A22 d_uu Gd + B21 d_u Bd + B22 d_u Gd + C21 Bd + C22 Gd ) = -S2
 
-function B1dGd_eq_coeff!(AA::Matrix, BB::Matrix, CC::Matrix, SS::Vector, vars::Tuple, ::Outer)
+function BdGd_eq_coeff!(AA::Matrix, BB::Matrix, CC::Matrix, SS::Vector, vars::Tuple, ::Outer)
     (
        u, xi, xi_x, xi_y, xi_xx, xi_yy, xi_xy,
         B     ,      G      ,        S      ,    Fx     ,    Fy     ,  Sd,
@@ -285,8 +309,8 @@ function B1dGd_eq_coeff!(AA::Matrix, BB::Matrix, CC::Matrix, SS::Vector, vars::T
     @cross_outer("S")
 
 
-    expB1   = exp(B1)
-    expB2   = exp(B2)
+    #expB1   = exp(B1)
+    #expB2   = exp(B2)
     sinh2G  = sinh(*(2, G))
     cosh2G  = cosh(*(2, G))
     coshGsq = cosh(G)^2
@@ -339,7 +363,7 @@ end
 function A_eq_coeff!(ABCS::Vector, vars::Tuple, ::Outer)
     (
         potential, u, xi, xi_x, xi_y, xi_xx, xi_yy, xi_xy,
-        B   ,  G   ,  S    , Fx    , Fy    , Sd, B1d, Gd, 
+        B   ,  G   ,  S    , Fx    , Fy    , Sd, Bd, Gd, 
         Bp  ,  Gp  ,  Sp   , Fxp   , Fyp   ,
         Bpp ,  Gpp ,  Spp  , Fxpp  , Fypp  ,
         B_x ,  G_x ,  S_x  , Fx_x  , Fy_x  ,
@@ -385,7 +409,7 @@ function A_eq_coeff!(ABCS::Vector, vars::Tuple, ::Outer)
    # VVp = -3 * phi + phi^4 * UUp(phi,potential) + 4*phi^3 * UU(phi,potential)
 
 
-    expB1   = exp(B1)
+    #expB1   = exp(B1)
     sinh2G  = sinh(*(2, G))
     cosh2G  = cosh(*(2, G))
     coshGsq = cosh(G)^2
@@ -434,11 +458,11 @@ end
 function xi_t_eq_coeff(vars::Tuple, ::Outer)
     (
         kappa, xi, xi_x, xi_y, xi_xx, xi_yy, xi_xy,
-        B   ,  G   ,  S    , Fx    , Fy    , Sd ,  B1d  , Gd,  A   ,
-        Bp  ,  Gp  ,  Sp   , Fxp   , Fyp   , Sdp,  B1dp , Gdp, Ap  ,
+        B   ,  G   ,  S    , Fx    , Fy    , Sd ,  Bd  , Gd,  A   ,
+        Bp  ,  Gp  ,  Sp   , Fxp   , Fyp   , Sdp,  Bdp , Gdp, Ap  ,
         Bpp ,  Gpp ,  Spp  , Fxpp  , Fypp  ,                   App ,
-        B_x ,  G_x ,  S_x  , Fx_x  , Fy_x  , Sd_x, B1d_x, Gd_x,A_x ,
-	B_y ,  G_y ,  S_y  , Fx_y  , Fy_y  , Sd_y, B1d_y,Gd_y, A_y ,
+        B_x ,  G_x ,  S_x  , Fx_x  , Fy_x  , Sd_x, Bd_x, Gd_x,A_x ,
+	B_y ,  G_y ,  S_y  , Fx_y  , Fy_y  , Sd_y, Bd_y,Gd_y, A_y ,
         Bp_x,  Gp_x,  Sp_x , Fxp_x , Fyp_x ,                   Ap_x,
         Bp_y,  Gp_y,  Sp_y , Fxp_y , Fyp_y ,                   Ap_y,
                                                   Fy_xx ,       A_xx,
@@ -452,7 +476,7 @@ function xi_t_eq_coeff(vars::Tuple, ::Outer)
     @tilde_outer("Fx")
     @tilde_outer("Fy")
     @tilde_outer("Sd")
-    @tilde_outer("B1d")
+    @tilde_outer("Bd")
     @tilde_outer("Gd")
     @tilde_outer("A")
 

@@ -121,7 +121,7 @@ end
 abstract type AbstractVars{T} <: AbstractVector{T} end
 
 struct BulkEvolved{T} <: AbstractVars{T}
-    B1  :: Array{T,3}
+    B  :: Array{T,3}
     G   :: Array{T,3}
 end
 
@@ -129,35 +129,35 @@ struct BulkConstrained{T} <: AbstractVars{T}
     S    :: Array{T,3}
     Fx   :: Array{T,3}
     Fy   :: Array{T,3}
-    B1d  :: Array{T,3}
+    Bd  :: Array{T,3}
     Gd   :: Array{T,3}
     Sd   :: Array{T,3}
     A    :: Array{T,3}
 end
 
 struct Bulk{T} <: AbstractVars{T}
-    B1   :: Array{T,3}
+    B   :: Array{T,3}
     G    :: Array{T,3}
     S    :: Array{T,3}
     Fx   :: Array{T,3}
     Fy   :: Array{T,3}
-    B1d  :: Array{T,3}
+    Bd  :: Array{T,3}
     Gd   :: Array{T,3}
     Sd   :: Array{T,3}
     A    :: Array{T,3}
 end
 
 struct BulkDeriv{T}
-    Du_B1   :: Array{T,3}
+    Du_B   :: Array{T,3}
     Du_G    :: Array{T,3}
     Du_S    :: Array{T,3}
     Du_Fx   :: Array{T,3}
     Du_Fy   :: Array{T,3}
     Du_Sd   :: Array{T,3}
-    Du_B1d  :: Array{T,3}
+    Du_Bd  :: Array{T,3}
     Du_Gd   :: Array{T,3}
     Du_A    :: Array{T,3}
-    Duu_B1  :: Array{T,3}
+    Duu_B  :: Array{T,3}
     Duu_G   :: Array{T,3}
     Duu_S   :: Array{T,3}
     Duu_Fx  :: Array{T,3}
@@ -175,9 +175,9 @@ struct Gauge{T} <: AbstractVars{T}
     xi  :: Array{T,3}
 end
 
-@inline varlist(::BulkEvolved)     = (:B1, :G)
-@inline varlist(::BulkConstrained) = (:S, :Fx, :Fy, :B1d,  :Gd, :Sd, :A)
-@inline varlist(::Bulk)            = (:B1,  :G, :S, :Fx, :Fy, :B1d, 
+@inline varlist(::BulkEvolved)     = (:B, :G)
+@inline varlist(::BulkConstrained) = (:S, :Fx, :Fy, :Bd,  :Gd, :Sd, :A)
+@inline varlist(::Bulk)            = (:B,  :G, :S, :Fx, :Fy, :Bd, 
                                       :Gd,:Sd, :A)
 @inline varlist(::Boundary)        = (:a3, :fx1, :fy1)
 @inline varlist(::Gauge)           = (:xi,)
@@ -187,29 +187,29 @@ end
     BulkEvolved{T}(undef, Nu, Nx, Ny)
 
 Construct a container of uninitialized Arrays to hold all the bulk variables
-that are evolved in time: B1, G
+that are evolved in time: B, G
 """
 function BulkEvolved{T}(::UndefInitializer, Nu::Int, Nx::Int, Ny::Int) where {T<:Real}
-    B1  = Array{T}(undef, Nu, Nx, Ny)
+    B  = Array{T}(undef, Nu, Nx, Ny)
     G   = Array{T}(undef, Nu, Nx, Ny)
-    BulkEvolved{T}(B1,  G)
+    BulkEvolved{T}(B,  G)
 end
 
 """
     BulkConstrained{T}(undef, Nu, Nx, Ny)
 
 Construct a container of uninitialized Arrays to hold all the bulk variables
-that are constrained (not evolved in time): S, Fx, Fy, B1d, Gd, Sd, A
+that are constrained (not evolved in time): S, Fx, Fy, Bd, Gd, Sd, A
 """
 function BulkConstrained{T}(::UndefInitializer, Nu::Int, Nx::Int, Ny::Int) where {T<:Real}
     S    = Array{T}(undef, Nu, Nx, Ny)
     Fx   = Array{T}(undef, Nu, Nx, Ny)
     Fy   = Array{T}(undef, Nu, Nx, Ny)
-    B1d  = Array{T}(undef, Nu, Nx, Ny)
+    Bd  = Array{T}(undef, Nu, Nx, Ny)
     Gd   = Array{T}(undef, Nu, Nx, Ny)
     Sd   = Array{T}(undef, Nu, Nx, Ny)
     A    = Array{T}(undef, Nu, Nx, Ny)
-    BulkConstrained{T}(S, Fx, Fy, B1d,Gd, Sd, A)
+    BulkConstrained{T}(S, Fx, Fy, Bd,Gd, Sd, A)
 end
 
 """
@@ -219,37 +219,37 @@ Construct a container to hold all the bulk variables where the evolved variables
 point to the given bulkevol struct and the constrained ones point to the bulkconstrain struct
 """
 function Bulk(bulkevol::BulkEvolved{T}, bulkconstrain::BulkConstrained{T}) where {T}
-    B1    = bulkevol.B1
+    B    = bulkevol.B
     G     = bulkevol.G
     S     = bulkconstrain.S
     Fx    = bulkconstrain.Fx
     Fy    = bulkconstrain.Fy
-    B1d   = bulkconstrain.B1d
+    Bd   = bulkconstrain.Bd
     Gd    = bulkconstrain.Gd
     Sd    = bulkconstrain.Sd
     A     = bulkconstrain.A
-    Bulk{T}(B1,  G,  S, Fx, Fy, B1d, Gd,Sd, A)
+    Bulk{T}(B,  G,  S, Fx, Fy, Bd, Gd,Sd, A)
 end
 
 function BulkDeriv{T}(::UndefInitializer, Nu::Int, Nx::Int, Ny::Int) where {T<:Real}
-    Du_B1    = Array{T}(undef, Nu, Nx, Ny)
+    Du_B    = Array{T}(undef, Nu, Nx, Ny)
     Du_G     = Array{T}(undef, Nu, Nx, Ny)
     Du_S     = Array{T}(undef, Nu, Nx, Ny)
     Du_Fx    = Array{T}(undef, Nu, Nx, Ny)
     Du_Fy    = Array{T}(undef, Nu, Nx, Ny)
     Du_Sd    = Array{T}(undef, Nu, Nx, Ny)
-    Du_B1d   = Array{T}(undef, Nu, Nx, Ny)
+    Du_Bd   = Array{T}(undef, Nu, Nx, Ny)
     Du_Gd    = Array{T}(undef, Nu, Nx, Ny)
     Du_A     = Array{T}(undef, Nu, Nx, Ny)
-    Duu_B1   = Array{T}(undef, Nu, Nx, Ny)
+    Duu_B   = Array{T}(undef, Nu, Nx, Ny)
     Duu_G    = Array{T}(undef, Nu, Nx, Ny)
     Duu_S    = Array{T}(undef, Nu, Nx, Ny)
     Duu_Fx   = Array{T}(undef, Nu, Nx, Ny)
     Duu_Fy   = Array{T}(undef, Nu, Nx, Ny)
     Duu_A    = Array{T}(undef, Nu, Nx, Ny)
-    BulkDeriv{T}(Du_B1,  Du_G, Du_S, Du_Fx, Du_Fy, Du_Sd, Du_B1d,
+    BulkDeriv{T}(Du_B,  Du_G, Du_S, Du_Fx, Du_Fy, Du_Sd, Du_Bd,
                 Du_Gd, Du_A,
-                 Duu_B1,  Duu_G, Duu_S, Duu_Fx, Duu_Fy, Duu_A)
+                 Duu_B,  Duu_G, Duu_S, Duu_Fx, Duu_Fy, Duu_A)
 end
 
 """
@@ -287,23 +287,23 @@ function Gauge{T}(::UndefInitializer, Nx::Int, Ny::Int) where {T<:Real}
 end
 
 
-@inline getB1(ff::BulkEvolved)       = ff.B1
+@inline getB(ff::BulkEvolved)       = ff.B
 @inline getG(ff::BulkEvolved)        = ff.G
 
 @inline getS(ff::BulkConstrained)    = ff.S
 @inline getFx(ff::BulkConstrained)   = ff.Fx
 @inline getFy(ff::BulkConstrained)   = ff.Fy
-@inline getB1d(ff::BulkConstrained)  = ff.B1d
+@inline getBd(ff::BulkConstrained)  = ff.Bd
 @inline getGd(ff::BulkConstrained)   = ff.Gd
 @inline getSd(ff::BulkConstrained)   = ff.Sd
 @inline getA(ff::BulkConstrained)    = ff.A
 
-@inline getB1(ff::Bulk)              = ff.B1
+@inline getB(ff::Bulk)              = ff.B
 @inline getG(ff::Bulk)               = ff.G
 @inline getS(ff::Bulk)               = ff.S
 @inline getFx(ff::Bulk)              = ff.Fx
 @inline getFy(ff::Bulk)              = ff.Fy
-@inline getB1d(ff::Bulk)             = ff.B1d
+@inline getBd(ff::Bulk)             = ff.Bd
 @inline getGd(ff::Bulk)              = ff.Gd
 @inline getSd(ff::Bulk)              = ff.Sd
 @inline getA(ff::Bulk)               = ff.A
@@ -354,7 +354,7 @@ end
 end
 
 Base.similar(ff::BulkEvolved{T}) where{T} =
-    BulkEvolved{T}(similar(ff.B1), similar(ff.G))
+    BulkEvolved{T}(similar(ff.B), similar(ff.G))
 
 Base.similar(ff::Boundary{T}) where{T} =
     Boundary{T}(similar(ff.a3), similar(ff.fx1), similar(ff.fy1))
@@ -434,7 +434,7 @@ Base.similar(ff::EvolVars{T,N,S}) where {T,N,S} = EvolVars{T,N,S}(similar.(ff.x)
 @inline getfy1(ff::EvolVars)  = ff.x[3]
 @inline getxi(ff::EvolVars)   = ff.x[4]
 
-function getB1(ff::EvolVars, i::Int)
+function getB(ff::EvolVars, i::Int)
     Nsys = getudomains(ff)
     @assert i > 0
     @assert i <= Nsys
@@ -453,7 +453,7 @@ end
 @inline getgauge(ff::EvolVars)    = Gauge(getxi(ff))
 
 @inline getbulkevolved(ff::EvolVars, i::Int) =
-    BulkEvolved(getB1(ff,i), getG(ff,i))
+    BulkEvolved(getB(ff,i), getG(ff,i))
 
 function getbulkevolvedpartition(ff::EvolVars)
     Nsys = getudomains(ff)
@@ -463,27 +463,27 @@ end
 
 
 struct BulkHorizon{T}
-    B1_uAH      :: Array{T,3}
+    B_uAH      :: Array{T,3}
     G_uAH       :: Array{T,3}
     S_uAH       :: Array{T,3}
     Fx_uAH      :: Array{T,3}
     Fy_uAH      :: Array{T,3}
     Sd_uAH      :: Array{T,3}
-    B1d_uAH     :: Array{T,3}
+    Bd_uAH     :: Array{T,3}
     Gd_uAH      :: Array{T,3}
     A_uAH       :: Array{T,3}
 
-    Du_B1_uAH   :: Array{T,3}
+    Du_B_uAH   :: Array{T,3}
     Du_G_uAH    :: Array{T,3}
     Du_S_uAH    :: Array{T,3}
     Du_Fx_uAH   :: Array{T,3}
     Du_Fy_uAH   :: Array{T,3}
     Du_Sd_uAH   :: Array{T,3}
-    Du_B1d_uAH  :: Array{T,3}
+    Du_Bd_uAH  :: Array{T,3}
     Du_Gd_uAH   :: Array{T,3}
     Du_A_uAH    :: Array{T,3}
 
-    Duu_B1_uAH  :: Array{T,3}
+    Duu_B_uAH  :: Array{T,3}
     Duu_G_uAH   :: Array{T,3}
     Duu_S_uAH   :: Array{T,3}
     Duu_Fx_uAH  :: Array{T,3}
@@ -491,38 +491,38 @@ struct BulkHorizon{T}
     Duu_A_uAH   :: Array{T,3}
 end
 function BulkHorizon{T}(Nx::Int, Ny::Int) where {T<:Real}
-    B1_uAH      = Array{T}(undef, 1, Nx, Ny)
+    B_uAH      = Array{T}(undef, 1, Nx, Ny)
     G_uAH       = Array{T}(undef, 1, Nx, Ny)
     S_uAH       = Array{T}(undef, 1, Nx, Ny)
     Fx_uAH      = Array{T}(undef, 1, Nx, Ny)
     Fy_uAH      = Array{T}(undef, 1, Nx, Ny)
     Sd_uAH      = Array{T}(undef, 1, Nx, Ny)
-    B1d_uAH     = Array{T}(undef, 1, Nx, Ny)
+    Bd_uAH     = Array{T}(undef, 1, Nx, Ny)
     Gd_uAH      = Array{T}(undef, 1, Nx, Ny)
     A_uAH       = Array{T}(undef, 1, Nx, Ny)
 
-    Du_B1_uAH   = Array{T}(undef, 1, Nx, Ny)
+    Du_B_uAH   = Array{T}(undef, 1, Nx, Ny)
     Du_G_uAH    = Array{T}(undef, 1, Nx, Ny)
     Du_S_uAH    = Array{T}(undef, 1, Nx, Ny)
     Du_Fx_uAH   = Array{T}(undef, 1, Nx, Ny)
     Du_Fy_uAH   = Array{T}(undef, 1, Nx, Ny)
     Du_Sd_uAH   = Array{T}(undef, 1, Nx, Ny)
-    Du_B1d_uAH  = Array{T}(undef, 1, Nx, Ny)
+    Du_Bd_uAH  = Array{T}(undef, 1, Nx, Ny)
     Du_Gd_uAH   = Array{T}(undef, 1, Nx, Ny)
     Du_A_uAH    = Array{T}(undef, 1, Nx, Ny)
 
-    Duu_B1_uAH  = Array{T}(undef, 1, Nx, Ny)
+    Duu_B_uAH  = Array{T}(undef, 1, Nx, Ny)
     Duu_G_uAH   = Array{T}(undef, 1, Nx, Ny)
     Duu_S_uAH   = Array{T}(undef, 1, Nx, Ny)
     Duu_Fx_uAH  = Array{T}(undef, 1, Nx, Ny)
     Duu_Fy_uAH  = Array{T}(undef, 1, Nx, Ny)
     Duu_A_uAH   = Array{T}(undef, 1, Nx, Ny)
 
-    BulkHorizon{T}(B1_uAH, G_uAH, S_uAH, Fx_uAH, Fy_uAH,
-                   Sd_uAH, B1d_uAH, Gd_uAH, A_uAH, Du_B1_uAH,
+    BulkHorizon{T}(B_uAH, G_uAH, S_uAH, Fx_uAH, Fy_uAH,
+                   Sd_uAH, Bd_uAH, Gd_uAH, A_uAH, Du_B_uAH,
                    Du_G_uAH, Du_S_uAH, Du_Fx_uAH,
-                   Du_Fy_uAH, Du_Sd_uAH, Du_B1d_uAH, Du_Gd_uAH,
-                   Du_A_uAH, Duu_B1_uAH, Duu_G_uAH, Duu_S_uAH,
+                   Du_Fy_uAH, Du_Sd_uAH, Du_Bd_uAH, Du_Gd_uAH,
+                   Du_A_uAH, Duu_B_uAH, Duu_G_uAH, Duu_S_uAH,
                    Duu_Fx_uAH, Duu_Fy_uAH, Duu_A_uAH)
 end
 

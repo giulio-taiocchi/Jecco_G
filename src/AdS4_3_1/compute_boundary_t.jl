@@ -32,8 +32,8 @@ function compute_boundary_t!(boundary_t::Boundary, bulk::BulkEvolved,
             xi_x    = Dx(gauge.xi, 1,i,j)
             xi_y    = Dy(gauge.xi, 1,i,j)
 
-            b13_x   = Dx(bulk.B1, 1,i,j)
-            b13_y   = Dy(bulk.B1, 1,i,j)
+            b13_x   = Dx(bulk.B, 1,i,j)
+            b13_y   = Dy(bulk.B, 1,i,j)
 
             g3_x    = Dx(bulk.G, 1,i,j)
             g3_y    = Dy(bulk.G, 1,i,j)

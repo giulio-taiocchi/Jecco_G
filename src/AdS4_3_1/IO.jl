@@ -22,7 +22,7 @@ function output_writer(u::EvolVars, chart2D::Chart, atlas, tinfo::Jecco.TimeInfo
     shape as in the remaining boundary fields -- 3D arrays of size (1,Nx,Ny) --
     we must reshape them first.
     =#
-    b13  = reshape(bulkevols[1].B1[1,:,:],  size(chart2D))
+    b13  = reshape(bulkevols[1].B[1,:,:],  size(chart2D))
     g3   = reshape(bulkevols[1].G[1,:,:],   size(chart2D))
 
     # output fields
@@ -35,7 +35,7 @@ function output_writer(u::EvolVars, chart2D::Chart, atlas, tinfo::Jecco.TimeInfo
     )
     gauge_fields = Jecco.Field("xi", gauge.xi, chart2D)
     bulkevols_fields = ntuple(i -> (
-        Jecco.Field("B1 c=$i",  bulkevols[i].B1,  atlas[i]),
+        Jecco.Field("B c=$i",  bulkevols[i].B,  atlas[i]),
         Jecco.Field("G c=$i",   bulkevols[i].G,   atlas[i])
     ), Nsys)
 
@@ -85,7 +85,7 @@ function output_writer(u::EvolVars, chart2D::Chart, atlas, tinfo::Jecco.TimeInfo
             boundary_fields[1].data = boundary.a3
             boundary_fields[2].data = boundary.fx1
             boundary_fields[3].data = boundary.fy1
-            @views copyto!(boundary_fields[4].data, bulkevols[1].B1[1,:,:])
+            @views copyto!(boundary_fields[4].data, bulkevols[1].B[1,:,:])
             @views copyto!(boundary_fields[6].data, bulkevols[1].G[1,:,:])
 
 
@@ -101,7 +101,7 @@ function output_writer(u::EvolVars, chart2D::Chart, atlas, tinfo::Jecco.TimeInfo
 
         if do_output_bulk
             @inbounds for i in 1:Nsys
-                bulkevols_fields[i][1].data = bulkevols[i].B1
+                bulkevols_fields[i][1].data = bulkevols[i].B
                 bulkevols_fields[I][2].data = bulkevols[i].G
             end
             # write data
@@ -129,7 +129,7 @@ function output_writer(bulkconstrains::BulkPartition{Nsys,BulkConstrained{T}}, a
         Jecco.Field("S c=$i",    bulkconstrains[i].S,    atlas[i]),
         Jecco.Field("Fx c=$i",   bulkconstrains[i].Fx,   atlas[i]),
         Jecco.Field("Fy c=$i",   bulkconstrains[i].Fy,   atlas[i]),
-        Jecco.Field("B1d c=$i",  bulkconstrains[i].B1d,  atlas[i]),
+        Jecco.Field("Bd c=$i",  bulkconstrains[i].Bd,  atlas[i]),
         Jecco.Field("Gd c=$i",   bulkconstrains[i].Gd,   atlas[i]),
         Jecco.Field("Sd c=$i",   bulkconstrains[i].Sd,   atlas[i]),
         Jecco.Field("A c=$i",    bulkconstrains[i].A,    atlas[i])
@@ -158,7 +158,7 @@ function output_writer(bulkconstrains::BulkPartition{Nsys,BulkConstrained{T}}, a
                 fields[i][1].data = bulkconstrains[i].S
                 fields[i][2].data = bulkconstrains[i].Fx
                 fields[i][3].data = bulkconstrains[i].Fy
-                fields[i][4].data = bulkconstrains[i].B1d
+                fields[i][4].data = bulkconstrains[i].Bd
                 fields[I][5].data = bulkconstrains[i].Gd
                 fields[I][6].data = bulkconstrains[i].Sd
                 fields[I][7].data = bulkconstrains[i].A
@@ -191,7 +191,7 @@ function checkpoint_writer(u::EvolVars, chart2D::Chart, atlas, tinfo::Jecco.Time
     )
     gauge_fields = Jecco.Field("xi", gauge.xi, chart2D)
     bulkevols_fields = ntuple(i -> (
-        Jecco.Field("B1 c=$i",  bulkevols[i].B1,  atlas[i]),
+        Jecco.Field("B c=$i",  bulkevols[i].B,  atlas[i]),
         Jecco.Field("G c=$i",   bulkevols[i].G,   atlas[i]),
     ), Nsys)
 
@@ -207,7 +207,7 @@ function checkpoint_writer(u::EvolVars, chart2D::Chart, atlas, tinfo::Jecco.Time
         gauge_fields.data = gauge.xi
 
         @inbounds for i in 1:Nsys
-            bulkevols_fields[i][1].data = bulkevols[i].B1
+            bulkevols_fields[i][1].data = bulkevols[i].B
             bulkevols_fields[I][2].data = bulkevols[i].G
         end
 
@@ -225,9 +225,9 @@ end
 function restore!(bulkevols::BulkPartition{Nsys}, ts::OpenPMDTimeSeries,
                   it::Int) where {Nsys}
     for i in 1:Nsys
-        B1, chart = get_field(ts, it=it, field="B1 c=$i")
-        @assert size(B1) == size(bulkevols[i].B1)
-        copyto!(bulkevols[i].B1, B1)
+        B, chart = get_field(ts, it=it, field="B c=$i")
+        @assert size(B) == size(bulkevols[i].B)
+        copyto!(bulkevols[i].B, B)
 
         G, chart = get_field(ts, it=it, field="G c=$i")
         @assert size(G) == size(bulkevols[i].G)

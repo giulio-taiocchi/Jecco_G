@@ -69,20 +69,20 @@ end
 
 function apply_dissipation!(bulkevol::BulkEvolved, cache::BulkEvolved,
                             sys::System)
-    B1  = getB1(bulkevol)
+    B  = getB(bulkevol)
     G   = getG(bulkevol)
 
-    B1_cache  = getB1(cache)
+    B_cache  = getB(cache)
     G_cache   = getG(cache)
 
 
     # the loops in these functions are threaded, so it's probably not worth it
     # to @spawn here
-    apply_dissipation_3D!( B1_cache,  B1, sys)
+    apply_dissipation_3D!( B_cache,  B, sys)
     apply_dissipation_3D!(  G_cache,   G, sys)
 
 
-    copyto!( B1,  B1_cache)
+    copyto!( B,  B_cache)
     copyto!(  G,   G_cache)
 
     nothing
@@ -91,7 +91,7 @@ end
 # exponential filtering
 function (filters::Filters)(bulkevol::BulkEvolved)
     @sync begin
-        @spawn filters.exp_filter(bulkevol.B1)
+        @spawn filters.exp_filter(bulkevol.B)
         @spawn filters.exp_filter(bulkevol.G)
     end
     nothing

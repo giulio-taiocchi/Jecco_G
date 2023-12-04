@@ -49,7 +49,7 @@ struct BC{T}
     S    :: Array{T,2}
     Fx   :: Array{T,2}
     Fy   :: Array{T,2}
-    B1d  :: Array{T,2}
+    Bd  :: Array{T,2}
     Gd   :: Array{T,2}
     Sd   :: Array{T,2}
     A    :: Array{T,2}
@@ -63,7 +63,7 @@ function BC{T}(Nx::Int, Ny::Int) where {T<:Real}
     S    = Array{T}(undef, Nx, Ny)
     Fx   = Array{T}(undef, Nx, Ny)
     Fy   = Array{T}(undef, Nx, Ny)
-    B1d  = Array{T}(undef, Nx, Ny)
+    Bd  = Array{T}(undef, Nx, Ny)
     Gd   = Array{T}(undef, Nx, Ny)
     Sd   = Array{T}(undef, Nx, Ny)
     A    = Array{T}(undef, Nx, Ny)
@@ -71,7 +71,7 @@ function BC{T}(Nx::Int, Ny::Int) where {T<:Real}
     Fx_u = Array{T}(undef, Nx, Ny)
     Fy_u = Array{T}(undef, Nx, Ny)
     A_u  = Array{T}(undef, Nx, Ny)
-    BC{T}(S, Fx, Fy, B1d, Gd, Sd, A, S_u, Fx_u, Fy_u, A_u)
+    BC{T}(S, Fx, Fy, Bd, Gd, Sd, A, S_u, Fx_u, Fy_u, A_u)
 end
 
 function BCs(systems::SystemPartition)
@@ -132,9 +132,9 @@ function solve_S!(bulk::Bulk, bc::BC, gauge::Gauge, deriv::BulkDeriv, aux_acc,
                   sys::System, evoleq::AffineNull)
     Nu, Nx, Ny = size(sys)
 
-    Du_B1   = deriv.Du_B1
+    Du_B   = deriv.Du_B
     Du_G    = deriv.Du_G
-    # Duu_B1  = deriv.Duu_B1
+    # Duu_B  = deriv.Duu_B
     # Duu_G   = deriv.Duu_G
 
     Du  = sys.Du
@@ -155,14 +155,14 @@ function solve_S!(bulk::Bulk, bc::BC, gauge::Gauge, deriv::BulkDeriv, aux_acc,
             @inbounds @simd for a in 1:Nu
                 u     = sys.ucoord[a]
 
-                B1    = bulk.B1[a,i,j]
+                B    = bulk.B[a,i,j]
                 G     = bulk.G[a,i,j]
 
 
-                B1p   = -u*u * Du_B1[a,i,j]
+                Bp   = -u*u * Du_B[a,i,j]
                 Gp    = -u*u * Du_G[a,i,j]
 
-                vars = (u, xi, B1, B1p, G, Gp)
+                vars = (u, xi, B, Bp, G, Gp)
 
                 S_eq_coeff!(aux.ABCS, vars, sys.gridtype)
 
@@ -200,10 +200,10 @@ function solve_Fxy!(bulk::Bulk, bc::BC, gauge::Gauge, deriv::BulkDeriv, aux_acc,
                     sys::System, evoleq::AffineNull)
     Nu, Nx, Ny = size(sys)
 
-    Du_B1   = deriv.Du_B1
+    Du_B   = deriv.Du_B
     Du_G    = deriv.Du_G
     Du_S    = deriv.Du_S
-    Duu_B1  = deriv.Duu_B1
+    Duu_B  = deriv.Duu_B
     Duu_G   = deriv.Duu_G
     Duu_S   = deriv.Duu_S
 
@@ -230,13 +230,13 @@ function solve_Fxy!(bulk::Bulk, bc::BC, gauge::Gauge, deriv::BulkDeriv, aux_acc,
                 u3    = u * u2
                 u4    = u2 * u2
 
-                B1    = bulk.B1[a,i,j]
-                B1p   = -u2 * Du_B1[a,i,j]
-                B1_x  = Dx(bulk.B1, a,i,j)
-                B1_y  = Dy(bulk.B1, a,i,j)
-                B1pp  = 2*u3 * Du_B1[a,i,j] + u4 * Duu_B1[a,i,j]
-                B1p_x = -u2 * Dx(Du_B1, a,i,j)
-                B1p_y = -u2 * Dy(Du_B1, a,i,j)
+                B    = bulk.B[a,i,j]
+                Bp   = -u2 * Du_B[a,i,j]
+                B_x  = Dx(bulk.B, a,i,j)
+                B_y  = Dy(bulk.B, a,i,j)
+                Bpp  = 2*u3 * Du_B[a,i,j] + u4 * Duu_B[a,i,j]
+                Bp_x = -u2 * Dx(Du_B, a,i,j)
+                Bp_y = -u2 * Dy(Du_B, a,i,j)
 
 
                 G     = bulk.G[a,i,j]
@@ -257,13 +257,13 @@ function solve_Fxy!(bulk::Bulk, bc::BC, gauge::Gauge, deriv::BulkDeriv, aux_acc,
 
                 vars = (
                     u, xi, xi_x, xi_y,
-                    B1     ,     G      ,       S      ,
-                    B1p    ,     Gp     ,       Sp     ,
-                    B1pp   ,     Gpp    ,       Spp    ,
-                    B1_x   ,     G_x    ,       S_x    ,
-                    B1_y   ,     G_y    ,       S_y    ,
-                    B1p_x  ,     Gp_x   ,       Sp_x   ,
-                    B1p_y  ,     Gp_y   ,       Sp_y
+                    B     ,     G      ,       S      ,
+                    Bp    ,     Gp     ,       Sp     ,
+                    Bpp   ,     Gpp    ,       Spp    ,
+                    B_x   ,     G_x    ,       S_x    ,
+                    B_y   ,     G_y    ,       S_y    ,
+                    Bp_x  ,     Gp_x   ,       Sp_x   ,
+                    Bp_y  ,     Gp_y   ,       Sp_y
                 )
 
                 Fxy_eq_coeff!(aux.AA, aux.BB, aux.CC, aux.SS, vars, sys.gridtype)
@@ -319,12 +319,12 @@ function solve_Sd!(bulk::Bulk, bc::BC, gauge::Gauge, deriv::BulkDeriv, aux_acc,
                    sys::System, evoleq::AffineNull)
     Nu, Nx, Ny = size(sys)
 
-    Du_B1   = deriv.Du_B1
+    Du_B   = deriv.Du_B
     Du_G    = deriv.Du_G
     Du_S    = deriv.Du_S
     Du_Fx   = deriv.Du_Fx
     Du_Fy   = deriv.Du_Fy
-    Duu_B1  = deriv.Duu_B1
+    Duu_B  = deriv.Duu_B
     Duu_G   = deriv.Duu_G
     Duu_S   = deriv.Duu_S
     Duu_Fx  = deriv.Duu_Fx
@@ -357,7 +357,7 @@ function solve_Sd!(bulk::Bulk, bc::BC, gauge::Gauge, deriv::BulkDeriv, aux_acc,
                 u3    = u * u2
                 u4    = u2 * u2
 
-                B1    = bulk.B1[a,i,j]
+                B    = bulk.B[a,i,j]
                 G     = bulk.G[a,i,j]
                 S     = bulk.S[a,i,j]
                 Fx    = bulk.Fx[a,i,j]
@@ -365,13 +365,13 @@ function solve_Sd!(bulk::Bulk, bc::BC, gauge::Gauge, deriv::BulkDeriv, aux_acc,
 
                 # r derivatives
 
-                B1p        = -u2 * Du_B1[a,i,j]
+                Bp        = -u2 * Du_B[a,i,j]
                 Gp         = -u2 * Du_G[a,i,j]
                 Sp         = -u2 * Du_S[a,i,j]
                 Fxp        = -u2 * Du_Fx[a,i,j]
                 Fyp        = -u2 * Du_Fy[a,i,j]
 
-                B1pp       = 2*u3 * Du_B1[a,i,j]  + u4 * Duu_B1[a,i,j]
+                Bpp       = 2*u3 * Du_B[a,i,j]  + u4 * Duu_B[a,i,j]
                 Gpp        = 2*u3 * Du_G[a,i,j]   + u4 * Duu_G[a,i,j]
                 Spp        = 2*u3 * Du_S[a,i,j]   + u4 * Duu_S[a,i,j]
                 Fxpp       = 2*u3 * Du_Fx[a,i,j]  + u4 * Duu_Fx[a,i,j]
@@ -379,35 +379,35 @@ function solve_Sd!(bulk::Bulk, bc::BC, gauge::Gauge, deriv::BulkDeriv, aux_acc,
 
                 # x and y derivatives
 
-                B1_x       = Dx(bulk.B1, a,i,j)
+                B_x       = Dx(bulk.B, a,i,j)
                 G_x        = Dx(bulk.G,  a,i,j)
                 S_x        = Dx(bulk.S,  a,i,j)
                 Fx_x       = Dx(bulk.Fx, a,i,j)
                 Fy_x       = Dx(bulk.Fy, a,i,j)
 
-                B1_y       = Dy(bulk.B1, a,i,j)
+                B_y       = Dy(bulk.B, a,i,j)
                 G_y        = Dy(bulk.G,  a,i,j)
                 S_y        = Dy(bulk.S,  a,i,j)
                 Fx_y       = Dy(bulk.Fx, a,i,j)
                 Fy_y       = Dy(bulk.Fy, a,i,j)
 
-                B1p_x      = -u2 * Dx(Du_B1, a,i,j)
+                Bp_x      = -u2 * Dx(Du_B, a,i,j)
                 Gp_x       = -u2 * Dx(Du_G,  a,i,j)
                 Sp_x       = -u2 * Dx(Du_S,  a,i,j)
                 Fxp_x      = -u2 * Dx(Du_Fx,  a,i,j)
                 Fyp_x      = -u2 * Dx(Du_Fy,  a,i,j)
 
-                B1p_y      = -u2 * Dy(Du_B1, a,i,j)
+                Bp_y      = -u2 * Dy(Du_B, a,i,j)
                 Gp_y       = -u2 * Dy(Du_G,  a,i,j)
                 Sp_y       = -u2 * Dy(Du_S,  a,i,j)
                 Fxp_y      = -u2 * Dy(Du_Fx, a,i,j)
                 Fyp_y      = -u2 * Dy(Du_Fy, a,i,j)
 
-                B1_xx      = Dxx(bulk.B1, a,i,j)
+                B_xx      = Dxx(bulk.B, a,i,j)
                 G_xx       = Dxx(bulk.G,  a,i,j)
                 S_xx       = Dxx(bulk.S,  a,i,j)
 
-                B1_yy      = Dyy(bulk.B1, a,i,j)
+                B_yy      = Dyy(bulk.B, a,i,j)
                 G_yy       = Dyy(bulk.G,  a,i,j)
                 S_yy       = Dyy(bulk.S,  a,i,j)
 
@@ -416,14 +416,14 @@ function solve_Sd!(bulk::Bulk, bc::BC, gauge::Gauge, deriv::BulkDeriv, aux_acc,
 
                 vars = (
                     potential, u, xi, xi_x, xi_y, xi_xx, xi_yy, xi_xy,
-                    B1     ,        G      ,     S      ,    Fx     ,    Fy     ,
-                    B1p    ,        Gp     ,     Sp     ,    Fxp    ,    Fyp    ,
-                    B1pp   ,        Gpp    ,     Spp    ,    Fxpp   ,    Fypp   ,
-                    B1_x   ,        G_y    ,     S_y    ,    Fx_y   ,    Fy_y   ,
-                    B1p_x  ,        Gp_x   ,     Sp_x   ,    Fxp_x  ,    Fyp_x  ,
-                    B1p_y  ,        Gp_y   ,     Sp_y   ,    Fxp_y  ,    Fyp_y  ,
-                    B1_xx  ,        G_xx   ,     S_xx   ,
-                    B1_yy  ,        G_yy   ,     S_yy   ,
+                    B     ,        G      ,     S      ,    Fx     ,    Fy     ,
+                    Bp    ,        Gp     ,     Sp     ,    Fxp    ,    Fyp    ,
+                    Bpp   ,        Gpp    ,     Spp    ,    Fxpp   ,    Fypp   ,
+                    B_x   ,        G_y    ,     S_y    ,    Fx_y   ,    Fy_y   ,
+                    Bp_x  ,        Gp_x   ,     Sp_x   ,    Fxp_x  ,    Fyp_x  ,
+                    Bp_y  ,        Gp_y   ,     Sp_y   ,    Fxp_y  ,    Fyp_y  ,
+                    B_xx  ,        G_xx   ,     S_xx   ,
+                    B_yy  ,        G_yy   ,     S_yy   ,
                                     G_xy   ,     S_xy
                 )
 
@@ -455,16 +455,16 @@ function solve_Sd!(bulk::Bulk, bc::BC, gauge::Gauge, deriv::BulkDeriv, aux_acc,
 end
 
 
-function solve_B1dGd!(bulk::Bulk, bc::BC, gauge::Gauge, deriv::BulkDeriv, aux_acc,
+function solve_BdGd!(bulk::Bulk, bc::BC, gauge::Gauge, deriv::BulkDeriv, aux_acc,
                       sys::System, evoleq::AffineNull)
     Nu, Nx, Ny = size(sys)
 
-    Du_B1   = deriv.Du_B1
+    Du_B   = deriv.Du_B
     Du_G    = deriv.Du_G
     Du_S    = deriv.Du_S
     Du_Fx   = deriv.Du_Fx
     Du_Fy   = deriv.Du_Fy
-    Duu_B1  = deriv.Duu_B1
+    Duu_B  = deriv.Duu_B
     Duu_G   = deriv.Duu_G
     Duu_S   = deriv.Duu_S
     Duu_Fx  = deriv.Duu_Fx
@@ -496,7 +496,7 @@ function solve_B1dGd!(bulk::Bulk, bc::BC, gauge::Gauge, deriv::BulkDeriv, aux_ac
                 u3    = u * u2
                 u4    = u2 * u2
 
-                B1    = bulk.B1[a,i,j]
+                B    = bulk.B[a,i,j]
                 G     = bulk.G[a,i,j]
                 S     = bulk.S[a,i,j]
                 Fx    = bulk.Fx[a,i,j]
@@ -505,13 +505,13 @@ function solve_B1dGd!(bulk::Bulk, bc::BC, gauge::Gauge, deriv::BulkDeriv, aux_ac
 
                 # r derivatives
 
-                B1p        = -u2 * Du_B1[a,i,j]
+                Bp        = -u2 * Du_B[a,i,j]
                 Gp         = -u2 * Du_G[a,i,j]
                 Sp         = -u2 * Du_S[a,i,j]
                 Fxp        = -u2 * Du_Fx[a,i,j]
                 Fyp        = -u2 * Du_Fy[a,i,j]
 
-                B1pp       = 2*u3 * Du_B1[a,i,j]  + u4 * Duu_B1[a,i,j]
+                Bpp       = 2*u3 * Du_B[a,i,j]  + u4 * Duu_B[a,i,j]
                 Gpp        = 2*u3 * Du_G[a,i,j]   + u4 * Duu_G[a,i,j]
                 Spp        = 2*u3 * Du_S[a,i,j]   + u4 * Duu_S[a,i,j]
                 Fxpp       = 2*u3 * Du_Fx[a,i,j]  + u4 * Duu_Fx[a,i,j]
@@ -519,35 +519,35 @@ function solve_B1dGd!(bulk::Bulk, bc::BC, gauge::Gauge, deriv::BulkDeriv, aux_ac
 
                 # x and y derivatives
 
-                B1_x       = Dx(bulk.B1, a,i,j)
+                B_x       = Dx(bulk.B, a,i,j)
                 G_x        = Dx(bulk.G,  a,i,j)
                 S_x        = Dx(bulk.S,  a,i,j)
                 Fx_x       = Dx(bulk.Fx, a,i,j)
                 Fy_x       = Dx(bulk.Fy, a,i,j)
 
-                B1_y       = Dy(bulk.B1, a,i,j)
+                B_y       = Dy(bulk.B, a,i,j)
                 G_y        = Dy(bulk.G,  a,i,j)
                 S_y        = Dy(bulk.S,  a,i,j)
                 Fx_y       = Dy(bulk.Fx, a,i,j)
                 Fy_y       = Dy(bulk.Fy, a,i,j)
 
-                B1p_x      = -u2 * Dx(Du_B1, a,i,j)
+                Bp_x      = -u2 * Dx(Du_B, a,i,j)
                 Gp_x       = -u2 * Dx(Du_G,  a,i,j)
                 Sp_x       = -u2 * Dx(Du_S,  a,i,j)
                 Fxp_x      = -u2 * Dx(Du_Fx,  a,i,j)
                 Fyp_x      = -u2 * Dx(Du_Fy,  a,i,j)
 
-                B1p_y      = -u2 * Dy(Du_B1, a,i,j)
+                Bp_y      = -u2 * Dy(Du_B, a,i,j)
                 Gp_y       = -u2 * Dy(Du_G,  a,i,j)
                 Sp_y       = -u2 * Dy(Du_S,  a,i,j)
                 Fxp_y      = -u2 * Dy(Du_Fx, a,i,j)
                 Fyp_y      = -u2 * Dy(Du_Fy, a,i,j)
 
-                B1_xx      = Dxx(bulk.B1, a,i,j)
+                B_xx      = Dxx(bulk.B, a,i,j)
                 G_xx       = Dxx(bulk.G,  a,i,j)
                 S_xx       = Dxx(bulk.S,  a,i,j)
 
-                B1_yy      = Dyy(bulk.B1, a,i,j)
+                B_yy      = Dyy(bulk.B, a,i,j)
                 G_yy       = Dyy(bulk.G,  a,i,j)
                 S_yy       = Dyy(bulk.S,  a,i,j)
 
@@ -557,19 +557,19 @@ function solve_B1dGd!(bulk::Bulk, bc::BC, gauge::Gauge, deriv::BulkDeriv, aux_ac
 
                 vars = (
                     u, xi, xi_x, xi_y, xi_xx, xi_yy, xi_xy,
-                    B1     ,        G      ,    S      ,    Fx     ,    Fy     ,  Sd,
-                    B1p    ,        Gp     ,    Sp     ,    Fxp    ,    Fyp    ,
-                    B1pp   ,        Gpp    ,    Spp    ,    Fxpp   ,    Fypp   ,
-                    B1_x   ,        G_x    ,    S_x    ,    Fx_x   ,    Fy_x   ,
-                    B1_y   ,        G_y    ,    S_y    ,    Fx_y   ,    Fy_y   ,
-                    B1p_x  ,        Gp_x   ,    Sp_x   ,    Fxp_x  ,    Fyp_x  ,
-                    B1p_y  ,        Gp_y   ,    Sp_y   ,    Fxp_y  ,    Fyp_y  ,
-                    B1_xx  ,        G_xx   ,    S_xx   ,
-                    B1_yy  ,        G_yy   ,    S_yy   ,
+                    B     ,        G      ,    S      ,    Fx     ,    Fy     ,  Sd,
+                    Bp    ,        Gp     ,    Sp     ,    Fxp    ,    Fyp    ,
+                    Bpp   ,        Gpp    ,    Spp    ,    Fxpp   ,    Fypp   ,
+                    B_x   ,        G_x    ,    S_x    ,    Fx_x   ,    Fy_x   ,
+                    B_y   ,        G_y    ,    S_y    ,    Fx_y   ,    Fy_y   ,
+                    Bp_x  ,        Gp_x   ,    Sp_x   ,    Fxp_x  ,    Fyp_x  ,
+                    Bp_y  ,        Gp_y   ,    Sp_y   ,    Fxp_y  ,    Fyp_y  ,
+                    B_xx  ,        G_xx   ,    S_xx   ,
+                    B_yy  ,        G_yy   ,    S_yy   ,
                                     G_xy   ,    S_xy
                 )
 
-                B1dGd_eq_coeff!(aux.AA, aux.BB, aux.CC, aux.SS, vars, sys.gridtype)
+                BdGd_eq_coeff!(aux.AA, aux.BB, aux.CC, aux.SS, vars, sys.gridtype)
 
                 aux.b_vec2[a]    = -aux.SS[1]
                 aux.b_vec2[a+Nu] = -aux.SS[2]
@@ -587,7 +587,7 @@ function solve_B1dGd!(bulk::Bulk, bc::BC, gauge::Gauge, deriv::BulkDeriv, aux_ac
 
             # BC (first order system)
 
-            aux.b_vec2[1]     = bc.B1d[i,j]
+            aux.b_vec2[1]     = bc.Bd[i,j]
             aux.A_mat2[1,:]  .= 0.0
             aux.A_mat2[1,1]   = 1.0
 
@@ -598,7 +598,7 @@ function solve_B1dGd!(bulk::Bulk, bc::BC, gauge::Gauge, deriv::BulkDeriv, aux_ac
             solve_lin_system_pivot!(aux.A_mat2, aux.b_vec2)
 
             @inbounds @simd for aa in 1:Nu
-                bulk.B1d[aa,i,j] = aux.b_vec2[aa]
+                bulk.Bd[aa,i,j] = aux.b_vec2[aa]
                 bulk.Gd[aa,i,j]  = aux.b_vec2[aa+Nu]
             end
 
@@ -613,12 +613,12 @@ function solve_A!(bulk::Bulk, bc::BC, gauge::Gauge, deriv::BulkDeriv, aux_acc,
                   sys::System, evoleq::AffineNull)
     Nu, Nx, Ny = size(sys)
 
-    Du_B1   = deriv.Du_B1
+    Du_B   = deriv.Du_B
     Du_G    = deriv.Du_G
     Du_S    = deriv.Du_S
     Du_Fx   = deriv.Du_Fx
     Du_Fy   = deriv.Du_Fy
-    Duu_B1  = deriv.Duu_B1
+    Duu_B  = deriv.Duu_B
     Duu_G   = deriv.Duu_G
     Duu_S   = deriv.Duu_S
     Duu_Fx  = deriv.Duu_Fx
@@ -651,24 +651,24 @@ function solve_A!(bulk::Bulk, bc::BC, gauge::Gauge, deriv::BulkDeriv, aux_acc,
                 u3    = u * u2
                 u4    = u2 * u2
 
-                B1    = bulk.B1[a,i,j]
+                B    = bulk.B[a,i,j]
                 G     = bulk.G[a,i,j]
                 S     = bulk.S[a,i,j]
                 Fx    = bulk.Fx[a,i,j]
                 Fy    = bulk.Fy[a,i,j]
                 Sd    = bulk.Sd[a,i,j]
-                B1d   = bulk.B1d[a,i,j]
+                Bd   = bulk.Bd[a,i,j]
                 Gd    = bulk.Gd[a,i,j]
 
                 # r derivatives
 
-                B1p        = -u2 * Du_B1[a,i,j]
+                Bp        = -u2 * Du_B[a,i,j]
                 Gp         = -u2 * Du_G[a,i,j]
                 Sp         = -u2 * Du_S[a,i,j]
                 Fxp        = -u2 * Du_Fx[a,i,j]
                 Fyp        = -u2 * Du_Fy[a,i,j]
 
-                B1pp       = 2*u3 * Du_B1[a,i,j]  + u4 * Duu_B1[a,i,j]
+                Bpp       = 2*u3 * Du_B[a,i,j]  + u4 * Duu_B[a,i,j]
                 Gpp        = 2*u3 * Du_G[a,i,j]   + u4 * Duu_G[a,i,j]
                 Spp        = 2*u3 * Du_S[a,i,j]   + u4 * Duu_S[a,i,j]
                 Fxpp       = 2*u3 * Du_Fx[a,i,j]  + u4 * Duu_Fx[a,i,j]
@@ -676,35 +676,35 @@ function solve_A!(bulk::Bulk, bc::BC, gauge::Gauge, deriv::BulkDeriv, aux_acc,
 
                 # x and y derivatives
 
-                B1_x       = Dx(bulk.B1, a,i,j)
+                B_x       = Dx(bulk.B, a,i,j)
                 G_x        = Dx(bulk.G,  a,i,j)
                 S_x        = Dx(bulk.S,  a,i,j)
                 Fx_x       = Dx(bulk.Fx, a,i,j)
                 Fy_x       = Dx(bulk.Fy, a,i,j)
 
-                B1_y       = Dy(bulk.B1, a,i,j)
+                B_y       = Dy(bulk.B, a,i,j)
                 G_y        = Dy(bulk.G,  a,i,j)
                 S_y        = Dy(bulk.S,  a,i,j)
                 Fx_y       = Dy(bulk.Fx, a,i,j)
                 Fy_y       = Dy(bulk.Fy, a,i,j)
 
-                B1p_x      = -u2 * Dx(Du_B1, a,i,j)
+                Bp_x      = -u2 * Dx(Du_B, a,i,j)
                 Gp_x       = -u2 * Dx(Du_G,  a,i,j)
                 Sp_x       = -u2 * Dx(Du_S,  a,i,j)
                 Fxp_x      = -u2 * Dx(Du_Fx,  a,i,j)
                 Fyp_x      = -u2 * Dx(Du_Fy,  a,i,j)
 
-                B1p_y      = -u2 * Dy(Du_B1, a,i,j)
+                Bp_y      = -u2 * Dy(Du_B, a,i,j)
                 Gp_y       = -u2 * Dy(Du_G,  a,i,j)
                 Sp_y       = -u2 * Dy(Du_S,  a,i,j)
                 Fxp_y      = -u2 * Dy(Du_Fx, a,i,j)
                 Fyp_y      = -u2 * Dy(Du_Fy, a,i,j)
 
-                B1_xx      = Dxx(bulk.B1, a,i,j)
+                B_xx      = Dxx(bulk.B, a,i,j)
                 G_xx       = Dxx(bulk.G,  a,i,j)
                 S_xx       = Dxx(bulk.S,  a,i,j)
 
-                B1_yy      = Dyy(bulk.B1, a,i,j)
+                B_yy      = Dyy(bulk.B, a,i,j)
                 G_yy       = Dyy(bulk.G,  a,i,j)
                 S_yy       = Dyy(bulk.S,  a,i,j)
 
@@ -713,15 +713,15 @@ function solve_A!(bulk::Bulk, bc::BC, gauge::Gauge, deriv::BulkDeriv, aux_acc,
 
                 vars = (
                     potential, u, xi, xi_x, xi_y, xi_xx, xi_yy, xi_xy,
-                    B1   , G   , S    , Fx    , Fy    , Sd, B1d, Gd, 
-                    B1p  , Gp  , Sp   , Fxp   , Fyp   ,
-                    B1pp  ,Gpp , Spp  , Fxpp  , Fypp  ,
-                    B1_x , G_x , S_x  , Fx_x  , Fy_x  ,
-                    B1_y , G_y , S_y  , Fx_y  , Fy_y  ,
-                    B1p_x, Gp_x, Sp_x , Fxp_x , Fyp_x ,
-                    B1p_y, Gp_y, Sp_y , Fxp_y , Fyp_y ,
-                    B1_xx, G_xx, S_xx ,
-                    B1_yy, G_yy, S_yy ,
+                    B   , G   , S    , Fx    , Fy    , Sd, Bd, Gd, 
+                    Bp  , Gp  , Sp   , Fxp   , Fyp   ,
+                    Bpp  ,Gpp , Spp  , Fxpp  , Fypp  ,
+                    B_x , G_x , S_x  , Fx_x  , Fy_x  ,
+                    B_y , G_y , S_y  , Fx_y  , Fy_y  ,
+                    Bp_x, Gp_x, Sp_x , Fxp_x , Fyp_x ,
+                    Bp_y, Gp_y, Sp_y , Fxp_y , Fyp_y ,
+                    B_xx, G_xx, S_xx ,
+                    B_yy, G_yy, S_yy ,
                            G_xy, S_xy
                 )
 
@@ -760,13 +760,13 @@ end
 function solve_nested!(bulkconstrain::BulkConstrained, bulkevol::BulkEvolved, bc::BC,
                        gauge::Gauge, deriv::BulkDeriv, aux_acc,
                        sys::System, evoleq::AffineNull)
-    Du_B1   = deriv.Du_B1
+    Du_B   = deriv.Du_B
     Du_G    = deriv.Du_G
     Du_S    = deriv.Du_S
     Du_Fx   = deriv.Du_Fx
     Du_Fy   = deriv.Du_Fy
     Du_A    = deriv.Du_A
-    Duu_B1  = deriv.Duu_B1
+    Duu_B  = deriv.Duu_B
     Duu_G   = deriv.Duu_G
     Duu_S   = deriv.Duu_S
     Duu_Fx  = deriv.Duu_Fx
@@ -810,14 +810,14 @@ function solve_nested!(bulkconstrain::BulkConstrained, bulkevol::BulkEvolved, bc
     vprint("INFO: solve_Sd")
     solve_Sd!(bulk, bc, gauge, deriv, aux_acc, sys, evoleq)
 
-    # equations for (B1d, Gd) are actually independent of each
+    # equations for (Bd, Gd) are actually independent of each
     # other and could be solved in parallel. however, it seems that use of
     # @spawn here is actually harmful for scaling. since the loops in each
     # function are already threaded, it seems better not to @spawn.
 
 
-    vprint("INFO: solve_B1dGd")
-    solve_B1dGd!(bulk, bc, gauge, deriv, aux_acc, sys, evoleq)
+    vprint("INFO: solve_BdGd")
+    solve_BdGd!(bulk, bc, gauge, deriv, aux_acc, sys, evoleq)
 
     # solve for A
     vprint("INFO: solve_A")
@@ -842,7 +842,7 @@ function syncBCs!(bc::BC, bulk::BulkConstrained, deriv::BulkDeriv)
             bc.Fx[i,j]   = bulk.Fx[end,i,j]
             bc.Fy[i,j]   = bulk.Fy[end,i,j]
             bc.Sd[i,j]   = bulk.Sd[end,i,j]
-            bc.B1d[i,j]  = bulk.B1d[end,i,j]
+            bc.Bd[i,j]  = bulk.Bd[end,i,j]
             bc.Gd[i,j]   = bulk.Gd[end,i,j]
             bc.A[i,j]    = bulk.A[end,i,j]
 
@@ -872,7 +872,7 @@ function set_innerBCs!(bc::BC, bulk::BulkEvolved, boundary::Boundary,
             xi_x    = Dx(gauge.xi, 1,i,j)
             xi_y    = Dy(gauge.xi, 1,i,j)
 
-            b13     = bulk.B1[1,i,j]
+            b13     = bulk.B[1,i,j]
             g3      = bulk.G[1,i,j]
 
             a3      = boundary.a3[1,i,j]
@@ -883,10 +883,10 @@ function set_innerBCs!(bc::BC, bulk::BulkEvolved, boundary::Boundary,
             fx1_x   = Dx(boundary.fx1, 1,i,j)
             fy1_y   = Dy(boundary.fy1, 1,i,j)
 
-            b13_x   = Dx(bulk.B1,1,i,j)
+            b13_x   = Dx(bulk.B,1,i,j)
             g3_x    = Dx(bulk.G,1,i,j)
 
-            b13_y   = Dy(bulk.B1,1,i,j)
+            b13_y   = Dy(bulk.B,1,i,j)
             g3_y    = Dy(bulk.G,1,i,j)
 
             bc.S[i,j]   =0
@@ -900,7 +900,7 @@ function set_innerBCs!(bc::BC, bulk::BulkEvolved, boundary::Boundary,
 
             bc.Sd[i,j] = a3 /2
 
-            bc.B1d[i,j] = -3* b13/2
+            bc.Bd[i,j] = -3* b13/2
             bc.Gd[i,j]  = -3 * g3/2
 
             bc.A[i,j]   = a3
@@ -937,7 +937,7 @@ function set_outerBCs!(bc::BC, bulk::BulkConstrained, gauge::Gauge,
             Fx     = bulk.Fx[end,i,j]
             Fy     = bulk.Fy[end,i,j]
             Sd     = bulk.Sd[end,i,j]
-            B1d    = bulk.B1d[end,i,j]
+            Bd    = bulk.Bd[end,i,j]
             Gd     = bulk.Gd[end,i,j]
             A      = bulk.A[end,i,j]
 
@@ -956,8 +956,8 @@ function set_outerBCs!(bc::BC, bulk::BulkConstrained, gauge::Gauge,
 
             bc.Sd[i,j]  = Sd_inner_to_outer(Sd, u0, xi)
 
-            # B1d and Gd transform in the same way
-            bc.B1d[i,j] = Bd_inner_to_outer(B1d, u0)
+            # Bd and Gd transform in the same way
+            bc.Bd[i,j] = Bd_inner_to_outer(Bd, u0)
             bc.Gd[i,j]  = Bd_inner_to_outer(Gd, u0)
 
             bc.A[i,j]   = A_inner_to_outer(A, u0, xi)
@@ -981,9 +981,9 @@ function solve_nesteds!(bulkconstrains, bulkevols, boundary::Boundary, gauge::Ga
     vprint("INFO: bulkevols derivatives")
     @sync begin
         @inbounds for i in 1:Nsys
-            @spawn mul!(derivs[i].Du_B1,  systems[i].Du,  bulkevols[i].B1)
+            @spawn mul!(derivs[i].Du_B,  systems[i].Du,  bulkevols[i].B)
             @spawn mul!(derivs[i].Du_G,   systems[i].Du,  bulkevols[i].G)
-            @spawn mul!(derivs[i].Duu_B1, systems[i].Duu, bulkevols[i].B1)
+            @spawn mul!(derivs[i].Duu_B, systems[i].Duu, bulkevols[i].B)
             @spawn mul!(derivs[i].Duu_G,  systems[i].Duu, bulkevols[i].G)
         end
     end

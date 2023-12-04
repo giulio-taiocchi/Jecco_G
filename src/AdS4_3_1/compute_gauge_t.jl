@@ -70,25 +70,25 @@ function compute_xi_t!(gauge_t::Gauge, bulkconstrain::BulkConstrained,
 
     interp = sys.uinterp
 
-    B1_uAH      = cache.bulkhorizon.B1_uAH
+    B_uAH      = cache.bulkhorizon.B_uAH
     G_uAH       = cache.bulkhorizon.G_uAH
     S_uAH       = cache.bulkhorizon.S_uAH
     Fx_uAH      = cache.bulkhorizon.Fx_uAH
     Fy_uAH      = cache.bulkhorizon.Fy_uAH
     Sd_uAH      = cache.bulkhorizon.Sd_uAH
-    B1d_uAH     = cache.bulkhorizon.B1d_uAH
+    Bd_uAH     = cache.bulkhorizon.Bd_uAH
     Gd_uAH      = cache.bulkhorizon.Gd_uAH
     A_uAH       = cache.bulkhorizon.A_uAH
-    Du_B1_uAH   = cache.bulkhorizon.Du_B1_uAH
+    Du_B_uAH   = cache.bulkhorizon.Du_B_uAH
     Du_G_uAH    = cache.bulkhorizon.Du_G_uAH
     Du_S_uAH    = cache.bulkhorizon.Du_S_uAH
     Du_Fx_uAH   = cache.bulkhorizon.Du_Fx_uAH
     Du_Fy_uAH   = cache.bulkhorizon.Du_Fy_uAH
     Du_Sd_uAH   = cache.bulkhorizon.Du_Sd_uAH
-    Du_B1d_uAH  = cache.bulkhorizon.Du_B1d_uAH
+    Du_Bd_uAH  = cache.bulkhorizon.Du_Bd_uAH
     Du_Gd_uAH   = cache.bulkhorizon.Du_Gd_uAH
     Du_A_uAH    = cache.bulkhorizon.Du_A_uAH
-    Duu_B1_uAH  = cache.bulkhorizon.Duu_B1_uAH
+    Duu_B_uAH  = cache.bulkhorizon.Duu_B_uAH
     Duu_G_uAH   = cache.bulkhorizon.Duu_G_uAH
     Duu_S_uAH   = cache.bulkhorizon.Duu_S_uAH
     Duu_Fx_uAH  = cache.bulkhorizon.Duu_Fx_uAH
@@ -123,39 +123,39 @@ function compute_xi_t!(gauge_t::Gauge, bulkconstrain::BulkConstrained,
     u3 = uAH * uAH * uAH
     u4 = uAH * uAH * uAH * uAH
 
-    # take u-derivatives of Sd, B1d,and Gd. these are not needed in the
+    # take u-derivatives of Sd, Bd,and Gd. these are not needed in the
     # nested system, so they haven't been computed before. since we need them
     # here, compute them now
     @sync begin
         @spawn mul!(deriv.Du_Sd,  Du,  bulkconstrain.Sd)
-        @spawn mul!(deriv.Du_B1d, Du,  bulkconstrain.B1d)
+        @spawn mul!(deriv.Du_Bd, Du,  bulkconstrain.Bd)
         @spawn mul!(deriv.Du_Gd,  Du,  bulkconstrain.Gd)
     end
 
     # interpolate bulk functions (and u-derivatives) to the u=uAH surface
     @inbounds Threads.@threads for j in 1:Ny
         @inbounds for i in 1:Nx
-            B1_uAH[1,i,j]       = interp(view(bulk.B1,  :,i,j))(uAH)
+            B_uAH[1,i,j]       = interp(view(bulk.B,  :,i,j))(uAH)
             G_uAH[1,i,j]        = interp(view(bulk.G,   :,i,j))(uAH)
             S_uAH[1,i,j]        = interp(view(bulk.S,   :,i,j))(uAH)
             Fx_uAH[1,i,j]       = interp(view(bulk.Fx,  :,i,j))(uAH)
             Fy_uAH[1,i,j]       = interp(view(bulk.Fy,  :,i,j))(uAH)
             Sd_uAH[1,i,j]       = interp(view(bulk.Sd,  :,i,j))(uAH)
-            B1d_uAH[1,i,j]      = interp(view(bulk.B1d, :,i,j))(uAH)
+            Bd_uAH[1,i,j]      = interp(view(bulk.Bd, :,i,j))(uAH)
             Gd_uAH[1,i,j]       = interp(view(bulk.Gd,  :,i,j))(uAH)
             A_uAH[1,i,j]        = interp(view(bulk.A,   :,i,j))(uAH)
 
-            Du_B1_uAH[1,i,j]    = interp(view(deriv.Du_B1,  :,i,j))(uAH)
+            Du_B_uAH[1,i,j]    = interp(view(deriv.Du_B,  :,i,j))(uAH)
             Du_G_uAH[1,i,j]     = interp(view(deriv.Du_G,   :,i,j))(uAH)
             Du_S_uAH[1,i,j]     = interp(view(deriv.Du_S,   :,i,j))(uAH)
             Du_Fx_uAH[1,i,j]    = interp(view(deriv.Du_Fx,  :,i,j))(uAH)
             Du_Fy_uAH[1,i,j]    = interp(view(deriv.Du_Fy,  :,i,j))(uAH)
             Du_Sd_uAH[1,i,j]    = interp(view(deriv.Du_Sd,  :,i,j))(uAH)
-            Du_B1d_uAH[1,i,j]   = interp(view(deriv.Du_B1d, :,i,j))(uAH)
+            Du_Bd_uAH[1,i,j]   = interp(view(deriv.Du_Bd, :,i,j))(uAH)
             Du_Gd_uAH[1,i,j]    = interp(view(deriv.Du_Gd,  :,i,j))(uAH)
             Du_A_uAH[1,i,j]     = interp(view(deriv.Du_A,   :,i,j))(uAH)
 
-            Duu_B1_uAH[1,i,j]   = interp(view(deriv.Duu_B1,  :,i,j))(uAH)
+            Duu_B_uAH[1,i,j]   = interp(view(deriv.Duu_B,  :,i,j))(uAH)
             Duu_G_uAH[1,i,j]    = interp(view(deriv.Duu_G,   :,i,j))(uAH)
             Duu_S_uAH[1,i,j]    = interp(view(deriv.Duu_S,   :,i,j))(uAH)
             Duu_Fx_uAH[1,i,j]   = interp(view(deriv.Duu_Fx,  :,i,j))(uAH)
@@ -164,7 +164,7 @@ function compute_xi_t!(gauge_t::Gauge, bulkconstrain::BulkConstrained,
         end
     end
 
-    ind2D  = LinearIndices(B1_uAH[1,:,:])
+    ind2D  = LinearIndices(B_uAH[1,:,:])
 
     # coefficients of the derivative operators
     @fastmath @inbounds Threads.@threads for j in 1:Ny
@@ -178,29 +178,29 @@ function compute_xi_t!(gauge_t::Gauge, bulkconstrain::BulkConstrained,
             xi_yy = Dyy(gauge.xi, 1,i,j)
             xi_xy = Dx(Dy, gauge.xi, 1,i,j)
 
-            B1    = B1_uAH[1,i,j]
+            B    = B_uAH[1,i,j]
             G     = G_uAH[1,i,j]
             S     = S_uAH[1,i,j]
             Fx    = Fx_uAH[1,i,j]
             Fy    = Fy_uAH[1,i,j]
             Sd    = Sd_uAH[1,i,j]
-            B1d   = B1d_uAH[1,i,j]
+            Bd   = Bd_uAH[1,i,j]
             Gd    = Gd_uAH[1,i,j]
             A     = A_uAH[1,i,j]
 
             # r derivatives
 
-            B1p        = -u2 * Du_B1_uAH[1,i,j]
+            Bp        = -u2 * Du_B_uAH[1,i,j]
             Gp         = -u2 * Du_G_uAH[1,i,j]
             Sp         = -u2 * Du_S_uAH[1,i,j]
             Fxp        = -u2 * Du_Fx_uAH[1,i,j]
             Fyp        = -u2 * Du_Fy_uAH[1,i,j]
             Sdp        = -u2 * Du_Sd_uAH[1,i,j]
-            B1dp       = -u2 * Du_B1d_uAH[1,i,j]
+            Bdp       = -u2 * Du_Bd_uAH[1,i,j]
             Gdp        = -u2 * Du_Gd_uAH[1,i,j]
             Ap         = -u2 * Du_A_uAH[1,i,j]
 
-            B1pp       = 2*u3 * Du_B1_uAH[1,i,j]  + u4 * Duu_B1_uAH[1,i,j]
+            Bpp       = 2*u3 * Du_B_uAH[1,i,j]  + u4 * Duu_B_uAH[1,i,j]
             Gpp        = 2*u3 * Du_G_uAH[1,i,j]   + u4 * Duu_G_uAH[1,i,j]
             Spp        = 2*u3 * Du_S_uAH[1,i,j]   + u4 * Duu_S_uAH[1,i,j]
             Fxpp       = 2*u3 * Du_Fx_uAH[1,i,j]  + u4 * Duu_Fx_uAH[1,i,j]
@@ -209,34 +209,34 @@ function compute_xi_t!(gauge_t::Gauge, bulkconstrain::BulkConstrained,
 
             # x and y derivatives
 
-            B1_x    = Dx(B1_uAH,   1,i,j)
+            B_x    = Dx(B_uAH,   1,i,j)
             G_x     = Dx(G_uAH,    1,i,j)
             S_x     = Dx(S_uAH,    1,i,j)
             Fx_x    = Dx(Fx_uAH,   1,i,j)
             Fy_x    = Dx(Fy_uAH,   1,i,j)
             Sd_x    = Dx(Sd_uAH,   1,i,j)
-            B1d_x   = Dx(B1d_uAH,  1,i,j)
+            Bd_x   = Dx(Bd_uAH,  1,i,j)
             Gd_x    = Dx(Gd_uAH,   1,i,j)
             A_x     = Dx(A_uAH,    1,i,j)
 
-            B1_y    = Dy(B1_uAH,   1,i,j)
+            B_y    = Dy(B_uAH,   1,i,j)
             G_y     = Dy(G_uAH,    1,i,j)
             S_y     = Dy(S_uAH,    1,i,j)
             Fx_y    = Dy(Fx_uAH,   1,i,j)
             Fy_y    = Dy(Fy_uAH,   1,i,j)
             Sd_y    = Dy(Sd_uAH,   1,i,j)
-            B1d_y   = Dy(B1d_uAH,  1,i,j)
+            Bd_y   = Dy(Bd_uAH,  1,i,j)
             Gd_y    = Dy(Gd_uAH,   1,i,j)
             A_y     = Dy(A_uAH,    1,i,j)
 
-            B1p_x   = -u2 * Dx(Du_B1_uAH, 1,i,j)
+            Bp_x   = -u2 * Dx(Du_B_uAH, 1,i,j)
             Gp_x    = -u2 * Dx(Du_G_uAH,  1,i,j)
             Sp_x    = -u2 * Dx(Du_S_uAH,  1,i,j)
             Fxp_x   = -u2 * Dx(Du_Fx_uAH, 1,i,j)
             Fyp_x   = -u2 * Dx(Du_Fy_uAH, 1,i,j)
             Ap_x    = -u2 * Dx(Du_A_uAH,  1,i,j)
 
-            B1p_y   = -u2 * Dy(Du_B1_uAH, 1,i,j)
+            Bp_y   = -u2 * Dy(Du_B_uAH, 1,i,j)
             Gp_y    = -u2 * Dy(Du_G_uAH,  1,i,j)
             Sp_y    = -u2 * Dy(Du_S_uAH,  1,i,j)
             Fxp_y   = -u2 * Dy(Du_Fx_uAH, 1,i,j)
@@ -255,13 +255,13 @@ function compute_xi_t!(gauge_t::Gauge, bulkconstrain::BulkConstrained,
 
             vars =  (
                 kappa, xi, xi_x, xi_y, xi_xx, xi_yy, xi_xy,
-                B1   , G   ,  S    , Fx    , Fy    , Sd ,  B1d  , Gd,  phid, A   ,
-                B1p  , Gp  ,  Sp   , Fxp   , Fyp   , Sdp,  B1dp , Gdp,       Ap  ,
-                B1pp , Gpp ,        Spp  , Fxpp  , Fypp  ,                                App ,
-                B1_x , G_x ,  S_x  , Fx_x  , Fy_x  , Sd_x, B1d_x,  Gd_x,      A_x ,
-	        B1_y ,G_y ,  S_y  , Fx_y  , Fy_y  , Sd_y, B1d_y,  Gd_y,      A_y ,
-                B1p_x, Gp_x,        Sp_x , Fxp_x , Fyp_x ,                                Ap_x,
-                B1p_y, Gp_y,        Sp_y , Fxp_y , Fyp_y ,                                Ap_y,
+                B   , G   ,  S    , Fx    , Fy    , Sd ,  Bd  , Gd,  phid, A   ,
+                Bp  , Gp  ,  Sp   , Fxp   , Fyp   , Sdp,  Bdp , Gdp,       Ap  ,
+                Bpp , Gpp ,        Spp  , Fxpp  , Fypp  ,                                App ,
+                B_x , G_x ,  S_x  , Fx_x  , Fy_x  , Sd_x, Bd_x,  Gd_x,      A_x ,
+	        B_y ,G_y ,  S_y  , Fx_y  , Fy_y  , Sd_y, Bd_y,  Gd_y,      A_y ,
+                Bp_x, Gp_x,        Sp_x , Fxp_x , Fyp_x ,                                Ap_x,
+                Bp_y, Gp_y,        Sp_y , Fxp_y , Fyp_y ,                                Ap_y,
                                                           Fy_xx ,                                A_xx,
                                                   Fx_yy ,                                        A_yy,
                                                   Fx_xy , Fy_xy ,                                A_xy

@@ -4,10 +4,10 @@ function compute_bulkevolved_t!(bulkevol_t::BulkEvolved,
                                 bulkevol::BulkEvolved, boundary::Boundary,
                                 gauge::Gauge, sys::System, ::EvolTest0)
 
-    B1_t, G_t = unpack(bulkevol_t)
-    # B1  , G   = unpack(bulkevol)
+    B_t, G_t = unpack(bulkevol_t)
+    # B  , G   = unpack(bulkevol)
 
-    fill!(B1_t,  0)
+    fill!(B_t,  0)
     fill!(G_t,   0)
 
     nothing
@@ -26,7 +26,7 @@ function compute_bulkevolved_t!(bulkevol_t::BulkEvolved,
 
     Nu, Nx, Ny = size(sys)
 
-    B1_t, G_t= unpack(bulkevol_t)
+    B_t, G_t= unpack(bulkevol_t)
 
   
     # remaining inner grid points
@@ -38,20 +38,20 @@ function compute_bulkevolved_t!(bulkevol_t::BulkEvolved,
                 u      = uu[a]
                 u3     = u * u * u 
 
-                B1     = bulkevol.B1[a,i,j]
+                B     = bulkevol.B[a,i,j]
                 G      = bulkevol.G[a,i,j]
 
-                B1d    = bulkconstrain.B1d[a,i,j]
+                Bd    = bulkconstrain.Bd[a,i,j]
                 Gd     = bulkconstrain.Gd[a,i,j]
                 A      = bulkconstrain.A[a,i,j]
 
-                B1_u   = Du(bulkevol.B1, a,i,j)
+                B_u   = Du(bulkevol.B, a,i,j)
                 G_u    = Du(bulkevol.G,  a,i,j)
 
-		B1_t[a,i,j] = B1_u *
+		B_t[a,i,j] = B_u *
                                (-2 * u * u * xi_t + A * u3 +
                                 (xi * u + 1) * (xi * u + 1))/2 +
-                                B1d
+                                Bd
 
 		G_t[a,i,j] = G1_u *
                                (-2 * u * u * xi_t + A * u3 +
@@ -77,7 +77,7 @@ function compute_bulkevolved_t!(bulkevol_t::BulkEvolved,
 
     Nu, Nx, Ny = size(sys)
 
-    B1_t, G_t = unpack(bulkevol_t)
+    B_t, G_t = unpack(bulkevol_t)
 
     @fastmath @inbounds for j in 1:Ny
         @inbounds for i in 1:Nx
@@ -86,14 +86,14 @@ function compute_bulkevolved_t!(bulkevol_t::BulkEvolved,
                 u      = uu[a]
                 u2     = u * u
 
-                B1d    = bulkconstrain.B1d[a,i,j]
+                Bd    = bulkconstrain.Bd[a,i,j]
                 Gd     = bulkconstrain.Gd[a,i,j]
                 A      = bulkconstrain.A[a,i,j]
 
-                B1_u   = Du(bulkevol.B1, a,i,j)
+                B_u   = Du(bulkevol.B, a,i,j)
                 G_u    = Du(bulkevol.G,  a,i,j)
 
-		B1_t[a,i,j] = B1d + u2 * (A/2 - xi_t) * B1_u
+		B_t[a,i,j] = Bd + u2 * (A/2 - xi_t) * B_u
 		G_t[a,i,j]  = Gd  + u2 * (A/2 - xi_t) * G_u
             end
         end
@@ -121,8 +121,8 @@ function sync_bulkevolved!(bulkevol1_t::BulkEvolved, bulkevol2_t::BulkEvolved,
 
     _, Nx, Ny = size(sys2)
 
-    B11_t, G1_t = unpack(bulkevol1_t)
-    B12_t, G2_t = unpack(bulkevol2_t)
+    B1_t, G1_t = unpack(bulkevol1_t)
+    B2_t, G2_t = unpack(bulkevol2_t)
 
     @fastmath @inbounds for j in 1:Ny
         @inbounds for i in 1:Nx
@@ -136,10 +136,10 @@ function sync_bulkevolved!(bulkevol1_t::BulkEvolved, bulkevol2_t::BulkEvolved,
             # if c < 0, mode is entering grid2 from grid1.
             # we assume here that grids merely touch at the interface
             if c > 0
-                B11_t[end,i,j]  = B12_t[1,i,j]
+                B1_t[end,i,j]  = B2_t[1,i,j]
                 G1_t[end,i,j]   = G2_t[1,i,j]
             elseif c < 0
-                B12_t[1,i,j]  = B11_t[end,i,j]
+                B2_t[1,i,j]  = B1_t[end,i,j]
                 G2_t[1,i,j]   = G1_t[end,i,j]
             end
         end
@@ -158,8 +158,8 @@ function sync_bulkevolved!(bulkevol1_t::BulkEvolved, bulkevol2_t::BulkEvolved,
 
     _, Nx, Ny = size(sys2)
 
-    B11_t, G1_t = unpack(bulkevol1_t)
-    B12_t, G2_t = unpack(bulkevol2_t)
+    B1_t, G1_t = unpack(bulkevol1_t)
+    B2_t, G2_t = unpack(bulkevol2_t)
 
     @fastmath @inbounds for j in 1:Ny
         @inbounds for i in 1:Nx
@@ -173,10 +173,10 @@ function sync_bulkevolved!(bulkevol1_t::BulkEvolved, bulkevol2_t::BulkEvolved,
             # if c < 0, mode is entering grid2 from grid1.
             # we assume here that grids merely touch at the interface
             if c > 0
-                B11_t[end,i,j]  = B12_t[1,i,j] / u03
+                B1_t[end,i,j]  = B2_t[1,i,j] / u03
                 G1_t[end,i,j]   = G2_t[1,i,j] / u03
             elseif c < 0
-                B12_t[1,i,j]  = u03 * B11_t[end,i,j]
+                B2_t[1,i,j]  = u03 * B1_t[end,i,j]
                 G2_t[1,i,j]   = u03 * G1_t[end,i,j]
             end
         end

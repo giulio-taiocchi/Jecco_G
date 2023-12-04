@@ -3,11 +3,11 @@
 
 We use these macros as shorthand notation. For instance
 
-  @tilde_inner("B1")
+  @tilde_inner("B")
 
 should expand to
 
-  B1t = B1_x -  (Fx * u + xi_x) * B1p
+  Bt = B_x -  (Fx * u + xi_x) * Bp
 
 etc.
 
@@ -69,7 +69,7 @@ x4 = (-B * x3 + Bp) ^ 2 * cosh(G * u ^ 3) ^ 2
 ABCS[1] = 4 * x0
 ABCS[2] = 24 * x1
 ABCS[3] = x2 * (9 * G ^ 2 * x0 - 6 * G * Gp * x1 + Gp ^ 2 * x2 + x2 * x4 + 24)
-ABCS[4] = x0 * (x4 + (-G * x3 + Gp) ^ 2) * (xi + 1 / u)
+ABCS[4] = - (x0 * (x4 + (-G * x3 + Gp) ^ 2) * (xi + 1 / u))
 
     nothing
 end
@@ -77,7 +77,7 @@ end
 
 # this is a coupled equation for Fx and Fy. the notation used is
 #
-# ( A11 d_uu Fx + A12 d_uu Fy + B11 d_u Fx + B12 d_u Fy + C11 Fx + C12 Fy ) = -S1
+# ( A11 d_uu Fx + A12 d_uu Fy + B d_u Fx + B2 d_u Fy + C11 Fx + C12 Fy ) = -S1
 # ( A21 d_uu Fx + A22 d_uu Fy + B21 d_u Fx + B22 d_u Fy + C21 Fx + C22 Fy ) = -S2
 
 function Fxy_eq_coeff!(AA::Matrix, BB::Matrix, CC::Matrix, SS::Vector, vars::Tuple, ::Inner)
@@ -88,8 +88,8 @@ function Fxy_eq_coeff!(AA::Matrix, BB::Matrix, CC::Matrix, SS::Vector, vars::Tup
         Bpp   ,        Gpp    ,       Spp    ,
         B_x   ,        G_x    ,       S_x    ,
         B_y   ,        G_y    ,       S_y    ,
-        B1p_x  ,        Gp_x   ,       Sp_x   ,
-        B1p_y  ,        Gp_y   ,       Sp_y   ,
+        Bp_x  ,        Gp_x   ,       Sp_x   ,
+        Bp_y  ,        Gp_y   ,       Sp_y   ,
     ) = vars
 
     u2 = u*u
@@ -100,12 +100,6 @@ function Fxy_eq_coeff!(AA::Matrix, BB::Matrix, CC::Matrix, SS::Vector, vars::Tup
     u6 = u3*u3
     u8 = u4*u4
 
-    expB1u4  = exp(*(B1, u4))
-    cosh2Gu4 = cosh(*(2, G, u4))
-    sinh2Gu4 = sinh(*(2, G, u4))
-
-    coshGu4sq = cosh(*(G, u4)) ^ 2
-    sinhGu4sq = sinh(*(G, u4)) ^ 2
 
 
     x0 = u ^ 3
@@ -287,14 +281,14 @@ BB[1,1] = x21 * (x19 + 8)
 BB[1,2] = -x28 * x30
 CC[1,1] = x20 * (15 * B * x29 * x35 + 36 * B * x40 + 27 * B * x50 * x61 + 9 * B * x8 - Bp * x0 * x36 - Bp * x32 - Bp * x40 * x58 - 10 * S * x37 + u * x36 + 24 * x1 * xi + x17 * x82 * x83 - x31 * x45 + x31 - 12 * x33 + 48 * x34 - x37 * x38 + x39 * x49 - x39 * x55 - x41 * x9 - 6 * x43 + 32 * x44 + x46 * x47 + x49 * x72 + x49 * x73 - 8 * x50 * x53 + 12 * x51 - 6 * x53 * x54 + 42 * x54 * x57 - x55 * x63 + x57 * x62 + x57 * x64 - x58 * x60 - x58 * x65 - 12 * x59 + x62 * x63 + x62 * x69 + x63 * x64 + x64 * x69 - x66 * x67 - x66 * x70 - x67 * x68 - x68 * x70 + x71 * x72 + x71 * x73 - 6 * x75)
 CC[1,2] = -x90 * (Gp * x1 * x84 - 4 * Gp * (2 * x3 + 4 * x4 + 1) + x24 * x88 + x26 * (-Bp * x89 + x13 * x88) - x86)
-SS[1] = Bh * x112 + Bp * x117 - Bp * x127 * x27 + Bph * x101 + Bpp * x104 - Bpp * x123 - Gh * x94 - Gp * x94 * xi_y + Gph * x91 + Gpp * x92 - Spp * x97 - Spt * x2 * x95 + x102 * x103 + x103 * x99 - x104 * x134 + x105 * x96 - x106 * x96 + x107 * x14 * x30 - 3 * x107 * x93 - x113 * x114 + x116 * x96 + x117 * x14 + x117 * x85 - x119 * x92 - x121 * x122 + x123 * x134 + x124 * x125 + x125 * x14 * x150 + x126 * x97 + x127 * x129 + x130 * x85 - x131 * x18 + x132 * x133 + x135 * x136 + x135 * x147 + x138 * x156 + x138 - x139 * x141 - x141 * x148 - x143 * x156 - x143 - x145 * x96 + x151 * x96 + x152 * x153 + x152 * x155 + x152 * x157 + x96 * x99
+SS[1] = -(Bh * x112 + Bp * x117 - Bp * x127 * x27 + Bph * x101 + Bpp * x104 - Bpp * x123 - Gh * x94 - Gp * x94 * xi_y + Gph * x91 + Gpp * x92 - Spp * x97 - Spt * x2 * x95 + x102 * x103 + x103 * x99 - x104 * x134 + x105 * x96 - x106 * x96 + x107 * x14 * x30 - 3 * x107 * x93 - x113 * x114 + x116 * x96 + x117 * x14 + x117 * x85 - x119 * x92 - x121 * x122 + x123 * x134 + x124 * x125 + x125 * x14 * x150 + x126 * x97 + x127 * x129 + x130 * x85 - x131 * x18 + x132 * x133 + x135 * x136 + x135 * x147 + x138 * x156 + x138 - x139 * x141 - x141 * x148 - x143 * x156 - x143 - x145 * x96 + x151 * x96 + x152 * x153 + x152 * x155 + x152 * x157 + x96 * x99)
 AA[2,1] = 0
 AA[2,2] = x7
 BB[2,1] = x149 * x158
 BB[2,2] = -x93 * (x19 - 8)
 CC[2,1] = x2 * x90 * (2 * Gp * x79 - x24 * x81 + x26 * x82 - x86)
 CC[2,2] = x142 * (x120 * x83 * (Bp * x89 - x13 * x88) - x159 * x45 + x159 - x160 * x66 - x160 * x68 + x161 * x72 + x161 * x73 + x32 * x35 - 6 * x33 + 24 * x34 - x41 * x60 - x41 * x65 - 3 * x43 + 16 * x44 + x47 * x48 + x49 * x57 + x49 * x63 + x49 * x69 + 6 * x51 - 6 * x59 + 3 * x75)
-SS[2] = -Bp * x157 - Bp * x74 * x96 + Bph * x121 + Bpp * x165 - Bpp * x167 - Bt * x110 * x150 - Gp * x124 * xi_x + Gpp * x164 + Gpt * x2 * x91 - Gt * x124 - Sph * x95 - Spp * x162 - x101 * x122 + x102 * x163 + x105 * xi_y - x106 * xi_y + x111 * x14 * x166 - x113 * x132 + x114 * x133 + x116 * xi_y + x117 * x170 - x119 * x164 + x126 * x162 + x129 * x154 + x130 * x170 + x131 * x170 - x134 * x165 + x134 * x167 - x135 * x139 - x135 * x148 + x136 * x171 + x14 * x149 * x168 - x14 * x157 - x145 * xi_y + x147 * x171 + x151 * xi_y + x153 * x18 + x155 * x18 - x156 * x169 + x156 * x172 + x157 * x18 + x163 * x99 - x166 * x94 + 3 * x168 * x21 - x169 + x172 + xi_y * (x115 - x77 + 4)
+SS[2] = -(-Bp * x157 - Bp * x74 * x96 + Bph * x121 + Bpp * x165 - Bpp * x167 - Bt * x110 * x150 - Gp * x124 * xi_x + Gpp * x164 + Gpt * x2 * x91 - Gt * x124 - Sph * x95 - Spp * x162 - x101 * x122 + x102 * x163 + x105 * xi_y - x106 * xi_y + x111 * x14 * x166 - x113 * x132 + x114 * x133 + x116 * xi_y + x117 * x170 - x119 * x164 + x126 * x162 + x129 * x154 + x130 * x170 + x131 * x170 - x134 * x165 + x134 * x167 - x135 * x139 - x135 * x148 + x136 * x171 + x14 * x149 * x168 - x14 * x157 - x145 * xi_y + x147 * x171 + x151 * xi_y + x153 * x18 + x155 * x18 - x156 * x169 + x156 * x172 + x157 * x18 + x163 * x99 - x166 * x94 + 3 * x168 * x21 - x169 + x172 + xi_y * (x115 - x77 + 4))
 
 
     nothing
@@ -457,7 +451,7 @@ x106 = -x0 * x105 + x50 * x92
 ABCS[1] = 0
 ABCS[2] = -x2 ^ 3 * x5
 ABCS[3] = x2 ^ 2 * x4 * (8 * Sp * u - x6 - 24 * x8)
-ABCS[4] = -12 * x10 ^ 4 * x4 + x10 * x4 * (x26 * (-x53 * x76 - x75 * x78) + x29 * (x65 * (8 * x30 + 8 * xi_x) - 8 * x7 * (Sc + x20 * x79 + x31 * x61 + x31 * x62) + x81 * (8 * x19 + x28) + x82 * (-8 * x1 + 4 * x13 + 4) - 8 * xi_xy)) + x10 * (x24 * x29 * (4 * x48 - x51 * (4 * x19 + 4 * xi_y)) - x26 * (x15 * x68 - x63 * (Spp * x59 + Ss + x60 * x62) + x65 * x66 + x66 * (-x20 * x70 - x64) + x74 * x75 - 4 * xi_yy)) + x11 * x12 + x11 * x5 * x9 + x12 * x14 * x16 * x9 + x16 * (x26 * (x42 ^ 2 - x43 * (Bpp * x59 + Bs + x60 * x98) + x44 * x67 + x45 * x60 + 2 * x53 ^ 2 - x60 * x99 + x60 * (-x100 * x20 - x99) + x68 * x96 + 2 * x74 ^ 2 + x74 * (2 * Fyp * u - 2 * x40) - x97 * (Fyph + Fypp * x20)) + x29 * (2 * x0 * (Gpp * x59 + Gs + x60 * x84) - x60 * x86 - x60 * (-x20 * x89 - x85) - x68 * x95 - (2 * x48 - 2 * x52) * (2 * x0 * x71 - x20 * x96 - x41))) + x18 * xi ^ 2 + x18 / x7 - x24 ^ 2 * x27 + x26 * x58 * (-x43 * (Gc + x20 * x87 + x31 * x83 + x31 * x84) + x51 * x82 + x53 * (-x38 - x94) + x57 * x86 + x60 * x91 + x78 * (x0 * x71 - x41 - x73)) + x29 * x58 * (u * (Fxph + Fxpp * x20) + u * (Fypp * x31 + Fypt) - x20 * x46 - x31 * x45 - x35 * x7 - x36 * x7 - x39 * x42 - x53 * (-x51 * x57 + x56)) + x34 * x4 * (8 * x22 - 8 * x23 + x28) + (x10 * (x26 * (x102 * x80 - x102 * x81 - x104 * x15 + x63 * (Sb - Spp * x101 + x57 * x79) + x76 * x94 + 4 * xi_xx) + x34 * (-x51 * (4 * x30 + 4 * xi_x) + 4 * x55)) + x16 * (x26 * (x103 * x44 - x104 * x96 + x106 * x57 + x39 ^ 2 + x43 * (B2 - Bpp * x101 + x105 * x57) + x46 * x57 - x57 * (-x100 * x31 - x106) + 2 * x78 ^ 2 + 2 * x94 ^ 2 - x94 * (2 * Fxp * u - 2 * x37) - x97 * (Fxpp * x31 + Fxpt)) + x29 * (2 * x0 * (Gb - Gpp * x101 + x57 * x87) - x104 * x95 + x57 * x90 - x57 * x91 + (x56 - 2 * x77) * (-x31 * x96 + x38 + 2 * x93))) - x27 * x33 ^ 2) * exp(2 * x3)
+ABCS[4] = -(-12 * x10 ^ 4 * x4 + x10 * x4 * (x26 * (-x53 * x76 - x75 * x78) + x29 * (x65 * (8 * x30 + 8 * xi_x) - 8 * x7 * (Sc + x20 * x79 + x31 * x61 + x31 * x62) + x81 * (8 * x19 + x28) + x82 * (-8 * x1 + 4 * x13 + 4) - 8 * xi_xy)) + x10 * (x24 * x29 * (4 * x48 - x51 * (4 * x19 + 4 * xi_y)) - x26 * (x15 * x68 - x63 * (Spp * x59 + Ss + x60 * x62) + x65 * x66 + x66 * (-x20 * x70 - x64) + x74 * x75 - 4 * xi_yy)) + x11 * x12 + x11 * x5 * x9 + x12 * x14 * x16 * x9 + x16 * (x26 * (x42 ^ 2 - x43 * (Bpp * x59 + Bs + x60 * x98) + x44 * x67 + x45 * x60 + 2 * x53 ^ 2 - x60 * x99 + x60 * (-x100 * x20 - x99) + x68 * x96 + 2 * x74 ^ 2 + x74 * (2 * Fyp * u - 2 * x40) - x97 * (Fyph + Fypp * x20)) + x29 * (2 * x0 * (Gpp * x59 + Gs + x60 * x84) - x60 * x86 - x60 * (-x20 * x89 - x85) - x68 * x95 - (2 * x48 - 2 * x52) * (2 * x0 * x71 - x20 * x96 - x41))) + x18 * xi ^ 2 + x18 / x7 - x24 ^ 2 * x27 + x26 * x58 * (-x43 * (Gc + x20 * x87 + x31 * x83 + x31 * x84) + x51 * x82 + x53 * (-x38 - x94) + x57 * x86 + x60 * x91 + x78 * (x0 * x71 - x41 - x73)) + x29 * x58 * (u * (Fxph + Fxpp * x20) + u * (Fypp * x31 + Fypt) - x20 * x46 - x31 * x45 - x35 * x7 - x36 * x7 - x39 * x42 - x53 * (-x51 * x57 + x56)) + x34 * x4 * (8 * x22 - 8 * x23 + x28) + (x10 * (x26 * (x102 * x80 - x102 * x81 - x104 * x15 + x63 * (Sb - Spp * x101 + x57 * x79) + x76 * x94 + 4 * xi_xx) + x34 * (-x51 * (4 * x30 + 4 * xi_x) + 4 * x55)) + x16 * (x26 * (x103 * x44 - x104 * x96 + x106 * x57 + x39 ^ 2 + x43 * (B2 - Bpp * x101 + x105 * x57) + x46 * x57 - x57 * (-x100 * x31 - x106) + 2 * x78 ^ 2 + 2 * x94 ^ 2 - x94 * (2 * Fxp * u - 2 * x37) - x97 * (Fxpp * x31 + Fxpt)) + x29 * (2 * x0 * (Gb - Gpp * x101 + x57 * x87) - x104 * x95 + x57 * x90 - x57 * x91 + (x56 - 2 * x77) * (-x31 * x96 + x38 + 2 * x93))) - x27 * x33 ^ 2) * exp(2 * x3))
     
 
     nothing
@@ -466,12 +460,12 @@ end
 
 
 
-# this is another coupled equation, for B1d and Gd. the notation used is
+# this is another coupled equation, for Bd and Gd. the notation used is
 #
-# ( A11 d_uu B1d + A12 d_uu Gd + B11 d_u B1d + B12 d_u Gd + C11 B1d + C12 Gd ) = -S1
-# ( A21 d_uu B1d + A22 d_uu Gd + B21 d_u B1d + B22 d_u Gd + C21 B1d + C22 Gd ) = -S2
+# ( A11 d_uu Bd + A12 d_uu Gd + B d_u Bd + B2 d_u Gd + C11 Bd + C12 Gd ) = -S1
+# ( A21 d_uu Bd + A22 d_uu Gd + B21 d_u Bd + B22 d_u Gd + C21 Bd + C22 Gd ) = -S2
 
-function B1dGd_eq_coeff!(AA::Matrix, BB::Matrix, CC::Matrix, SS::Vector, vars::Tuple, ::Inner)
+function BdGd_eq_coeff!(AA::Matrix, BB::Matrix, CC::Matrix, SS::Vector, vars::Tuple, ::Inner)
     (
         u, xi, xi_x, xi_y, xi_xx, xi_yy, xi_xy,
         B     ,       G      ,        S      ,    Fx     ,    Fy     ,  Sd,
@@ -586,14 +580,14 @@ BB[1,1] = -x3 * x9
 BB[1,2] = 0
 CC[1,1] = -x10 * x3 * (x15 * x7 * (-Gp + x12) + x17)
 CC[1,2] = x15 * x18 * x3
-SS[1] = x0 * x19 * x52 * x7 * (-Fxh * Gp + Fxp * Gh - Fyp * Gt + Fyt * Gp - Gh * x38 + Gt * x21 + x33 * (-Fx * Gp + 3 * Fxp * G) + x46 * x47 - x47 * x48 - x49 * x50 + x50 * x51 + xi_x * (-Fyp * x12 + Gp * x21)) - x19 * x22 * x29 * x30 + x19 * x32 * x35 + x19 * x36 * (x30 * x42 - 2 * x45) - x31 * (12 * B * u - 4 * Bp)
+SS[1] = -(x0 * x19 * x52 * x7 * (-Fxh * Gp + Fxp * Gh - Fyp * Gt + Fyt * Gp - Gh * x38 + Gt * x21 + x33 * (-Fx * Gp + 3 * Fxp * G) + x46 * x47 - x47 * x48 - x49 * x50 + x50 * x51 + xi_x * (-Fyp * x12 + Gp * x21)) - x19 * x22 * x29 * x30 + x19 * x32 * x35 + x19 * x36 * (x30 * x42 - 2 * x45) - x31 * (12 * B * u - 4 * Bp))
 AA[2,1] = 0
 AA[2,2] = 0
 BB[2,1] = 0
 BB[2,2] = -x52 * x9
 CC[2,1] = -x18 * x2 * x24 * sinh(2 * x14)
 CC[2,2] = -x10 * x17 * x52
-SS[2] = -x13 * x52 * x55 * (Fx * Sh * x13 - Fxp * x23 + 4 * Fy * S * x57 + Fy * St * x13 - Fy * x43 - Fyp * x40 + x22 * x41 + x26 * x39 - x27 * x49 - x27 * x51 + x49 + x51) + x2 * x32 * x55 * (-Bh * Fxp * x0 + Bh * x57 - Bt * Fy * x56 + Bt * Fyp * x0 + 5 * Fx * Fy * x0 + Fxh * x58 - Fxh * x60 + Fxp * Fyp * u - Fxph - Fypt - Fyt * x58 + Fyt * x60 - x24 * x49 - x24 * x51 + x33 * (Bp * Fx * x0 - Fxp * x62 - Fxp + x43) - x44 * (-Fyp * x62 + Fyp + x21 * (Bp * x13 - 2)) + x46 + x48 + x49 * x61 - x51 * x61) + x22 * x29 * x53 * x54 + x31 * (-6 * G * u + 2 * Gp) - x35 * x53 * x7 + x36 * x53 * (x42 * x54 - x45)
+SS[2] = -(-x13 * x52 * x55 * (Fx * Sh * x13 - Fxp * x23 + 4 * Fy * S * x57 + Fy * St * x13 - Fy * x43 - Fyp * x40 + x22 * x41 + x26 * x39 - x27 * x49 - x27 * x51 + x49 + x51) + x2 * x32 * x55 * (-Bh * Fxp * x0 + Bh * x57 - Bt * Fy * x56 + Bt * Fyp * x0 + 5 * Fx * Fy * x0 + Fxh * x58 - Fxh * x60 + Fxp * Fyp * u - Fxph - Fypt - Fyt * x58 + Fyt * x60 - x24 * x49 - x24 * x51 + x33 * (Bp * Fx * x0 - Fxp * x62 - Fxp + x43) - x44 * (-Fyp * x62 + Fyp + x21 * (Bp * x13 - 2)) + x46 + x48 + x49 * x61 - x51 * x61) + x22 * x29 * x53 * x54 + x31 * (-6 * G * u + 2 * Gp) - x35 * x53 * x7 + x36 * x53 * (x42 * x54 - x45))
     
     nothing
 end
@@ -603,7 +597,7 @@ end
 function A_eq_coeff!(ABCS::Vector, vars::Tuple, ::Inner)
     (
         potential, u, xi, xi_x, xi_y, xi_xx, xi_yy, xi_xy,
-        B   ,  G   ,  S    , Fx    , Fy    , Sd, B1d, Gd,
+        B   ,  G   ,  S    , Fx    , Fy    , Sd, Bd, Gd,
         Bp  ,  Gp  ,  Sp   , Fxp   , Fyp   ,
         Bpp ,  Gpp ,  Spp  , Fxpp  , Fypp  ,
         B_x ,  G_x ,  S_x  , Fx_x  , Fy_x  ,
@@ -781,7 +775,7 @@ x132 = 3 * Bt
 ABCS[1] = x7 * x8
 ABCS[2] = 8 * x7
 ABCS[3] = x10 * x7
-ABCS[4] = 4 * x13 ^ 4 * x2 + x13 * (4 * u * x20 * (Bh * Fy * x43 + Bh * x32 - Fyh * x16 + Fyh * x33 + Fyh - Spp * x34 * x48 - Ss * u + u * x50 * xi_yy + x34 * x40 - x34 * x47 + x35 - x37 - x38 * x39 + x39 * x41 * x42 - 3 * x46 + x52 * x54 - x55 * x8 * (-S * x56 + Spp + 3 * x12) + x67 * (Bh * x59 + Fy * (-x61 - x62 + x64 + x66) + x32 * x42 - x57)) - x18 * x28 * x31) + x18 ^ 2 * x22 + x2 * (-8 * x106 * x11 * x18 * x29 + x13 ^ 2 * (x20 * x48 * (Fxh * x26 - Fxh * x69 - Fy * Gt * x56 + Fyt * x26 - Fyt * x69 + 2 * Gc + Gh * x110 + 3 * Gh * x122 - 2 * Gp * x127 - Gp * x130 - Gt * x30 * x42 * xi_y - Gt * x36 + x121 * x67 + x121 * x71 - x124 * x131 * x44 + x125 * x83 + 30 * x126 * x78 + 27 * x128 * x19 + x129 * x70 + x129 * x84 + x132 * x77 + x132 * x78 * xi_y + xi_x * (u * (27 * Fy * x25 + Gh * x62 - Gp * x89 - x131 * x19 + x70 + x84) + xi_y * (24 * x25 + x83)) - xi_xy * (2 * Gp - 6 * x87)) + x29 * (x108 * x28 * x41 + x92 * (-Fxp + x123) * (Fyp - x89)) + (Sd * x48 + x4 ^ 2) * (8 * S * x0 - 4 * x33 - 4) / x11) - x6 * x8 * (-Bd * x20 ^ 2 * x97 - Gd * x73) + (u * x29 * (16 * Fx * S * x76 + Fxh * x16 - Fxh * x33 - Fxh + Fy * St * x38 + Fyt * x16 - Fyt * x33 - Fyt + 14 * S * x128 * x30 + Sc * x8 + Sh * x112 - Sp * x0 * x128 - Sp * x126 * x58 + 4 * St * x11 * xi_y + x119 * (Fy * (-x33 + x61 + x65 - 1) + x57 + xi_y * (12 * x12 + x60)) - x125 - x126 * x92 + x127 * x60 + x130 * x60 - x50 * x8 * xi_xy) + x20 * x30 * (x106 * x27 + x108 * x18)) * (x10 + 4 * x12 + 4 * xi)) + x68 * (-x20 * (B * Bh * x94 + Bh ^ 2 * x58 - Bs * x8 - Fyh * x91 + Fyh * x93 - Fyp ^ 2 + 2 * Fyp * x89 + G * Gh * x94 + Gh ^ 2 * x58 - x0 * x34 * x96 + x100 * x52 + x102 * x52 + x34 * x95 - x35 - 12 * x37 - 30 * x46 - x55 * (24 * B * x0 + 4 * Bpp * u - x104) + x92 * xi_y * (-27 * B * x71 + Bp * x89 - Fy * x96 + x100 * x76 + x102 * x76 + x19 * x70 + x75 * x85) + x98 * xi_yy) + x90 * (Fy * x45 * x70 - Fyh * x26 + Fyh * x69 + 2 * Gh * x36 - Gs + x34 * x74 - x34 * x79 + x34 * x82 - x35 * x80 - x55 * (12 * x25 - x45 * x81 + x80) + x67 * (x19 * x75 + x70 * x85 - x84 + x89 * (Gp + x88 * (x86 - 3))) - x70 * x71 + x73 * xi_yy + x75 * x77)) + (x106 ^ 2 * x22 + x13 * (-u * x21 * (Bt * Fx * x43 + Bt * x109 + Fxt * x16 - Fxt * x33 - Fxt + Sb * u + St * x112 + 3 * St * x115 * x41 + u * x49 * xi_xx - x111 - x113 * x40 + x113 * x47 - x113 * x56 + x114 + x116 * x54 + x117 * x118 * x3 + x119 * (Bt * x59 - Fx * (x62 - x64 + x66) + 4 * x105 + x109 * x42)) - 4 * x106 * x108 * x31) + x68 * (-x20 * (B2 * x8 + Bt ^ 2 * x58 + Bt * x115 * x63 - Fxp ^ 2 + 2 * Fxp * x123 + Fxt * x91 - Fxt * x93 + Gt ^ 2 * x58 + Gt * x124 * x63 + x100 * x116 + x102 * x116 + 12 * x111 + 30 * x113 * x45 - x113 * x95 + x114 + x117 * (24 * x1 + x104) + x92 * xi_x * (Bt * x118 + u * (-Bp * Fx + 3 * u * (G * x107 * x8 + x0 * x120 * x99 + 9 * x115))) - x98 * xi_xx) - x90 * (Bt * G * x120 * x44 + Fxt * x26 - Fxt * x69 + Gb + Gt * x11 * x120 + 2 * Gt * x110 - x113 * x74 + x113 * x79 + x113 * x82 + 6 * x117 * x25 * (x62 + 2) + x119 * (6 * Bt * x19 + Gt * x118 + x123 * (x72 + x88 * (x86 + 3))) + x121 * x122 - x73 * xi_xx))) * exp(2 * x1)
+ABCS[4] = -(4 * x13 ^ 4 * x2 + x13 * (4 * u * x20 * (Bh * Fy * x43 + Bh * x32 - Fyh * x16 + Fyh * x33 + Fyh - Spp * x34 * x48 - Ss * u + u * x50 * xi_yy + x34 * x40 - x34 * x47 + x35 - x37 - x38 * x39 + x39 * x41 * x42 - 3 * x46 + x52 * x54 - x55 * x8 * (-S * x56 + Spp + 3 * x12) + x67 * (Bh * x59 + Fy * (-x61 - x62 + x64 + x66) + x32 * x42 - x57)) - x18 * x28 * x31) + x18 ^ 2 * x22 + x2 * (-8 * x106 * x11 * x18 * x29 + x13 ^ 2 * (x20 * x48 * (Fxh * x26 - Fxh * x69 - Fy * Gt * x56 + Fyt * x26 - Fyt * x69 + 2 * Gc + Gh * x110 + 3 * Gh * x122 - 2 * Gp * x127 - Gp * x130 - Gt * x30 * x42 * xi_y - Gt * x36 + x121 * x67 + x121 * x71 - x124 * x131 * x44 + x125 * x83 + 30 * x126 * x78 + 27 * x128 * x19 + x129 * x70 + x129 * x84 + x132 * x77 + x132 * x78 * xi_y + xi_x * (u * (27 * Fy * x25 + Gh * x62 - Gp * x89 - x131 * x19 + x70 + x84) + xi_y * (24 * x25 + x83)) - xi_xy * (2 * Gp - 6 * x87)) + x29 * (x108 * x28 * x41 + x92 * (-Fxp + x123) * (Fyp - x89)) + (Sd * x48 + x4 ^ 2) * (8 * S * x0 - 4 * x33 - 4) / x11) - x6 * x8 * (-Bd * x20 ^ 2 * x97 - Gd * x73) + (u * x29 * (16 * Fx * S * x76 + Fxh * x16 - Fxh * x33 - Fxh + Fy * St * x38 + Fyt * x16 - Fyt * x33 - Fyt + 14 * S * x128 * x30 + Sc * x8 + Sh * x112 - Sp * x0 * x128 - Sp * x126 * x58 + 4 * St * x11 * xi_y + x119 * (Fy * (-x33 + x61 + x65 - 1) + x57 + xi_y * (12 * x12 + x60)) - x125 - x126 * x92 + x127 * x60 + x130 * x60 - x50 * x8 * xi_xy) + x20 * x30 * (x106 * x27 + x108 * x18)) * (x10 + 4 * x12 + 4 * xi)) + x68 * (-x20 * (B * Bh * x94 + Bh ^ 2 * x58 - Bs * x8 - Fyh * x91 + Fyh * x93 - Fyp ^ 2 + 2 * Fyp * x89 + G * Gh * x94 + Gh ^ 2 * x58 - x0 * x34 * x96 + x100 * x52 + x102 * x52 + x34 * x95 - x35 - 12 * x37 - 30 * x46 - x55 * (24 * B * x0 + 4 * Bpp * u - x104) + x92 * xi_y * (-27 * B * x71 + Bp * x89 - Fy * x96 + x100 * x76 + x102 * x76 + x19 * x70 + x75 * x85) + x98 * xi_yy) + x90 * (Fy * x45 * x70 - Fyh * x26 + Fyh * x69 + 2 * Gh * x36 - Gs + x34 * x74 - x34 * x79 + x34 * x82 - x35 * x80 - x55 * (12 * x25 - x45 * x81 + x80) + x67 * (x19 * x75 + x70 * x85 - x84 + x89 * (Gp + x88 * (x86 - 3))) - x70 * x71 + x73 * xi_yy + x75 * x77)) + (x106 ^ 2 * x22 + x13 * (-u * x21 * (Bt * Fx * x43 + Bt * x109 + Fxt * x16 - Fxt * x33 - Fxt + Sb * u + St * x112 + 3 * St * x115 * x41 + u * x49 * xi_xx - x111 - x113 * x40 + x113 * x47 - x113 * x56 + x114 + x116 * x54 + x117 * x118 * x3 + x119 * (Bt * x59 - Fx * (x62 - x64 + x66) + 4 * x105 + x109 * x42)) - 4 * x106 * x108 * x31) + x68 * (-x20 * (B2 * x8 + Bt ^ 2 * x58 + Bt * x115 * x63 - Fxp ^ 2 + 2 * Fxp * x123 + Fxt * x91 - Fxt * x93 + Gt ^ 2 * x58 + Gt * x124 * x63 + x100 * x116 + x102 * x116 + 12 * x111 + 30 * x113 * x45 - x113 * x95 + x114 + x117 * (24 * x1 + x104) + x92 * xi_x * (Bt * x118 + u * (-Bp * Fx + 3 * u * (G * x107 * x8 + x0 * x120 * x99 + 9 * x115))) - x98 * xi_xx) - x90 * (Bt * G * x120 * x44 + Fxt * x26 - Fxt * x69 + Gb + Gt * x11 * x120 + 2 * Gt * x110 - x113 * x74 + x113 * x79 + x113 * x82 + 6 * x117 * x25 * (x62 + 2) + x119 * (6 * Bt * x19 + Gt * x118 + x123 * (x72 + x88 * (x86 + 3))) + x121 * x122 - x73 * xi_xx))) * exp(2 * x1))
 
     nothing
 end
