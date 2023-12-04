@@ -18,11 +18,11 @@ evoleq = AffineNull(
     potential      = potential,
 )
 
-id = Polinomial(
-	u0 = 1,
-	u1 = 1,
-	u2 = 1,
-	u3 = 3,
+id = Sine2D(
+    kx   = 1,
+    ky   = 2,
+    Lx   = grid.x_max - grid.x_min,
+    Ly   = grid.y_max - grid.y_min,
    )
 
 io = InOut(
@@ -35,7 +35,7 @@ integration = Integration(
     dt              = 0.002,
     ODE_method      = KG_3_1.RK4(),
     adaptive        = false,
-    tmax            = 0.05,
+    tmax            = 20,
 )
 
 
