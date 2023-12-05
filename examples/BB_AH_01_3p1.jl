@@ -19,7 +19,7 @@ grid = SpecCartGrid3D(
 
 id   = BlackBrane(
    #AH_pos = 1.001,
-   AH_pos = 0.501,
+   AH_pos = 2.01,
 )
 
 evoleq = AffineNull(
