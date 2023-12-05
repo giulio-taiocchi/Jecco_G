@@ -25,7 +25,7 @@ id   = BlackBrane(
 evoleq = AffineNull(
     #phi0       = 0.0,
     #potential  = ZeroPotential(),
-    gaugecondition = ConstantAH(u_AH = 1.0),
+    gaugecondition = ConstantAH(u_AH = 2.0),
     #gaugecondition = ConstantAH(u_AH = 0.5),
 )
 

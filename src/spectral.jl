@@ -136,10 +136,11 @@ function (interp::ChebInterpolator)(fp)
 
     # compute the spectral coefficients
     spec_coeff = fft_fp ./ interp.c
-    minmin=interp.xmin
-    maxmax=interp.xmax
-    println("in Chebint function $minmin  $maxmax and x0 $x0" )
+    
     function (x0::T) where {T<:Real}
+    	minmin=interp.xmin
+        maxmax=interp.xmax
+        println("in Chebint function $minmin  $maxmax and x0 $x0" )
         @assert interp.xmin <= x0 <= interp.xmax
         X = (2 * x0 - (interp.xmin + interp.xmax)) / (interp.xmax - interp.xmin)
         sum_l = zero(T)
