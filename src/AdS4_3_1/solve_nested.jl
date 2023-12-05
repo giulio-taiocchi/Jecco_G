@@ -337,7 +337,7 @@ function solve_Sd!(bulk::Bulk, bc::BC, gauge::Gauge, deriv::BulkDeriv, aux_acc,
     Dy  = sys.Dy
     Dyy = sys.Dyy
 
-    potential = evoleq.potential
+    #potential = evoleq.potential
 
     @fastmath @inbounds @threads for j in 1:Ny
         @inbounds for i in 1:Nx
