@@ -138,7 +138,7 @@ function (interp::ChebInterpolator)(fp)
     spec_coeff = fft_fp ./ interp.c
     minmin=interp.xmin
     maxmax=interp.xmax
-    println("min $minmin max in Chebint $maxmax")
+    println("in Chebint function $minmin  $maxmax")
     function (x0::T) where {T<:Real}
         @assert interp.xmin <= x0 <= interp.xmax
         X = (2 * x0 - (interp.xmin + interp.xmax)) / (interp.xmax - interp.xmin)
