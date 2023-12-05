@@ -104,7 +104,7 @@ function ChebInterpolator(xmin::T, xmax::T, N::Int) where {T<:Real}
     fft_plan = FFTW.plan_r2r(x, FFTW.REDFT00)
 
     c  = M * [2; ones(Int,M-1); 2] .* (-1).^(0:M)
-    println("min $xmin max in Chebint $xmax")
+    #println("min $xmin max in Chebint $xmax")
     ChebInterpolator{T,typeof(c),typeof(fft_plan)}(xmin, xmax, c, fft_plan)
 end
 """
@@ -140,7 +140,7 @@ function (interp::ChebInterpolator)(fp)
     function (x0::T) where {T<:Real}
     	minmin=interp.xmin
         maxmax=interp.xmax
-        println("in Chebint function $minmin  $maxmax and x0 $x0" )
+        #println("in Chebint function $minmin  $maxmax and x0 $x0" )
         @assert interp.xmin <= x0 <= interp.xmax
         X = (2 * x0 - (interp.xmin + interp.xmax)) / (interp.xmax - interp.xmin)
         sum_l = zero(T)

@@ -9,7 +9,7 @@ grid = SpecCartGrid3D(
     y_max            =  5.0,
     y_nodes          =  12,
     u_outer_min      =  0.1,
-    u_outer_max      =  2.003,
+    u_outer_max      =  1.003,
     u_outer_domains  =  3,
     u_outer_nodes    =  24,
     u_inner_nodes    =  12,
@@ -19,13 +19,13 @@ grid = SpecCartGrid3D(
 
 id   = BlackBrane(
    #AH_pos = 1.001,
-   AH_pos = 2.01,
+   AH_pos = 1.0001,
 )
 
 evoleq = AffineNull(
     #phi0       = 0.0,
     #potential  = ZeroPotential(),
-    gaugecondition = ConstantAH(u_AH = 2.0),
+    gaugecondition = ConstantAH(u_AH = 1.0),
     #gaugecondition = ConstantAH(u_AH = 0.5),
 )
 
