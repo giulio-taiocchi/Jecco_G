@@ -104,7 +104,7 @@ function ChebInterpolator(xmin::T, xmax::T, N::Int) where {T<:Real}
     fft_plan = FFTW.plan_r2r(x, FFTW.REDFT00)
 
     c  = M * [2; ones(Int,M-1); 2] .* (-1).^(0:M)
-
+    println("min $xmin max in Chebint $xmax")
     ChebInterpolator{T,typeof(c),typeof(fft_plan)}(xmin, xmax, c, fft_plan)
 end
 """
@@ -136,7 +136,7 @@ function (interp::ChebInterpolator)(fp)
 
     # compute the spectral coefficients
     spec_coeff = fft_fp ./ interp.c
-
+    println("min $interp.xmin max in Chebint $interp.xmax")
     function (x0::T) where {T<:Real}
         @assert interp.xmin <= x0 <= interp.xmax
         X = (2 * x0 - (interp.xmin + interp.xmax)) / (interp.xmax - interp.xmin)
