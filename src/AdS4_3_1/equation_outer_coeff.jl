@@ -86,34 +86,7 @@ function Fxy_eq_coeff!(AA::Matrix, BB::Matrix, CC::Matrix, SS::Vector, vars::Tup
 
  
 
-    @tilde_outer("B")
-    @tilde_outer("G")
-    @tilde_outer("S")
-    @tilde_outer("Fx")
-    @tilde_outer("Fy")
 
-    @hat_outer("B")
-    @hat_outer("G")
-    @hat_outer("S")
-    @hat_outer("Fx")
-    @hat_outer("Fy")
-
-    @bar_outer("B")
-    @bar_outer("G")
-    @bar_outer("S")
-
-    @star_outer("B")
-    @star_outer("G")
-    @star_outer("S")
-
-    @tilde_outer("Fxp")
-    @tilde_outer("Fyp")
-
-    @hat_outer("Fxp")
-    @hat_outer("Fyp")
-
-    @cross_outer("G")
-    @cross_outer("S")
 
 x0 = exp(B)
 x1 = S ^ 2
@@ -121,37 +94,63 @@ x2 = 2 * x1
 x3 = u ^ 4 * x2
 x4 = cosh(G)
 x5 = x4 ^ 2
-x6 = u ^ 2
-x7 = x2 * x6
-x8 = x0 * x7
-x9 = sinh(G)
-x10 = Bp * x4 * x9
-x11 = 4 * S
-x12 = x0 * x11
-x13 = Gp * x2
-x14 = 2 * G
-x15 = sinh(x14)
-x16 = x1 * x15
-x17 = Bp * x16
-x18 = cosh(x14)
-x19 = Gt * x0 * x2
-x20 = 2 * Bp
-x21 = 2 * S * x5
-x22 = Bp * x18
+x6 = Bp * x5
+x7 = u ^ 2
+x8 = x2 * x7
+x9 = x0 * x8
+x10 = Bp * x4 * sinh(G)
+x11 = Bp ^ 2
+x12 = 2 * Bp
+x13 = Bpp * S + Sp * x12
+x14 = S * x11 + x13
+x15 = 2 * S
+x16 = x15 * x5
+x17 = 2 * G
+x18 = sinh(x17)
+x19 = x1 * x18
+x20 = Gp * x12
+x21 = x19 * x20
+x22 = Sp ^ 2
+x23 = Gp ^ 2 * x1
+x24 = S * Spp
+x25 = -4 * x22 + 2 * x23 + 4 * x24
+x26 = S * x11 - x13
+x27 = S * x20
+x28 = cosh(x17)
+x29 = Bp * x28
+x30 = Gp * x15 * x29
+x31 = 4 * Sp
+x32 = Gp * x31 + Gpp * x15
+x33 = x18 * x26 + x27 - x30 - x32
+x34 = S * x0
+x35 = 4 * x34
+x36 = Gp * x2
+x37 = x0 * x36
+x38 = Bp * x19
+x39 = S_x * x35
+x40 = x2 * x5
+x41 = Bp_x * x0
+x42 = x0 * x2
+x43 = x12 * x19
+x44 = S * x5
+x45 = Gp * x38
+x46 = -2 * x22 + x23 + 2 * x24
+x47 = x34 * (x14 * x18 - x27 + x30 - x32)
+x48 = 4 * S
 AA[1,1] = x0 * x3
 AA[1,2] = 0
-BB[1,1] = x8 * (-Bp * x5 + 2 * u)
-BB[1,2] = x7 * (Gp + x10)
-CC[1,1] = 0
-CC[1,2] = 0
-SS[1] = -(-Bh * x13 - Bh * x17 + 2 * Bp * Gh * x1 * x18 + 4 * Bp * S * Sh * x4 * x9 - Bp * x15 * x19 + Bph * x1 * x15 + 4 * Gp * S * Sh + 2 * Gph * x1 - Gt * x0 * x13 + 4 * Sp * St * x0 - Spt * x12 - x0 * x21 * (Bp * Bt * S + Bpt * S + St * x20))
+BB[1,1] = x9 * (2 * u - x6)
+BB[1,2] = x8 * (Gp + x10)
+CC[1,1] = x0 * (x14 * x16 + x21 + x25)
+CC[1,2] = S * x33
+SS[1] = -B_x * x42 * x6 - B_y * x36 - B_y * x38 + 2 * Bp * G_y * x1 * x28 + 2 * Bp * S * S_y * x18 + Bp_y * x1 * x18 - G_x * x0 * x43 - G_x * x37 + 4 * Gp * S * S_y + 2 * Gp_y * x1 + S * x33 * xi_y + 4 * S_x * Sp * x0 - Sp_x * x35 + 2 * x0 * xi_x * (x14 * x44 + x45 + x46) - x39 * x6 - x40 * x41
 AA[2,1] = 0
 AA[2,2] = x3
-BB[2,1] = x8 * (Gp - x10)
-BB[2,2] = x1 * x6 * (Bp + 4 * u + x22)
-CC[2,1] = 0
-CC[2,2] = 0
-SS[2] = -(2 * Bp * Gh * x1 * x15 - Bpt * x0 * x16 + 2 * Bt * Gp * x0 * x1 - Bt * x0 * x17 - Gh * x13 + 4 * Gp * S * St * x0 + 2 * Gpt * x0 * x1 + 4 * Sh * Sp - Sph * x11 - St * x10 * x12 - x19 * x22 - x21 * (Bh * Bp * S - Bph * S - Sh * x20))
+BB[2,1] = x9 * (Gp - x10)
+BB[2,2] = x1 * x7 * (Bp + 4 * u + x29)
+CC[2,1] = x47
+CC[2,2] = x16 * x26 - x21 + x25
+SS[2] = -B_x * x0 * x38 + B_x * x37 - B_y * x2 * x6 + Bp_y * x40 - G_x * x29 * x42 - G_y * x36 + G_y * x43 + Gp * x39 + Gp_x * x42 + S_y * x31 + S_y * x48 * x6 - Sp_y * x48 - x10 * x39 - x19 * x41 + x47 * xi_x + 2 * xi_y * (x26 * x44 - x45 + x46)
     
     nothing
 end
