@@ -415,18 +415,17 @@ function solve_Sd!(bulk::Bulk, bc::BC, gauge::Gauge, deriv::BulkDeriv, aux_acc,
                 S_xy       = Dx(Dy, bulk.S,  a,i,j)
 
                 vars = (
-        u, xi, xi_x, xi_y, xi_xx, xi_yy, xi_xy,
-        B     ,        G      ,        S      ,    Fx     ,    Fy     ,
-        Bp    ,        Gp     ,        Sp     ,    Fxp    ,    Fyp    ,
-        Bpp   ,        Gpp    ,        Spp    ,    Fxpp   ,    Fypp   ,
-        B_x   ,        G_x    ,        S_x    ,    Fx_x   ,    Fy_x   ,
-        B_y   ,        G_y    ,        S_y    ,    Fx_y   ,    Fy_y   ,
-        Bp_x  ,        Gp_x   ,        Sp_x   ,    Fxp_x  ,    Fyp_x  ,
-        Bp_y  ,        Gp_y   ,        Sp_y   ,    Fxp_y  ,    Fyp_y  ,
-        B_xx  ,        G_xx   ,        S_xx   ,
-        B_yy  ,        G_yy   ,        S_yy   ,
-                        G_xy   ,        S_xy  ,   St
-    )
+                     u, xi, xi_x, xi_y, xi_xx, xi_yy, xi_xy,
+                    B     ,        G      ,     S      ,    Fx     ,    Fy     ,
+                    Bp    ,        Gp     ,     Sp     ,    Fxp    ,    Fyp    ,
+                    Bpp   ,        Gpp    ,     Spp    ,    Fxpp   ,    Fypp   ,
+                    B_x   ,        G_y    ,     S_y    ,    Fx_y   ,    Fy_y   ,
+                    Bp_x  ,        Gp_x   ,     Sp_x   ,    Fxp_x  ,    Fyp_x  ,
+                    Bp_y  ,        Gp_y   ,     Sp_y   ,    Fxp_y  ,    Fyp_y  ,
+                    B_xx  ,        G_xx   ,     S_xx   ,
+                    B_yy  ,        G_yy   ,     S_yy   ,
+                                    G_xy   ,     S_xy
+                )
 
                 Sd_eq_coeff!(aux.ABCS, vars, sys.gridtype)
 

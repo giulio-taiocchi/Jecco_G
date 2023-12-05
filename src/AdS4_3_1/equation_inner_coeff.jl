@@ -314,7 +314,7 @@ function Sd_eq_coeff!(ABCS::Vector, vars::Tuple, ::Inner)
         Bp_y  ,        Gp_y   ,        Sp_y   ,    Fxp_y  ,    Fyp_y  ,
         B_xx  ,        G_xx   ,        S_xx   ,
         B_yy  ,        G_yy   ,        S_yy   ,
-                        G_xy   ,        S_xy  ,   St
+                        G_xy   ,        S_xy  
     ) = vars
 
     @tilde_inner("B")
