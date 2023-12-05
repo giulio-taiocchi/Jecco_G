@@ -197,9 +197,9 @@ function Sd_eq_coeff!(ABCS::Vector, vars::Tuple, ::Outer)
     @tilde_outer("Fxp")
     @tilde_outer("Fyp")
 
-    @tilde_outer("Bp")
-    @tilde_outer("Gp")
-    @tilde_outer("Sp")
+    @hat_outer("Bp")
+    @hat_outer("Gp")
+    @hat_outer("Sp")
     @hat_outer("Fxp")
     @hat_outer("Fyp")
 
