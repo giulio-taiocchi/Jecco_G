@@ -59,7 +59,7 @@ function S_eq_coeff!(ABCS::Vector, vars::Tuple, ::Outer)
 
 	ABCS[2] = 8*u^3
 
-	ABCS[3] = Gp^2 + Bp^2*sym.cosh(G)^2
+	ABCS[3] = Gp^2 + Bp^2*cosh(G)^2
 
 	ABCS[4] =0
 
