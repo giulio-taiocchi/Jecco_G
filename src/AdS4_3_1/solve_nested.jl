@@ -415,7 +415,7 @@ function solve_Sd!(bulk::Bulk, bc::BC, gauge::Gauge, deriv::BulkDeriv, aux_acc,
                 S_xy       = Dx(Dy, bulk.S,  a,i,j)
 
                 vars = (
-                    potential, u, xi, xi_x, xi_y, xi_xx, xi_yy, xi_xy,
+                     u, xi, xi_x, xi_y, xi_xx, xi_yy, xi_xy,
                     B     ,        G      ,     S      ,    Fx     ,    Fy     ,
                     Bp    ,        Gp     ,     Sp     ,    Fxp    ,    Fyp    ,
                     Bpp   ,        Gpp    ,     Spp    ,    Fxpp   ,    Fypp   ,
@@ -631,7 +631,7 @@ function solve_A!(bulk::Bulk, bc::BC, gauge::Gauge, deriv::BulkDeriv, aux_acc,
     Dy  = sys.Dy
     Dyy = sys.Dyy
 
-    potential = evoleq.potential
+    #potential = evoleq.potential
 
     @fastmath @inbounds @threads for j in 1:Ny
         @inbounds for i in 1:Nx
@@ -712,7 +712,7 @@ function solve_A!(bulk::Bulk, bc::BC, gauge::Gauge, deriv::BulkDeriv, aux_acc,
                 S_xy       = Dx(Dy, bulk.S,  a,i,j)
 
                 vars = (
-                    potential, u, xi, xi_x, xi_y, xi_xx, xi_yy, xi_xy,
+                     u, xi, xi_x, xi_y, xi_xx, xi_yy, xi_xy,
                     B   , G   , S    , Fx    , Fy    , Sd, Bd, Gd, 
                     Bp  , Gp  , Sp   , Fxp   , Fyp   ,
                     Bpp  ,Gpp , Spp  , Fxpp  , Fypp  ,
