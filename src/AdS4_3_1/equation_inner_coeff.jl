@@ -304,7 +304,7 @@ end
 
 function Sd_eq_coeff!(ABCS::Vector, vars::Tuple, ::Inner)
     (
-        potential,  u, xi, xi_x, xi_y, xi_xx, xi_yy, xi_xy,
+        u, xi, xi_x, xi_y, xi_xx, xi_yy, xi_xy,
         B     ,        G      ,        S      ,    Fx     ,    Fy     ,
         Bp    ,        Gp     ,        Sp     ,    Fxp    ,    Fyp    ,
         Bpp   ,        Gpp    ,        Spp    ,    Fxpp   ,    Fypp   ,
@@ -603,7 +603,7 @@ end
 
 function A_eq_coeff!(ABCS::Vector, vars::Tuple, ::Inner)
     (
-        potential, u, xi, xi_x, xi_y, xi_xx, xi_yy, xi_xy,
+         u, xi, xi_x, xi_y, xi_xx, xi_yy, xi_xy,
         B   ,  G   ,  S    , Fx    , Fy    , Sd, Bd, Gd,
         Bp  ,  Gp  ,  Sp   , Fxp   , Fyp   ,
         Bpp ,  Gpp ,  Spp  , Fxpp  , Fypp  ,
