@@ -463,7 +463,7 @@ function xi_t_eq_coeff(vars::Tuple, ::Outer)
         Bp_y,  Gp_y,  Sp_y , Fxp_y , Fyp_y ,                   Ap_y,
                                  Fy_xx ,       A_xx,
                                           Fx_yy ,               A_yy,
-                                          Fx_xy , Fy_xy ,       A_xy,
+                                          Fx_xy , Fy_xy ,       A_xy,Fx_xx,
                                           B_xx,B_yy,B_xy,G_xx,G_yy,G_xy,S_xx,S_yy,S_xy
     ) = vars
 
