@@ -486,11 +486,31 @@ function xi_t_eq_coeff(vars::Tuple, ::Outer)
     @hat_outer("Gd")
     @hat_outer("A")
 
-    @bar_outer("A")
+    @bar_outer("B")
+    @bar_outer("G")
+    @bar_outer("S")
+    @bar_outer("Fx")
     @bar_outer("Fy")
+    @bar_outer("Sd")
+    @bar_outer("Bd")
+    @bar_outer("Gd")
+    @bar_outer("A")
+    
+    @tilde_outer("Sd")
+    @tilde_outer("Bd")
+    @tilde_outer("Gd")
+    
 
     @star_outer("A")
+    @star_outer("B")
+    @star_outer("G")
+    @star_outer("S")
     @star_outer("Fx")
+    @star_outer("Fy")
+    @star_outer("Sd")
+    @star_outer("Bd")
+    @star_outer("Gd")
+   
 
     @tilde_outer("Bp")
     @tilde_outer("Gp")
