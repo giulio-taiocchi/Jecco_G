@@ -991,7 +991,7 @@ function solve_nesteds!(bulkconstrains, bulkevols, boundary::Boundary, gauge::Ga
         end
        
     end
-
+	println("out of bulkevolvs")
     vprint("INFO: innerBCs")
     set_innerBCs!(bcs[1], bulkevols[1], boundary, gauge, derivs[1], systems[1], evoleq)
 
@@ -1008,6 +1008,7 @@ function solve_nesteds!(bulkconstrains, bulkevols, boundary::Boundary, gauge::Ga
                       derivs[i], aux_accs[i], systems[i], evoleq)
         syncBCs!(bcs[i+1], bulkconstrains[i], derivs[i])
     end
+    println("flag before ")
     vprint("INFO: solve_nested $Nsys")
     solve_nested!(bulkconstrains[Nsys], bulkevols[Nsys], bcs[Nsys], gauge,
                   derivs[Nsys], aux_accs[Nsys], systems[Nsys], evoleq)
@@ -1020,7 +1021,7 @@ function solve_nesteds!(bulkconstrains, bulkevols, boundary::Boundary, gauge::Ga
                         bcs, derivs, aux_accs,
                         systems, evoleq::EvolTest0)
     Nsys = length(systems)
-
+	println("testing")
     for i in 1:Nsys
         fill!(bulkconstrains[i], 0)
     end
@@ -1071,4 +1072,5 @@ function (nested::Nested)(bulkevols::BulkPartition, boundary::Boundary,
                           gauge::Gauge, evoleq::EvolutionEquations)
     solve_nesteds!(nested.bulkconstrains, bulkevols, boundary, gauge, nested.bcs,
                    nested.derivs, nested.aux_accs, nested.systems, evoleq)
+    println("finished nesteds")
 end
