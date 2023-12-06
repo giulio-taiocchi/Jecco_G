@@ -457,13 +457,14 @@ function xi_t_eq_coeff(vars::Tuple, ::Outer)
         B   ,  G   ,  S    , Fx    , Fy    , Sd ,  Bd  , Gd,  A   ,
         Bp  ,  Gp  ,  Sp   , Fxp   , Fyp   , Sdp,  Bdp , Gdp, Ap  ,
         Bpp ,  Gpp ,  Spp  , Fxpp  , Fypp  ,                   App ,
-        B_x ,  G_x ,  S_x  , Fx_x  , Fy_x  , Sd_x, Bd_x, Gd_x,A_x ,
+        B_x ,   G_x ,  S_x  , Fx_x  , Fy_x  , Sd_x, Bd_x, Gd_x,A_x ,
 	B_y ,  G_y ,  S_y  , Fx_y  , Fy_y  , Sd_y, Bd_y,Gd_y, A_y ,
         Bp_x,  Gp_x,  Sp_x , Fxp_x , Fyp_x ,                   Ap_x,
         Bp_y,  Gp_y,  Sp_y , Fxp_y , Fyp_y ,                   Ap_y,
-                                                  Fy_xx ,       A_xx,
+                                 Fy_xx ,       A_xx,
                                           Fx_yy ,               A_yy,
                                           Fx_xy , Fy_xy ,       A_xy,
+                                          B_xx,B_yy,B_xy,G_xx,G_yy,G_xy,S_xx,S_yy,S_xy
     ) = vars
 
     @tilde_outer("B")
@@ -491,9 +492,9 @@ function xi_t_eq_coeff(vars::Tuple, ::Outer)
     @bar_outer("S")
     @bar_outer("Fx")
     @bar_outer("Fy")
-    @bar_outer("Sd")
-    @bar_outer("Bd")
-    @bar_outer("Gd")
+    #@bar_outer("Sd")
+    #@bar_outer("Bd")
+    #@bar_outer("Gd")
     @bar_outer("A")
     
     @tilde_outer("Sd")
@@ -507,9 +508,9 @@ function xi_t_eq_coeff(vars::Tuple, ::Outer)
     @star_outer("S")
     @star_outer("Fx")
     @star_outer("Fy")
-    @star_outer("Sd")
-    @star_outer("Bd")
-    @star_outer("Gd")
+    #@star_outer("Sd")
+    #@star_outer("Bd")
+    #@star_outer("Gd")
    
 
     @tilde_outer("Bp")
