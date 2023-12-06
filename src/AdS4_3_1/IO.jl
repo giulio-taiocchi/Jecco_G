@@ -102,7 +102,7 @@ function output_writer(u::EvolVars, chart2D::Chart, atlas, tinfo::Jecco.TimeInfo
         if do_output_bulk
             @inbounds for i in 1:Nsys
                 bulkevols_fields[i][1].data = bulkevols[i].B
-                bulkevols_fields[I][2].data = bulkevols[i].G
+                bulkevols_fields[i][2].data = bulkevols[i].G
             end
             # write data
             out_bulk.(bulkevols_fields)#, params=params)
@@ -159,9 +159,9 @@ function output_writer(bulkconstrains::BulkPartition{Nsys,BulkConstrained{T}}, a
                 fields[i][2].data = bulkconstrains[i].Fx
                 fields[i][3].data = bulkconstrains[i].Fy
                 fields[i][4].data = bulkconstrains[i].Bd
-                fields[I][5].data = bulkconstrains[i].Gd
-                fields[I][6].data = bulkconstrains[i].Sd
-                fields[I][7].data = bulkconstrains[i].A
+                fields[i][5].data = bulkconstrains[i].Gd
+                fields[i][6].data = bulkconstrains[i].Sd
+                fields[i][7].data = bulkconstrains[i].A
             end
             # write data
             out.(fields)#, params=params)
@@ -208,7 +208,7 @@ function checkpoint_writer(u::EvolVars, chart2D::Chart, atlas, tinfo::Jecco.Time
 
         @inbounds for i in 1:Nsys
             bulkevols_fields[i][1].data = bulkevols[i].B
-            bulkevols_fields[I][2].data = bulkevols[i].G
+            bulkevols_fields[i][2].data = bulkevols[i].G
         end
 
         # write data
