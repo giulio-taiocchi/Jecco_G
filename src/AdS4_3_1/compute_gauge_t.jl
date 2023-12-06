@@ -245,13 +245,22 @@ function compute_xi_t!(gauge_t::Gauge, bulkconstrain::BulkConstrained,
 
             Fy_xx   = Dxx(Fy_uAH,  1,i,j)
             A_xx    = Dxx(A_uAH,   1,i,j)
+            B_xx    = Dxx(B_uAH,   1,i,j)
+            G_xx    = Dxx(G_uAH,   1,i,j)
+            S_xx    = Dxx(S_uAH,   1,i,j)
 
             Fx_yy   = Dyy(Fx_uAH,  1,i,j)
             A_yy    = Dyy(A_uAH,   1,i,j)
+            B_yy    = Dyy(B_uAH,   1,i,j)
+            G_yy    = Dyy(G_uAH,   1,i,j)
+            S_yy    = Dyy(S_uAH,   1,i,j)
 
             Fx_xy   = Dx(Dy, Fx_uAH, 1,i,j)
             Fy_xy   = Dx(Dy, Fy_uAH, 1,i,j)
             A_xy    = Dx(Dy, A_uAH,  1,i,j)
+            B_xy    = Dx(Dy, B_uAH,  1,i,j)
+            G_xy    = Dx(Dy, G_uAH,  1,i,j)
+            S_xy    = Dx(Dy, S_uAH,  1,i,j)
 
             vars =  (
                 kappa, xi, xi_x, xi_y, xi_xx, xi_yy, xi_xy,
