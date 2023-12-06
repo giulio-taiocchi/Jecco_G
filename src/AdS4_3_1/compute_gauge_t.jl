@@ -255,7 +255,7 @@ function compute_xi_t!(gauge_t::Gauge, bulkconstrain::BulkConstrained,
 
             vars =  (
                 kappa, xi, xi_x, xi_y, xi_xx, xi_yy, xi_xy,
-                B   , G   ,  S    , Fx    , Fy    , Sd ,  Bd  , Gd,  phid, A   ,
+                B   , G   ,  S    , Fx    , Fy    , Sd ,  Bd  , Gd, A   ,
                 Bp  , Gp  ,  Sp   , Fxp   , Fyp   , Sdp,  Bdp , Gdp,       Ap  ,
                 Bpp , Gpp ,        Spp  , Fxpp  , Fypp  ,                                App ,
                 B_x , G_x ,  S_x  , Fx_x  , Fy_x  , Sd_x, Bd_x,  Gd_x,      A_x ,
