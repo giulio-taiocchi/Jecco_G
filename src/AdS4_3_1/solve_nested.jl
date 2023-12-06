@@ -980,7 +980,7 @@ function solve_nesteds!(bulkconstrains, bulkevols, boundary::Boundary, gauge::Ga
     
     # take all u-derivatives of the bulkevols functions
     vprint("INFO: bulkevols derivatives")
-    sizebulkevolvs=size(bulkevols)
+    sizebulkevolvs=len(bulkevols)
     println("flagging Nsys $Nsys and bulkevolvs size is $sizebulkevolvs")
     @sync begin
         @inbounds for i in 1:Nsys

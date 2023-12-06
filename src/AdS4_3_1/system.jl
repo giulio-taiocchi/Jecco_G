@@ -93,7 +93,7 @@ function System(gridtype::GT, ucoord::GaussLobattoCoord,
     Dy  = CenteredDiff{3}(1, ord, Jecco.delta(ycoord), ycoord.nodes)
     Dyy = CenteredDiff{3}(2, ord, Jecco.delta(ycoord), ycoord.nodes)
 
-    println("ucoord.min, ucoord.max")
+    
     uinterp = ChebInterpolator(ucoord.min, ucoord.max, ucoord.nodes)
 
     KO_order = ord + 1
