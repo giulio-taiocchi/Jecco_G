@@ -444,7 +444,9 @@ function getB(ff::EvolVars, i::Int)
     Nsys = getudomains(ff)
     @assert i > 0
     @assert i <= Nsys
-    ff.x[5 + (i-1)*4]
+    println("i is $i")
+    #changed from ff.x[5 + (i-1)*4]
+    ff.x[5 + (i-1)*2]
 end
 
 
@@ -452,7 +454,8 @@ function getG(ff::EvolVars, i::Int)
     Nsys = getudomains(ff)
     @assert i > 0
     @assert i <= Nsys
-    ff.x[7 + (i-1)*4]
+    #changed from ff.x[7 + (i-1)*4]
+    ff.x[6 + (i-1)*2]
 end
 
 @inline getboundary(ff::EvolVars) = Boundary(geta3(ff), getfx1(ff), getfy1(ff))
