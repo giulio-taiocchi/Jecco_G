@@ -980,20 +980,20 @@ function solve_nesteds!(bulkconstrains, bulkevols, boundary::Boundary, gauge::Ga
     
     # take all u-derivatives of the bulkevols functions
     vprint("INFO: bulkevols derivatives")
-    println("flagging Nsys $Nsys")
+    #println("flagging Nsys $Nsys")
     @sync begin
         @inbounds for i in 1:Nsys
-        println("start of inner for cycle $i")
+        #println("start of inner for cycle $i")
             @spawn mul!(derivs[i].Du_B,  systems[i].Du,  bulkevols[i].B)
             
             @spawn mul!(derivs[i].Du_G,   systems[i].Du,  bulkevols[i].G)
             @spawn mul!(derivs[i].Duu_B, systems[i].Duu, bulkevols[i].B)
             @spawn mul!(derivs[i].Duu_G,  systems[i].Duu, bulkevols[i].G)
-           println("end of inner for cycle $i")
+           #println("end of inner for cycle $i")
         end
-    println("end of function")
+    #println("end of function")
     end
-    println("out of bulkevolvs")
+    #println("out of bulkevolvs")
     vprint("INFO: innerBCs")
     set_innerBCs!(bcs[1], bulkevols[1], boundary, gauge, derivs[1], systems[1], evoleq)
 
@@ -1010,7 +1010,7 @@ function solve_nesteds!(bulkconstrains, bulkevols, boundary::Boundary, gauge::Ga
                       derivs[i], aux_accs[i], systems[i], evoleq)
         syncBCs!(bcs[i+1], bulkconstrains[i], derivs[i])
     end
-    println("flag before ")
+    #println("flag before ")
     vprint("INFO: solve_nested $Nsys")
     solve_nested!(bulkconstrains[Nsys], bulkevols[Nsys], bcs[Nsys], gauge,
                   derivs[Nsys], aux_accs[Nsys], systems[Nsys], evoleq)
@@ -1072,8 +1072,8 @@ end
 
 function (nested::Nested)(bulkevols::BulkPartition, boundary::Boundary,
                           gauge::Gauge, evoleq::EvolutionEquations)
-    println("entering nested")
+    #println("entering nested")
     solve_nesteds!(nested.bulkconstrains, bulkevols, boundary, gauge, nested.bcs,
                    nested.derivs, nested.aux_accs, nested.systems, evoleq)
-    println("finished nesteds")
+    #println("finished nesteds")
 end
