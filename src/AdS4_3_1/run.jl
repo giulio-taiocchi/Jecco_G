@@ -59,14 +59,14 @@ function run_model(grid::SpecCartGrid3D, id::InitialData, evoleq::EvolutionEquat
         id(bulkconstrains, bulkevols, bulkderivs, boundary, gauge,
            horizoncache, systems, evoleq)
     end
-    println("I am here")	
+    	
     # full state vector: all variables
     evolvars  = EvolVars(boundary, gauge, bulkevols)
-
+println("I am here1")
     # function that updates the state vector
     rhs! = setup_rhs(evolvars, bulkconstrains, bulkderivs, horizoncache,
                      systems, integration)
-
+println("I am here2")
     #=
     limit the default integrator dtmax and qmax values. see:
       https://diffeq.sciml.ai/latest/extras/timestepping/
@@ -88,13 +88,14 @@ function run_model(grid::SpecCartGrid3D, id::InitialData, evoleq::EvolutionEquat
     # impossibly large value for tstop
     tspan = (0.0, 1.e20)
     alg   = integration.ODE_method
-
+println("I am here3")
     prob  = ODEProblem(rhs!, evolvars, tspan, evoleq)
+   println("I am here4")
     # https://diffeq.sciml.ai/stable/basics/integrator/
     integrator = init(prob, alg, save_everystep=false, dt=dt0, dtmax=dtmax, qmax=qmax,
                       adaptive=integration.adaptive, reltol=integration.reltol,
                       calck=false)
-
+println("I am here5")
     tinfo  = Jecco.TimeInfo(it0, t0, 0.0, 0.0)
 
     # for the boundary/xi grid
