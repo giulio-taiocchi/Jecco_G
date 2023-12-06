@@ -980,15 +980,16 @@ function solve_nesteds!(bulkconstrains, bulkevols, boundary::Boundary, gauge::Ga
     
     # take all u-derivatives of the bulkevols functions
     vprint("INFO: bulkevols derivatives")
-    sizebulkevolvs=len(bulkevols)
-    println("flagging Nsys $Nsys and bulkevolvs size is $sizebulkevolvs")
+    println("flagging Nsys $Nsys")
     @sync begin
         @inbounds for i in 1:Nsys
+        println("flagging $i")
             @spawn mul!(derivs[i].Du_B,  systems[i].Du,  bulkevols[i].B)
             @spawn mul!(derivs[i].Du_G,   systems[i].Du,  bulkevols[i].G)
             @spawn mul!(derivs[i].Duu_B, systems[i].Duu, bulkevols[i].B)
             @spawn mul!(derivs[i].Duu_G,  systems[i].Duu, bulkevols[i].G)
         end
+       
     end
 
     vprint("INFO: innerBCs")
