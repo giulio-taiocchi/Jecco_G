@@ -53,10 +53,10 @@ function compute_bulkevolved_t!(bulkevol_t::BulkEvolved,
                                 (xi * u + 1) * (xi * u + 1))/2 +
                                 Bd
 
-		G_t[a,i,j] = G1_u *
+		G_t[a,i,j] = G_u *
                                (-2 * u * u * xi_t + A * u3 +
                                 (xi * u + 1) * (xi * u + 1))/2 +
-                                G1d
+                                Gd
             end
         end
     end
