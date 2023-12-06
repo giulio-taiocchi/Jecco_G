@@ -965,7 +965,7 @@ function set_outerBCs!(bc::BC, bulk::BulkConstrained, gauge::Gauge,
             bc.A_u[i,j] = A_u_inner_to_outer(A_u, A, u0, xi)
         end
     end
-    println("flag")
+    
     nothing
 end
 
@@ -977,9 +977,11 @@ function solve_nesteds!(bulkconstrains, bulkevols, boundary::Boundary, gauge::Ga
                         bcs, derivs, aux_accs,
                         systems::SystemPartition, evoleq::AffineNull)
     Nsys = length(systems)
-
+    
     # take all u-derivatives of the bulkevols functions
     vprint("INFO: bulkevols derivatives")
+    sizebulkevolvs=size(bulkevols)
+    println("flagging Nsys $Nsys and bulkevolvs size is $sizebulkevolvs")
     @sync begin
         @inbounds for i in 1:Nsys
             @spawn mul!(derivs[i].Du_B,  systems[i].Du,  bulkevols[i].B)
