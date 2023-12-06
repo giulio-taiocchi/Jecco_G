@@ -444,10 +444,10 @@ Base.zero(ff::EvolVars{T,N,S}) where {T,N,S} = EvolVars{T,N,S}(zero.(ff.x))
 function getB(ff::EvolVars, i::Int)
     Nsys = getudomains(ff)
     Nvalue = Nsys *2+4
-    println("The value of N is $Nvalue")
+    #println("The value of N is $Nvalue")
     @assert i > 0
     @assert i <= Nsys
-    println("i is $i")
+    #println("i is $i")
     #changed from ff.x[5 + (i-1)*4]
     ff.x[5 + (i-1)*2]
 end
