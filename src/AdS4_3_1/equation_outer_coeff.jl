@@ -530,6 +530,9 @@ function xi_t_eq_coeff(vars::Tuple, ::Outer)
     @cross_outer("A")
     @cross_outer("Fx")
     @cross_outer("Fy")
+    @cross_outer("S")
+    @cross_outer("G")
+    
 
    
 
