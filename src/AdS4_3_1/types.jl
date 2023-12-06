@@ -432,8 +432,9 @@ Base.copy(ff::EvolVars{T,N,S}) where {T,N,S} = EvolVars{T,N,S}(copy.(ff.x))
 Base.zero(ff::EvolVars{T,N,S}) where {T,N,S} = EvolVars{T,N,S}(zero.(ff.x))
 
 
-#modified: before was div(N-4, 4). 4 to 2 because of the number of bulkevolved functions!
-@inline getudomains(::EvolVars{T,N}) where {T,N} = div(N-2, 2)
+#modified: before was div(N-4, 4). I sent the second 4 to 2 because of the number of bulkevolved functions!
+# the first 4 should be related to the boundary variable plus the gauge
+@inline getudomains(::EvolVars{T,N}) where {T,N} = div(N-4, 2)
 
 @inline geta3(ff::EvolVars)   = ff.x[1]
 @inline getfx1(ff::EvolVars)  = ff.x[2]
@@ -442,6 +443,8 @@ Base.zero(ff::EvolVars{T,N,S}) where {T,N,S} = EvolVars{T,N,S}(zero.(ff.x))
 
 function getB(ff::EvolVars, i::Int)
     Nsys = getudomains(ff)
+    Nvalue = Nsys *2+4
+    println("The value of N is $Nvalue")
     @assert i > 0
     @assert i <= Nsys
     println("i is $i")
