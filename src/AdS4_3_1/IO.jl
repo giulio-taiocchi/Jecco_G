@@ -1,6 +1,6 @@
-
+# removed , potential::Potential as last argument
 function output_writer(u::EvolVars, chart2D::Chart, atlas, tinfo::Jecco.TimeInfo,
-                       io::InOut, potential::Potential)
+                       io::InOut)
     Nsys = length(atlas)
 
     # output structures
@@ -13,7 +13,7 @@ function output_writer(u::EvolVars, chart2D::Chart, atlas, tinfo::Jecco.TimeInfo
     bulkevols = getbulkevolvedpartition(u)
 
     # NamedTuple with potential parameters
-    params = parameters(potential)
+    #params = parameters(potential)
 
     #=
     for analysis, it's useful to have the boundary behaviour of the bulk fields,
@@ -90,13 +90,13 @@ function output_writer(u::EvolVars, chart2D::Chart, atlas, tinfo::Jecco.TimeInfo
 
 
             # write data
-            out_bdry(boundary_fields, params=params)
+            out_bdry(boundary_fields)#, params=params)
         end
 
         if do_output_gauge
             gauge_fields.data = gauge.xi
             # write data
-            out_gauge(gauge_fields, params=params)
+            out_gauge(gauge_fields)#, params=params)
         end
 
         if do_output_bulk
@@ -105,21 +105,21 @@ function output_writer(u::EvolVars, chart2D::Chart, atlas, tinfo::Jecco.TimeInfo
                 bulkevols_fields[I][2].data = bulkevols[i].G
             end
             # write data
-            out_bulk.(bulkevols_fields, params=params)
+            out_bulk.(bulkevols_fields)#, params=params)
         end
 
         nothing
     end
 end
 
-
+#removed , potential::Potential as last argument here
 function output_writer(bulkconstrains::BulkPartition{Nsys,BulkConstrained{T}}, atlas,
-                       tinfo::Jecco.TimeInfo, io::InOut, potential::Potential,
+                       tinfo::Jecco.TimeInfo, io::InOut,
                        ) where {Nsys,T}
     @assert Nsys == length(atlas)
 
     # NamedTuple with potential parameters
-    params = parameters(potential)
+    #params = parameters(potential)
 
     # output structure
     out  = Jecco.Output(io.out_dir, "constrained_", tinfo)
@@ -164,7 +164,7 @@ function output_writer(bulkconstrains::BulkPartition{Nsys,BulkConstrained{T}}, a
                 fields[I][7].data = bulkconstrains[i].A
             end
             # write data
-            out.(fields, params=params)
+            out.(fields)#, params=params)
         end
 
         nothing
