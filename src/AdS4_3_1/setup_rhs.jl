@@ -50,8 +50,9 @@ function setup_rhs(tmp::EvolVars, bulkconstrains::BulkPartition{Nsys},
 
         # solve nested system for the constrained variables
         vprint("INFO: nested system")
+        println("enter nested from setup rhs")
         nested(bulkevols, boundary, gauge, evoleq)
-
+	println("exit nested from setup rhs")
         vprint("INFO: compute_xi_t")
         compute_xi_t!(gauge_t, bulkconstrains[Nsys], bulkevols[Nsys], bulkderivs[Nsys],
                       gauge, cache, systems[Nsys], evoleq.gaugecondition)
