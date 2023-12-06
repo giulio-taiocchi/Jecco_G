@@ -251,6 +251,7 @@ function compute_xi_t!(gauge_t::Gauge, bulkconstrain::BulkConstrained,
             S_xx    = Dxx(S_uAH,   1,i,j)
 
             Fx_yy   = Dyy(Fx_uAH,  1,i,j)
+            Fy_yy   = Dyy(Fy_uAH,  1,i,j)
             A_yy    = Dyy(A_uAH,   1,i,j)
             B_yy    = Dyy(B_uAH,   1,i,j)
             G_yy    = Dyy(G_uAH,   1,i,j)
@@ -274,7 +275,7 @@ function compute_xi_t!(gauge_t::Gauge, bulkconstrain::BulkConstrained,
                 Bp_y, Gp_y,        Sp_y , Fxp_y , Fyp_y ,                                Ap_y,
                                                           Fy_xx ,                                A_xx,
                                                   Fx_yy ,                                        A_yy,
-                                                  Fx_xy , Fy_xy ,                                A_xy,Fx_xx,B_xx,B_yy,B_xy,G_xx,G_yy,G_xy,S_xx,S_yy,S_xy
+                                                  Fx_xy , Fy_xy ,                                A_xy,Fx_xx,Fy_yy,B_xx,B_yy,B_xy,G_xx,G_yy,G_xy,S_xx,S_yy,S_xy
             )
 
             a11, a22, a12, b1, b2, c, SS = xi_t_eq_coeff(vars, sys.gridtype)
