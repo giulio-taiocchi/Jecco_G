@@ -432,8 +432,8 @@ Base.copy(ff::EvolVars{T,N,S}) where {T,N,S} = EvolVars{T,N,S}(copy.(ff.x))
 Base.zero(ff::EvolVars{T,N,S}) where {T,N,S} = EvolVars{T,N,S}(zero.(ff.x))
 
 
-
-@inline getudomains(::EvolVars{T,N}) where {T,N} = div(N-4, 4)
+#modified: before was div(N-4, 4). 4 to 2 because of the number of bulkevolved functions!
+@inline getudomains(::EvolVars{T,N}) where {T,N} = div(N-2, 2)
 
 @inline geta3(ff::EvolVars)   = ff.x[1]
 @inline getfx1(ff::EvolVars)  = ff.x[2]

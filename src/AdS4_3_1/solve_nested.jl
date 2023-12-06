@@ -983,15 +983,17 @@ function solve_nesteds!(bulkconstrains, bulkevols, boundary::Boundary, gauge::Ga
     println("flagging Nsys $Nsys")
     @sync begin
         @inbounds for i in 1:Nsys
-        println("flagging $i")
+        println("start of inner for cycle $i")
             @spawn mul!(derivs[i].Du_B,  systems[i].Du,  bulkevols[i].B)
+            
             @spawn mul!(derivs[i].Du_G,   systems[i].Du,  bulkevols[i].G)
             @spawn mul!(derivs[i].Duu_B, systems[i].Duu, bulkevols[i].B)
             @spawn mul!(derivs[i].Duu_G,  systems[i].Duu, bulkevols[i].G)
+           println("end of inner for cycle $i")
         end
-       
+    println("end of function")
     end
-	println("out of bulkevolvs")
+    println("out of bulkevolvs")
     vprint("INFO: innerBCs")
     set_innerBCs!(bcs[1], bulkevols[1], boundary, gauge, derivs[1], systems[1], evoleq)
 
@@ -1021,7 +1023,7 @@ function solve_nesteds!(bulkconstrains, bulkevols, boundary::Boundary, gauge::Ga
                         bcs, derivs, aux_accs,
                         systems, evoleq::EvolTest0)
     Nsys = length(systems)
-	println("testing")
+
     for i in 1:Nsys
         fill!(bulkconstrains[i], 0)
     end
@@ -1070,6 +1072,7 @@ end
 
 function (nested::Nested)(bulkevols::BulkPartition, boundary::Boundary,
                           gauge::Gauge, evoleq::EvolutionEquations)
+    println("entering nested")
     solve_nesteds!(nested.bulkconstrains, bulkevols, boundary, gauge, nested.bcs,
                    nested.derivs, nested.aux_accs, nested.systems, evoleq)
     println("finished nesteds")
