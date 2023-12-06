@@ -59,7 +59,7 @@ function run_model(grid::SpecCartGrid3D, id::InitialData, evoleq::EvolutionEquat
         id(bulkconstrains, bulkevols, bulkderivs, boundary, gauge,
            horizoncache, systems, evoleq)
     end
-
+    println("I am here")	
     # full state vector: all variables
     evolvars  = EvolVars(boundary, gauge, bulkevols)
 
