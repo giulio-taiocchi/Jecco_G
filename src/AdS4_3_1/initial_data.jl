@@ -193,7 +193,7 @@ function init_data!(bulk::BulkEvolved, gauge::Gauge, sys::System{Outer},
                 xi_ij     = xi[1,i,j]
                 aux       = 1 + xi_ij * u
                 aux3      = aux * aux * aux
-                #aux4      = aux * aux3
+                aux4      = aux * aux3
                 u_old     = u / aux
                 B_old    = analytic_B(u_old, x, y, id)
                 G_old     = analytic_G(u_old, x, y, id)
