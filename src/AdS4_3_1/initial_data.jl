@@ -158,13 +158,13 @@ function init_data!(bulk::BulkEvolved, gauge::Gauge, sys::System{Inner},
                 xi_ij   = xi[1,i,j]
                 aux     = 1 + xi_ij * u
                 aux3    = aux * aux * aux
-                aux4    = aux * aux3
+                #aux4    = aux * aux3
                 u_old   = u / aux
                 B_old  = analytic_B(u_old, x, y, id)
                 G_old   = analytic_G(u_old, x, y, id)
 
-                B[a,i,j]  = B_old / aux4
-                G[a,i,j]   = G_old  / aux4
+                B[a,i,j]  = B_old / aux3
+                G[a,i,j]   = G_old  / aux3
             end
         end
     end
@@ -193,12 +193,12 @@ function init_data!(bulk::BulkEvolved, gauge::Gauge, sys::System{Outer},
                 xi_ij     = xi[1,i,j]
                 aux       = 1 + xi_ij * u
                 aux3      = aux * aux * aux
-                aux4      = aux * aux3
+                #aux4      = aux * aux3
                 u_old     = u / aux
                 B_old    = analytic_B(u_old, x, y, id)
                 G_old     = analytic_G(u_old, x, y, id)
-                B_inner  = B_old / aux4
-                G_inner   = G_old  / aux4
+                B_inner  = B_old / aux3
+                G_inner   = G_old  / aux3
 
                 B[a,i,j]  = u^3 * B_inner
                 G[a,i,j]   = u^3 * G_inner
