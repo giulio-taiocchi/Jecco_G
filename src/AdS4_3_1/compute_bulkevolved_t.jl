@@ -94,7 +94,7 @@ function compute_bulkevolved_t!(bulkevol_t::BulkEvolved,
                 G_u    = Du(bulkevol.G,  a,i,j)
 
 		B_t[a,i,j] = Bd + u2 * (A/2 - xi_t) * B_u
-		G_t[a,i,j]  = Gd  + u2 * (A/2 - xi_t) * G_u
+		G_t[a,i,j] = Gd + u2 * (A/2 - xi_t) * G_u
             end
         end
     end
