@@ -196,15 +196,16 @@ function init_data!(bulk::BulkEvolved, gauge::Gauge, sys::System{Outer},
                 aux4      = aux * aux3
                 u_old     = u / aux
                 B_old    = analytic_B(u_old, x, y, id)
+                Bvalue = B_old
+                uvalue = a
+                println("in u=$u B e' $Bvalue")
                 G_old     = analytic_G(u_old, x, y, id)
                 B_inner  = B_old / aux3
                 G_inner   = G_old  / aux3
 
                 B[a,i,j]  = u^3 * B_inner
                 G[a,i,j]   = u^3 * G_inner
-                Bvalue = B[a,i,j]
-                uvalue = a
-                println("in u=$u B e' $Bvalue")
+                
             end
         end
     end
