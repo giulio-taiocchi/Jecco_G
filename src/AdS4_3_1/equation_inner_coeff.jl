@@ -1317,6 +1317,8 @@ BB[2,2] = -x52 * x9
 CC[2,1] = -x18 * x2 * x24 * sinh(2 * x14)
 CC[2,2] = -x10 * x17 * x52
 SS[2] = (-x13 * x52 * x55 * (Fx * Sh * x13 - Fxp * x23 + 4 * Fy * S * x57 + Fy * St * x13 - Fy * x43 - Fyp * x40 + x22 * x41 + x26 * x39 - x27 * x49 - x27 * x51 + x49 + x51) + x2 * x32 * x55 * (-Bh * Fxp * x0 + Bh * x57 - Bt * Fy * x56 + Bt * Fyp * x0 + 5 * Fx * Fy * x0 + Fxh * x58 - Fxh * x60 + Fxp * Fyp * u - Fxph - Fypt - Fyt * x58 + Fyt * x60 - x24 * x49 - x24 * x51 + x33 * (Bp * Fx * x0 - Fxp * x62 - Fxp + x43) - x44 * (-Fyp * x62 + Fyp + x21 * (Bp * x13 - 2)) + x46 + x48 + x49 * x61 - x51 * x61) + x22 * x29 * x53 * x54 + x31 * (-6 * G * u + 2 * Gp) - x35 * x53 * x7 + x36 * x53 * (x42 * x54 - x45))
+SS2=SS[2]
+println("SS2 is $SS2")
     
     nothing
 end
