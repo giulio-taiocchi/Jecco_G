@@ -202,6 +202,9 @@ function init_data!(bulk::BulkEvolved, gauge::Gauge, sys::System{Outer},
 
                 B[a,i,j]  = u^3 * B_inner
                 G[a,i,j]   = u^3 * G_inner
+                Bvalue = B[a,i,j]
+                uvalue = a
+                println("in u=$u B e' $Bvalue")
             end
         end
     end
