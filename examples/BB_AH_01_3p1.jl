@@ -30,15 +30,15 @@ evoleq = AffineNull(
 )
 
 io = InOut(
-    out_boundary_every  = 10,
-    #out_bulk_every      = 500,
-    out_gauge_every     = 10,
-    # remove_existing     = true,
+    #out_boundary_every  = 10,
+    out_bulk_every      = 2,
+    #out_gauge_every     = 10,
+    remove_existing     = true,
 )
 
 integration = Integration(
     dt              = 0.001,
-    tmax            = 30.0,
+    tmax            = 50.0,
     #ODE_method      = AdS4_3_1.AB3(),
     filter_poststep = true,
 )
