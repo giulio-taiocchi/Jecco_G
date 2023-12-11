@@ -28,13 +28,31 @@ function compute_bulkevolved_t!(bulkevol_t::BulkEvolved,
 
     B_t, G_t= unpack(bulkevol_t)
 
+    # u = 0
+    @fastmath @inbounds @threads for j in 1:Ny
+        @inbounds @simd for i in 1:Nx
+            xi     = gauge.xi[1,i,j]
+
+            B     = bulkevol.B[1,i,j]
+            G      = bulkevol.G[1,i,j]
+
+            B_u   = Du(bulkevol.B, 1,i,j)
+            G_u    = Du(bulkevol.G,  1,i,j)
+
+            Bd_u  = Du(bulkconstrain.Bd, 1,i,j)
+            Gd_u   = Du(bulkconstrain.Gd,  1,i,j)
+
+            B_t[1,i,j]  = Bd_u + 2 * B_u  + 3 * B * xi
+            G_t[1,i,j]  = Gd_u + 2 * G_u  + 3 * G * xi
+        end
+    end
   
     # remaining inner grid points
     @fastmath @inbounds for j in 1:Ny
         @inbounds for i in 1:Nx
             xi    = gauge.xi[1,i,j]
             xi_t  = gauge_t.xi[1,i,j]
-            @inbounds @simd for a in 1:Nu
+            @inbounds @simd for a in 2:Nu
                 u      = uu[a]
                 u3     = u * u * u 
 
@@ -48,15 +66,15 @@ function compute_bulkevolved_t!(bulkevol_t::BulkEvolved,
                 B_u   = Du(bulkevol.B, a,i,j)
                 G_u    = Du(bulkevol.G,  a,i,j)
 
-		B_t[a,i,j] = B_u *
+		B_t[a,i,j] = ((3* B + u * B_u) *
                                (-2 * u * u * xi_t + A * u3 +
-                                (xi * u + 1) * (xi * u + 1))/2 +
-                                Bd
+                                (xi * u + 1) * (xi * u + 1)))/(2 * u) +
+                                Bd/u
 
-		G_t[a,i,j] = G_u *
+		G_t[a,i,j] =((3 * G + u * G_u) *
                                (-2 * u * u * xi_t + A * u3 +
-                                (xi * u + 1) * (xi * u + 1))/2 +
-                                Gd
+                                (xi * u + 1) * (xi * u + 1)))/(2 * u) +
+                                Gd/u
             end
         end
     end
