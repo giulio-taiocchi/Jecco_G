@@ -196,9 +196,7 @@ function init_data!(bulk::BulkEvolved, gauge::Gauge, sys::System{Outer},
                 aux4      = aux * aux3
                 u_old     = u / aux
                 B_old    = analytic_B(u_old, x, y, id)
-                Bvalue = B_old
-                uvalue = a
-                println("in u=$u B e' $Bvalue")
+                
                 G_old     = analytic_G(u_old, x, y, id)
                 B_inner  = B_old / aux3
                 G_inner   = G_old  / aux3
@@ -440,8 +438,8 @@ end
 
 
 #QNM in 1D initial data
-analytic_B(u, x, y, id::QNM_1D)  = 3/2*0.001 * u^8
-analytic_G(u, x, y, id::QNM_1D)   = 0
+analytic_B(u, x, y, id::QNM_1D)  = 0
+analytic_G(u, x, y, id::QNM_1D)   =  3/2*0.001 * u^8
 
 function init_data!(ff::Boundary, sys::System, id::QNM_1D)
     a3  = geta3(ff)
@@ -464,7 +462,7 @@ function init_data!(ff::Gauge, sys::System, id::QNM_1D)
     AH_pos  = id.AH_pos
 
     a30 = (-epsilon) / 2
-    println("entered QNM ID")
+
     xi0 = 0
 
     xi  = getxi(ff)
