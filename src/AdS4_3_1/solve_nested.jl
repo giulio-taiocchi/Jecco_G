@@ -894,12 +894,12 @@ function set_innerBCs!(bc::BC, bulk::BulkEvolved, boundary::Boundary,
             bc.S_u[i,j] = 0
 
             bc.Fx[i,j]   = fx1
-            # Is there a 1/10 factor missing?
+
             bc.Fx_u[i,j] = - 2 * fx1 * xi +3 / 2 * (-b13_x  + g3_y)
 
             bc.Fy[i,j]   = fy1
             bc.Fy_u[i,j] = - 2 * fy1 * xi + 3/2 * (b13_y+ g3_x)
-	    println("I passed from the modified bc line")
+
             bc.Sd[i,j] = a3 /2
 
             bc.Bd[i,j] = -3* b13/2
