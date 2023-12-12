@@ -439,7 +439,7 @@ end
 
 #QNM in 1D initial data
 analytic_B(u, x, y, id::QNM_1D)  = 0
-analytic_G(u, x, y, id::QNM_1D)   =  3/2*0.001 * u^8
+analytic_G(u, x, y, id::QNM_1D)   =  3/2*0.1 * u^8
 
 function init_data!(ff::Boundary, sys::System, id::QNM_1D)
     a3  = geta3(ff)
