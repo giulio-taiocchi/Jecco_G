@@ -894,7 +894,7 @@ function set_innerBCs!(bc::BC, bulk::BulkEvolved, boundary::Boundary,
             bc.S_u[i,j] = 0
 
             bc.Fx[i,j]   = fx1
-
+            # Is there a 1/10 factor missing?
             bc.Fx_u[i,j] = - 2 * fx1 * xi +3 / 2 * (-b13_x  + g3_y)
 
             bc.Fy[i,j]   = fy1
