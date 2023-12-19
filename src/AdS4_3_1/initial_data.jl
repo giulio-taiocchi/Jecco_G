@@ -60,6 +60,12 @@ Base.@kwdef struct QNM_1D{T} <: InitialData
     ahf         :: AHF = AHF()
 end
 
+Base.@kwdef struct BoostedBBnumerical{T} <: InitialData
+    #energy_dens :: T   = 1.0
+    AH_pos      :: T   = 1.0
+    ahf         :: AHF = AHF()
+end
+
 
 function (id::InitialData)(bulkconstrains, bulkevols, bulkderivs, boundary::Boundary,
                            gauge::Gauge, horizoncache::HorizonCache, systems::SystemPartition,
@@ -158,10 +164,11 @@ function init_data!(bulk::BulkEvolved, gauge::Gauge, sys::System{Inner},
                 xi_ij   = xi[1,i,j]
                 aux     = 1 + xi_ij * u
                 aux3    = aux * aux * aux
-                #aux4    = aux * aux3
                 u_old   = u / aux
-                B_old  = analytic_B(u_old, x, y, id)
-                G_old   = analytic_G(u_old, x, y, id)
+                B_old  = analytic_B(a, i, j, u_old, x, y, id)
+                G_old  = analytic_G(a, i, j, u_old, x, y, id)
+                #B_old  = analytic_B(u_old, x, y, id)
+                #G_old   = analytic_G(u_old, x, y, id)
 
                 B[a,i,j]  = B_old / aux3
                 G[a,i,j]   = G_old  / aux3
@@ -195,15 +202,14 @@ function init_data!(bulk::BulkEvolved, gauge::Gauge, sys::System{Outer},
                 aux3      = aux * aux * aux
                 aux4      = aux * aux3
                 u_old     = u / aux
-                B_old    = analytic_B(u_old, x, y, id)
+                B_old    = analytic_B(a, i, j, u_old, x, y, id)
                 
-                G_old     = analytic_G(u_old, x, y, id)
+                G_old     = analytic_G(a, i, j, u_old, x, y, id)
                 B_inner  = B_old / aux3
                 G_inner   = G_old  / aux3
 
                 B[a,i,j]  = u^3 * B_inner
                 G[a,i,j]   = u^3 * G_inner
-                
             end
         end
     end
@@ -261,8 +267,8 @@ end
 
 # BlackBrane initial data
 
-analytic_B(u, x, y, id::BlackBrane)  = 0
-analytic_G(u, x, y, id::BlackBrane)   = 0
+analytic_B(i, j, k, u, x, y, id::BlackBrane)  = 0
+analytic_G(i, j, k, u, x, y, id::BlackBrane)   = 0
 
 function init_data!(ff::Boundary, sys::System, id::BlackBrane)
     a30 = -id.energy_dens/2
@@ -458,6 +464,41 @@ function init_data!(ff::Boundary, sys::System, id::QNM_1D)
 end
 
 function init_data!(ff::Gauge, sys::System, id::QNM_1D)
+    epsilon = id.energy_dens
+    AH_pos  = id.AH_pos
+
+    a30 = (-epsilon) / 2
+
+    xi0 = 0
+
+    xi  = getxi(ff)
+
+    fill!(xi, xi0)
+
+    ff
+end
+
+#numerical boosted Black Brane
+analytic_B(i, j, k, u, x, y, id::BoostedBBnumerical)  =  3/2*0.1 * u^6
+analytic_G(i, j, k, u, x, y, id::BoostedBBnumerical)  = 0
+
+function init_data!(ff::Boundary, sys::System, id::BoostedBBnumerical)
+    a3  = geta3(ff)
+    fx1 = getfx1(ff)
+    fy1 = getfy1(ff)
+
+    epsilon = id.energy_dens
+
+    a30 = (-epsilon) / 2
+
+    fill!(a3, a30)
+    fill!(fx1, 0)
+    fill!(fy1, 0)
+
+    ff
+end
+
+function init_data!(ff::Gauge, sys::System, id::BoostedBBnumerical)
     epsilon = id.energy_dens
     AH_pos  = id.AH_pos
 
