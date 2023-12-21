@@ -149,11 +149,6 @@ function init_data!(bulk::BulkEvolved, gauge::Gauge, sys::System{Inner},
     xx = sys.xcoord
     yy = sys.ycoord
     uu = sys.ucoord
-    writing_coordinates= h5open("/home/giulio/University/PhD/JeccoNewTest/Jecco_G/examples/gridoutput.h5","w")
-    writing_coordinates["x"] = xx
-    writing_coordinates["y"] = y
-    writing_coordinates["u"] = uu
-    close(writing_coordinates)
     B  = getB(bulk)
     G   = getG(bulk)
     xi  = getxi(gauge)
