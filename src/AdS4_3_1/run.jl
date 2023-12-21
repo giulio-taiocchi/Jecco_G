@@ -21,11 +21,6 @@ function run_model(grid::SpecCartGrid3D, id::InitialData, evoleq::EvolutionEquat
     systems   = SystemPartition(grid)
     Nsys      = length(systems)
     
-    #writing in output the grid
-    println("writing the grid")
-    writing_grid = h5open("/home/giulio/University/PhD/JeccoNewTest/Jecco_G/examples/h5testfile.h5","w")
-    writing_grid["a"] = systems[1].ucoord
-    close(writing_grid)
     
     # allocate variables
     boundary       = Boundary(grid)
