@@ -73,7 +73,6 @@ function (id::InitialData)(bulkconstrains, bulkevols, bulkderivs, boundary::Boun
     _, Nx, Ny = size(systems[end])
     AH_pos    = id.AH_pos
     xi        = getxi(gauge)
-
     # function to solve the nested system
     nested = Nested(systems, bulkconstrains)
 
@@ -102,6 +101,14 @@ function (id::ID_ConstantAH)(bulkconstrains, bulkevols, bulkderivs, boundary::Bo
     _, Nx, Ny = size(systems[end])
     AH_pos    = id.AH_pos
     xi        = getxi(gauge)
+    
+    
+    #printing u
+    inner_system = systems[1]
+    u_coordinates = inner_system.ucoord
+    for a in 1:Nu
+    	utoprint = u_coordinates[a]
+    	println("u: $u")
 
     # function to solve the nested system
     nested = Nested(systems, bulkconstrains)
@@ -153,14 +160,12 @@ function init_data!(bulk::BulkEvolved, gauge::Gauge, sys::System{Inner},
     G   = getG(bulk)
     xi  = getxi(gauge)
 
-
     for j in 1:Ny
         for i in 1:Nx
             for a in 1:Nu
                 u       = uu[a]
                 x       = xx[i]
                 y       = yy[j]
-                println("coord y:$y x:$x and u:$u")
                 xi_ij   = xi[1,i,j]
                 aux     = 1 + xi_ij * u
                 aux3    = aux * aux * aux
