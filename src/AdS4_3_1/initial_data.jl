@@ -158,9 +158,9 @@ function init_data!(bulk::BulkEvolved, gauge::Gauge, sys::System{Inner},
         for i in 1:Nx
             for a in 1:Nu
                 u       = uu[a]
-            	println("u: $uu")
                 x       = xx[i]
                 y       = yy[j]
+                println("coord y:$y x:$x and u:$u")
                 xi_ij   = xi[1,i,j]
                 aux     = 1 + xi_ij * u
                 aux3    = aux * aux * aux
