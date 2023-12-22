@@ -105,7 +105,7 @@ function (id::ID_ConstantAH)(bulkconstrains, bulkevols, bulkderivs, boundary::Bo
     
     #printing u
     
-    for nsys in 4
+    for nsys in 1:4
 	    println("domain $nsys")
 	    actual_system = systems[nsys]
 	    Nu, Nx, Ny = size(actual_system)
