@@ -105,6 +105,7 @@ function (id::ID_ConstantAH)(bulkconstrains, bulkevols, bulkderivs, boundary::Bo
     
     #printing u
     inner_system = systems[1]
+    Nu, Nx, Ny = size(inner_system)
     u_coordinates = inner_system.ucoord
     for a in 1:Nu
     	utoprint = u_coordinates[a]
