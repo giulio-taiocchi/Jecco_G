@@ -109,6 +109,7 @@ function (id::ID_ConstantAH)(bulkconstrains, bulkevols, bulkderivs, boundary::Bo
     for a in 1:Nu
     	utoprint = u_coordinates[a]
     	println("u: $u")
+    end
 
     # function to solve the nested system
     nested = Nested(systems, bulkconstrains)
