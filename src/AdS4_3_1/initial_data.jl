@@ -104,13 +104,18 @@ function (id::ID_ConstantAH)(bulkconstrains, bulkevols, bulkderivs, boundary::Bo
     
     
     #printing u
-    inner_system = systems[1]
-    Nu, Nx, Ny = size(inner_system)
-    u_coordinates = inner_system.ucoord
-    for a in 1:Nu
-    	utoprint = u_coordinates[a]
-    	println("u: $utoprint")
-    end
+    
+    for nsys in size(systems)
+	    println("domain $nsys")
+	    actual_system = systems[nsys]
+	    Nu, Nx, Ny = size(actual_system)
+	    u_coordinates = actual_system.ucoord
+	    for a in 1:Nu
+	    	utoprint = u_coordinates[a]
+	    	println("u: $utoprint")
+	    end
+    
+    
 
     # function to solve the nested system
     nested = Nested(systems, bulkconstrains)
