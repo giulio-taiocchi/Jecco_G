@@ -61,7 +61,7 @@ Base.@kwdef struct QNM_1D{T} <: InitialData
 end
 
 Base.@kwdef struct BoostedBBnumerical{T} <: InitialData
-    energy_dens :: T   = 5.0
+    #energy_dens :: T   = 5.0
     AH_pos      :: T   = 1.0
     ahf         :: AHF = AHF()
 end
@@ -506,9 +506,9 @@ function init_data!(ff::Boundary, sys::System, id::BoostedBBnumerical)
     fx1 = getfx1(ff)
     fy1 = getfy1(ff)
 
-    epsilon = id.energy_dens
+    #epsilon = id.energy_dens
 
-    a30 = (-epsilon) / 2
+    a30 = (-5) / 2
 
     fill!(a3, a30)
     fill!(fx1, -sqrt(2))
@@ -518,10 +518,10 @@ function init_data!(ff::Boundary, sys::System, id::BoostedBBnumerical)
 end
 
 function init_data!(ff::Gauge, sys::System, id::BoostedBBnumerical)
-    epsilon = id.energy_dens
+    #epsilon = id.energy_dens
     AH_pos  = id.AH_pos
 
-    a30 = (-epsilon) / 2
+    a30 = (-5) / 2
 
     xi0 = 0
 
