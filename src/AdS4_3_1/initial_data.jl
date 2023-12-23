@@ -61,7 +61,7 @@ Base.@kwdef struct QNM_1D{T} <: InitialData
 end
 
 Base.@kwdef struct BoostedBBnumerical{T} <: InitialData
-    #energy_dens :: T   = 1.0
+    energy_dens :: T   = 5.0
     AH_pos      :: T   = 1.0
     ahf         :: AHF = AHF()
 end
@@ -493,7 +493,12 @@ function init_data!(ff::Gauge, sys::System, id::QNM_1D)
 end
 
 #numerical boosted Black Brane
-analytic_B(i, j, k, u, x, y, id::BoostedBBnumerical)  =  3/2*0.1 * u^6
+function analytic_B(i, j, k, u, x, y, id::BoostedBBnumerical)
+	initialB=h5open("/home/giulio/University/PhD/JeccoNewTest/Jecco_G/examples/InitialB.h5")
+	dset=initialB["Dataset1"]
+	B=read(dset)
+	B[i]
+end
 analytic_G(i, j, k, u, x, y, id::BoostedBBnumerical)  = 0
 
 function init_data!(ff::Boundary, sys::System, id::BoostedBBnumerical)
@@ -506,7 +511,7 @@ function init_data!(ff::Boundary, sys::System, id::BoostedBBnumerical)
     a30 = (-epsilon) / 2
 
     fill!(a3, a30)
-    fill!(fx1, 0)
+    fill!(fx1, -sqrt(2))
     fill!(fy1, 0)
 
     ff
