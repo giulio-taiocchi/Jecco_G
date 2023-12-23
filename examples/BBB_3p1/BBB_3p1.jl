@@ -19,12 +19,11 @@ grid = SpecCartGrid3D(
 
 
 id = AdS4_3_1.BoostedBBnumerical(
-    energy_dens  = 5,
     AH_pos = 1,
 )
 
 evoleq = AffineNull(
-    #gaugecondition = ConstantAH(u_AH = 1.0),
+    gaugecondition = ConstantAH(u_AH = 1.0),
 )
 
 io = InOut(

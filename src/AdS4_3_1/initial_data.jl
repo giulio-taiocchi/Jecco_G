@@ -497,7 +497,9 @@ function analytic_B(i, j, k, u, x, y, id::BoostedBBnumerical)
 	initialB=h5open("/home/giulio/University/PhD/JeccoNewTest/Jecco_G/examples/InitialB.h5")
 	dset=initialB["Dataset1"]
 	B=read(dset)
-	B[i]
+	Bvalue = B[i]
+	println("B in u=$u index: $i is $Bvalue")
+	Bvalue
 end
 analytic_G(i, j, k, u, x, y, id::BoostedBBnumerical)  = 0
 
