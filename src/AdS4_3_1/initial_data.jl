@@ -159,7 +159,7 @@ function init_data!(bulkevols, gauge::Gauge, systems::SystemPartition,
     #init_data!.(bulkevols, Ref(gauge), systems, Ref(id))
     counting = 0
     for k in systems
-    	init_data!.(bulkevols, Ref(gauge), Ref(k), Ref(id),Ref(counting))
+    	init_data!(Ref(bulkevols[1+counting]), Ref(gauge), Ref(k), Ref(id),Ref(counting))
     	counting = counting + 1
     end
 end
