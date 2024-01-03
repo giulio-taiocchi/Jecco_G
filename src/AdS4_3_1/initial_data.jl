@@ -158,8 +158,8 @@ function init_data!(bulkevols, gauge::Gauge, systems::SystemPartition,
     # the Ref() makes its argument a scalar with respect to broadcast
     #init_data!.(bulkevols, Ref(gauge), systems, Ref(id))
     counting = 0
-    for (j,k) in (bulkevols,systems)
-    	init_data!.(Ref(j), Ref(gauge), Ref(k), Ref(id),Ref(counting))
+    for k in systems
+    	init_data!.(Ref(bulkevolvs.x[counting+1]), Ref(gauge), Ref(k), Ref(id),Ref(counting))
     	counting = counting + 1
     end
 end
