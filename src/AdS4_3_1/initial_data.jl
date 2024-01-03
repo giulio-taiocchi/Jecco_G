@@ -103,7 +103,7 @@ function (id::ID_ConstantAH)(bulkconstrains, bulkevols, bulkderivs, boundary::Bo
     xi        = getxi(gauge)
     
     
-    #printing u
+    #printing u, added for numerical initial data
     counting = 0
     for nsys in systems
 	    println("domain $counting")
@@ -156,11 +156,16 @@ end
 function init_data!(bulkevols, gauge::Gauge, systems::SystemPartition,
                     id::InitialData)
     # the Ref() makes its argument a scalar with respect to broadcast
-    init_data!.(bulkevols, Ref(gauge), systems, Ref(id))
+    #init_data!.(bulkevols, Ref(gauge), systems, Ref(id))
+    counting = 0
+    for k in systems
+    	init_data!.(bulkevols, Ref(gauge), Ref(k), Ref(id),Ref(counting))
+    	counting = counting + 1
+    end
 end
 
 function init_data!(bulk::BulkEvolved, gauge::Gauge, sys::System{Inner},
-                    id::InitialData)
+                    id::InitialData,counting)
     Nu, Nx, Ny = size(sys)
     xx = sys.xcoord
     yy = sys.ycoord
@@ -179,13 +184,13 @@ function init_data!(bulk::BulkEvolved, gauge::Gauge, sys::System{Inner},
                 aux     = 1 + xi_ij * u
                 aux3    = aux * aux * aux
                 u_old   = u / aux
-                B_old  = analytic_B(a, i, j, u_old, x, y, id)
-                G_old  = analytic_G(a, i, j, u_old, x, y, id)
+                B_old   = analytic_B(a, i, j, u_old, x, y, id, counting)
+                G_old   = analytic_G(a, i, j, u_old, x, y, id, counting)
                 #B_old  = analytic_B(u_old, x, y, id)
                 #G_old   = analytic_G(u_old, x, y, id)
 
                 B[a,i,j]  = B_old / aux3
-                G[a,i,j]   = G_old  / aux3
+                G[a,i,j]  = G_old / aux3
             end
         end
     end
@@ -195,7 +200,7 @@ function init_data!(bulk::BulkEvolved, gauge::Gauge, sys::System{Inner},
 end
 
 function init_data!(bulk::BulkEvolved, gauge::Gauge, sys::System{Outer},
-                    id::InitialData)
+                    id::InitialData,counting)
     Nu, Nx, Ny = size(sys)
     xx = sys.xcoord
     yy = sys.ycoord
@@ -216,14 +221,14 @@ function init_data!(bulk::BulkEvolved, gauge::Gauge, sys::System{Outer},
                 aux3      = aux * aux * aux
                 aux4      = aux * aux3
                 u_old     = u / aux
-                B_old    = analytic_B(a, i, j, u_old, x, y, id)
+                B_old     = analytic_B(a, i, j, u_old, x, y, id, counting)
                 
-                G_old     = analytic_G(a, i, j, u_old, x, y, id)
-                B_inner  = B_old / aux3
+                G_old     = analytic_G(a, i, j, u_old, x, y, id, counting)
+                B_inner   = B_old / aux3
                 G_inner   = G_old  / aux3
 
                 B[a,i,j]  = u^3 * B_inner
-                G[a,i,j]   = u^3 * G_inner
+                G[a,i,j]  = u^3 * G_inner
             end
         end
     end
@@ -493,12 +498,14 @@ function init_data!(ff::Gauge, sys::System, id::QNM_1D)
 end
 
 #numerical boosted Black Brane
-function analytic_B(i, j, k, u, x, y, id::BoostedBBnumerical)
+function analytic_B(i, j, k, u, x, y, id::BoostedBBnumerical, whichsystem)
+	
 	initialB=h5open("/home/giulio/University/PhD/JeccoNewTest/Jecco_G/examples/InitialB.h5")
 	dset=initialB["Dataset1"]
 	B=read(dset)
 	Bvalue = B[i]
 	println("B in u=$u index: $i is $Bvalue")
+	println("THIS IS SYSTEM NUMBER $whichsystem")
 	Bvalue
 end
 analytic_G(i, j, k, u, x, y, id::BoostedBBnumerical)  = 0
