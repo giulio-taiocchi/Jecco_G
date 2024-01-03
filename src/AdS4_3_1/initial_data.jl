@@ -508,7 +508,7 @@ function analytic_B(i, j, k, u, x, y, id::BoostedBBnumerical, whichsystem)
 	println("THIS IS SYSTEM NUMBER $whichsystem")
 	Bvalue
 end
-analytic_G(i, j, k, u, x, y, id::BoostedBBnumerical)  = 0
+analytic_G(i, j, k, u, x, y, id::BoostedBBnumerical,whichsystem)  = 0
 
 function init_data!(ff::Boundary, sys::System, id::BoostedBBnumerical)
     a3  = geta3(ff)
