@@ -500,7 +500,7 @@ end
 function analytic_B(i, j, k, u, x, y, id::BoostedBBnumerical, whichsystem)
 	
 	initialB=h5open("/home/giulio/University/PhD/JeccoNewTest/Jecco_G/examples/InitialB.h5")
-	system_index = string(whichsystem)
+	system_index = string(whichsystem+1)
 	dset=initialB[system_index]
 	B=read(dset)
 	Bvalue = B[i]
