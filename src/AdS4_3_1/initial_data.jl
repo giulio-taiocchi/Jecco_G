@@ -173,7 +173,6 @@ function init_data!(bulk::BulkEvolved, gauge::Gauge, sys::System{Inner},
     B  = getB(bulk)
     G   = getG(bulk)
     xi  = getxi(gauge)
-
     for j in 1:Ny
         for i in 1:Nx
             for a in 1:Nu
@@ -501,11 +500,12 @@ end
 function analytic_B(i, j, k, u, x, y, id::BoostedBBnumerical, whichsystem)
 	
 	initialB=h5open("/home/giulio/University/PhD/JeccoNewTest/Jecco_G/examples/InitialB.h5")
-	dset=initialB["Dataset1"]
+	system_index = string(whichsystem)
+	dset=initialB[system_index]
 	B=read(dset)
 	Bvalue = B[i]
-	println("B in u=$u index: $i is $Bvalue")
-	println("THIS IS SYSTEM NUMBER $whichsystem")
+	#println("B in u=$u index: $i is $Bvalue")
+	#println("THIS IS SYSTEM NUMBER $whichsystem")
 	Bvalue
 end
 analytic_G(i, j, k, u, x, y, id::BoostedBBnumerical,whichsystem)  = 0
