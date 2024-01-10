@@ -285,8 +285,8 @@ end
 
 # BlackBrane initial data
 
-analytic_B(i, j, k, u, x, y, id::BlackBrane)  = 0
-analytic_G(i, j, k, u, x, y, id::BlackBrane)   = 0
+analytic_B(i, j, k, u, x, y, id::BlackBrane, whichsystem)  = 0
+analytic_G(i, j, k, u, x, y, id::BlackBrane, whichsystem)   = 0
 
 function init_data!(ff::Boundary, sys::System, id::BlackBrane)
     a30 = -id.energy_dens/2
