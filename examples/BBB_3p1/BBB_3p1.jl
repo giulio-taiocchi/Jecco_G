@@ -7,23 +7,23 @@ grid = SpecCartGrid3D(
     x_nodes          =  32,
     y_min            = -5.0,
     y_max            =  5.0,
-    y_nodes          =  64,
-    u_outer_min      =  0.1,
-    u_outer_max      =  1.003,
+    y_nodes          =  32,
+    u_outer_min      =  0.2,
+    u_outer_max      =  1.03,
     u_outer_domains  =  2,
-    u_outer_nodes    =  48,
-    u_inner_nodes    =  24,
+    u_outer_nodes    =  36,
+    u_inner_nodes    =  12,
     fd_order         =  4,
     sigma_diss       =  0.2,
 )
 
 
 id = AdS4_3_1.BoostedBBnumerical(
-    AH_pos = 1,
+    AH_pos = 1.0,
 )
 
 evoleq = AffineNull(
-    gaugecondition = ConstantAH(u_AH = 1.0),
+    gaugecondition = ConstantAH(u_AH = 1.00),
     
 )
 
@@ -31,7 +31,7 @@ io = InOut(
     out_boundary_every  = 1,
     out_bulk_every      = 1,
     #out_gauge_every     = 10,
-    #remove_existing     = true,
+    remove_existing     = true,
 )
 
 integration = Integration(
