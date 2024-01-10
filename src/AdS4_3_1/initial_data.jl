@@ -104,18 +104,18 @@ function (id::ID_ConstantAH)(bulkconstrains, bulkevols, bulkderivs, boundary::Bo
     
     
     #printing u, added for numerical initial data
-    counting = 0
-    for nsys in systems
-	    println("domain $counting")
-	    actual_system = nsys
-	    Nu, Nx, Ny = size(actual_system)
-	    u_coordinates = actual_system.ucoord
-	    for a in 1:Nu
-	    	utoprint = u_coordinates[a]
-	    	println("u: $utoprint")
-	    end
-	    counting = counting +1
-    end
+    #counting = 0
+    #for nsys in systems
+	    #println("domain $counting")
+	    #actual_system = nsys
+	    #Nu, Nx, Ny = size(actual_system)
+	    #u_coordinates = actual_system.ucoord
+	    #for a in 1:Nu
+	    #	utoprint = u_coordinates[a]
+	    #	println("u: $utoprint")
+	    #end
+	    #counting = counting +1
+    #end
     
     
 
