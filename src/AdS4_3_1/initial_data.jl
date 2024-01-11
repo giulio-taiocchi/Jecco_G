@@ -517,7 +517,8 @@ function init_data!(ff::Boundary, sys::System, id::BoostedBBnumerical)
 
     #epsilon = id.energy_dens
 
-    a30 = (-5) / 2
+    #a30 = (-5) / 2
+    a30 = -2
 
     fill!(a3, a30)
     fill!(fx1, -sqrt(2))
@@ -530,7 +531,8 @@ function init_data!(ff::Gauge, sys::System, id::BoostedBBnumerical)
     #epsilon = id.energy_dens
     AH_pos  = id.AH_pos
 
-    a30 = (-5) / 2
+    #a30 = (-5) / 2
+    a30 = -2
 
     xi0 = 0
 
