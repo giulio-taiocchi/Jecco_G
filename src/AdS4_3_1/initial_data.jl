@@ -504,7 +504,7 @@ function analytic_B(i, j, k, u, x, y, id::BoostedBBnumerical, whichsystem)
 	dset=initialB[system_index]
 	B=read(dset)
 	Bvalue = B[i]
-	#println("B in u=$u index: $i is $Bvalue")
+	println("B in u=$u index: $i is $Bvalue")
 	#println("THIS IS SYSTEM NUMBER $whichsystem")
 	Bvalue
 end
