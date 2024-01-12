@@ -9,17 +9,17 @@ grid = SpecCartGrid3D(
     y_max            =  5.0,
     y_nodes          =  32,
     u_outer_min      =  0.2,
-    u_outer_max      =  1.03,
-    u_outer_domains  =  1,
-    u_outer_nodes    =  36,
-    u_inner_nodes    =  12,
+    u_outer_max      =  1.003,
+    u_outer_domains  =  3,
+    u_outer_nodes    =  48,
+    u_inner_nodes    =  48,
     fd_order         =  4,
     sigma_diss       =  0.2,
 )
 
 
 id = AdS4_3_1.BoostedBBnumerical(
-    AH_pos = 1.001,
+    AH_pos = 1.00,
 )
 
 evoleq = AffineNull(
@@ -35,8 +35,8 @@ io = InOut(
 )
 
 integration = Integration(
-#0.002
-    dt              = 0.01,
+
+    dt              = 0.002,
     tmax            = 50.0,
     ODE_method      = AdS4_3_1.AB3(),
     filter_poststep = true,

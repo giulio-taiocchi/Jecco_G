@@ -60,7 +60,7 @@ Base.@kwdef struct QNM_1D{T} <: InitialData
     ahf         :: AHF = AHF()
 end
 
-Base.@kwdef struct BoostedBBnumerical{T} <: InitialData
+Base.@kwdef struct BoostedBBnumerical{T} <: ID_ConstantAH
     #energy_dens :: T   = 5.0
     AH_pos      :: T   = 1.0
     ahf         :: AHF = AHF()
@@ -462,8 +462,8 @@ end
 
 
 #QNM in 1D initial data
-analytic_B(u, x, y, id::QNM_1D)  =  3/2*0.1 * u^6
-analytic_G(u, x, y, id::QNM_1D)  = 0
+analytic_B(i, j, k,u, x, y, id::QNM_1D, whichsystem)  =  3/2*0.1 * u^6
+analytic_G(i, j, k,u, x, y, id::QNM_1D, whichsystem)  = 0
 
 function init_data!(ff::Boundary, sys::System, id::QNM_1D)
     a3  = geta3(ff)
