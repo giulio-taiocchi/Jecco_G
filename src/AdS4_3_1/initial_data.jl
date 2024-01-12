@@ -498,13 +498,13 @@ end
 
 #numerical boosted Black Brane
 function analytic_B(i, j, k, u, x, y, id::BoostedBBnumerical, whichsystem)
-	
+	uu = u
 	initialB=h5open("/home/giulio/University/PhD/JeccoNewTest/Jecco_G/examples/InitialB.h5")
 	system_index = string(whichsystem+1)
 	dset=initialB[system_index]
 	B=read(dset)
 	Bvalue = B[i]
-	println("B in u=$u index: $i is $Bvalue")
+	println("B in u=$uu index: $i is $Bvalue")
 	#println("THIS IS SYSTEM NUMBER $whichsystem")
 	Bvalue
 end
@@ -532,9 +532,9 @@ function init_data!(ff::Gauge, sys::System, id::BoostedBBnumerical)
     AH_pos  = id.AH_pos
 
     #a30 = (-5) / 2
-    a30 = -2
+    a30 = -2.0
 
-    xi0 = 0
+    xi0 = 0.00000001
 
     xi  = getxi(ff)
 
