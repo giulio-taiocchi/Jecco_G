@@ -9,7 +9,7 @@ grid = SpecCartGrid3D(
     y_max            =  5.0,
     y_nodes          =  5,
     u_outer_min      =  0.2,
-    u_outer_max      =  1.3,
+    u_outer_max      =  1.0,
     u_outer_domains  =  2,
     u_outer_nodes    =  96,
     u_inner_nodes    =  12,
@@ -19,7 +19,7 @@ grid = SpecCartGrid3D(
 
 
 id = AdS4_3_1.BoostedBBnumerical(
-    AH_pos = 1.00,
+    AH_pos = 0.8338097372270935,
 )
 
 evoleq = AffineNull(
