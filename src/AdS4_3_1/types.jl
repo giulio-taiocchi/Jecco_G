@@ -42,7 +42,7 @@ end
 Parameters for the Apparent Horizon Finder
 """
 Base.@kwdef struct AHF
-    itmax     :: Int      = 201
+    itmax     :: Int      = 20001
     # modified from 10^-12
     epsilon   :: Float64  = 1e-10
 end
