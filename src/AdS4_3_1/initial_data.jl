@@ -534,7 +534,7 @@ function init_data!(ff::Gauge, sys::System, id::BoostedBBnumerical)
     a30 = (-5)/2
     #a30 = -2
 
-    xi0 = 10
+    xi0 = 0.19931437035694333
 
     xi  = getxi(ff)
 
