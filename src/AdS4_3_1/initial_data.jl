@@ -126,7 +126,7 @@ function (id::ID_ConstantAH)(bulkconstrains, bulkevols, bulkderivs, boundary::Bo
 
     init_data!(gauge,    systems[end], id)
     init_data!(bulkevols, gauge, systems, id)
-
+    
     # solve nested system for the constrained variables
     nested(bulkevols, boundary, gauge, evoleq)
 
@@ -534,7 +534,7 @@ function init_data!(ff::Gauge, sys::System, id::BoostedBBnumerical)
     a30 = (-5)/2
     #a30 = -2
 
-    xi0 = 0.19931437035694333
+    xi0 = 10
 
     xi  = getxi(ff)
 
