@@ -435,7 +435,9 @@ function find_AH!(sigma::Array, bulkconstrain::BulkConstrained,
         # check if sigma inside domain
         min_uAH = 1/maximum(sigma)
         max_uAH = 1/minimum(sigma)
-        println("min uAH is: $min_uAH")
+        println("    min : $min_uAH")
+        println("    max : $max_uAH")
+        println(" ")
         if ( min_uAH < sys.ucoord[1] || max_uAH > sys.ucoord[end] )
             println("INFO (AH): guess outside domain, min_uAH = $min_uAH, max_uAH = $max_uAH")
             println("INFO (AH): giving up")
