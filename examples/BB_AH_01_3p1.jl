@@ -18,8 +18,8 @@ grid = SpecCartGrid3D(
 )
 
 id   = BlackBrane(
-   #AH_pos = 1.001,
-   AH_pos = 0.9,
+   AH_pos = 1.001,
+   #AH_pos = 0.9,
    energy_dens = 0.6,
 )
 
