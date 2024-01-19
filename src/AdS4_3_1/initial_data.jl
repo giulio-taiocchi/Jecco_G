@@ -144,7 +144,10 @@ function (id::ID_ConstantAH)(bulkconstrains, bulkevols, bulkderivs, boundary::Bo
 
     # assuming that the AH has been found, we now update xi and the bulk variables
     MaxAH=maximum(sigma)
+    MaxOldxi= maximum(xi)
     println("The horizon found is $MaxAH")
+    println("AH_pos is $AH_pos")
+    println("old xi is $MaxOldxi")
     for j in 1:Ny
         for i in 1:Nx
             xi[1,i,j] += -1 / AH_pos + sigma[1,i,j]
