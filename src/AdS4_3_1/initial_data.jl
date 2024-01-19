@@ -145,7 +145,7 @@ function (id::ID_ConstantAH)(bulkconstrains, bulkevols, bulkderivs, boundary::Bo
     # assuming that the AH has been found, we now update xi and the bulk variables
     MaxAH=maximum(sigma)
     MaxOldxi= maximum(xi)
-    println("The horizon found is $MaxAH")
+    println("The horizon found is r=$MaxAH")
     println("AH_pos is $AH_pos")
     println("old xi is $MaxOldxi")
     for j in 1:Ny
@@ -596,11 +596,11 @@ function init_data!(ff::Boundary, sys::System, id::BBnumerical)
 
     #epsilon = id.energy_dens
 
-    a30 = (-5)/2
+    a30 = -1
     #a30 = -2
 
     fill!(a3, a30)
-    fill!(fx1, -sqrt(2))
+    fill!(fx1, 0)
     fill!(fy1, 0)
 
     ff
@@ -610,7 +610,7 @@ function init_data!(ff::Gauge, sys::System, id::BBnumerical)
     #epsilon = id.energy_dens
     AH_pos  = id.AH_pos
 
-    a30 = (-5)/2
+    a30 = (-1)
     #a30 = -2
 
     #xi0 = 0.19931437035694333

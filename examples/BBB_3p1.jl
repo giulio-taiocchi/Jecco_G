@@ -8,22 +8,22 @@ grid = SpecCartGrid3D(
     y_min            = -5.0,
     y_max            =  5.0,
     y_nodes          =  5,
-    u_outer_min      =  0.2,
+    u_outer_min      =  0.1,
     u_outer_max      =  1.1,
-    u_outer_domains  =  1,
-    u_outer_nodes    =  48,
-    u_inner_nodes    =  24,
+    u_outer_domains  =  3,
+    u_outer_nodes    =  24,
+    u_inner_nodes    =  12,
     fd_order         =  4,
     sigma_diss       =  0.2,
 )
 
 
 id = AdS4_3_1.BoostedBBnumerical(
-    AH_pos = 0.83380973722709370480988054208238,
+    AH_pos = 0.83381,
 )
 
 evoleq = AffineNull(
-    gaugecondition = ConstantAH(u_AH = 1.00),
+    gaugecondition = ConstantAH(u_AH = 1.00),# this u_AH is a not used parameter
     
 )
 

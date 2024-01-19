@@ -9,7 +9,7 @@ grid = SpecCartGrid3D(
     y_max            =  5.0,
     y_nodes          =  12,
     u_outer_min      =  0.1,
-    u_outer_max      =  1.003,
+    u_outer_max      =  1.1,
     u_outer_domains  =  3,
     u_outer_nodes    =  24,
     u_inner_nodes    =  12,
@@ -18,7 +18,7 @@ grid = SpecCartGrid3D(
 )
 
 id   = BlackBrane(
-   AH_pos = 1.001,
+   AH_pos = 1,
    #AH_pos = 0.9,
    energy_dens = 0.6,
 )
