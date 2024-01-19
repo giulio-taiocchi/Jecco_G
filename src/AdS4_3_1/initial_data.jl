@@ -578,9 +578,7 @@ function analytic_B(i, j, k, u, x, y, id::BBnumerical, whichsystem)
 	Bprec = precision(Bvalue)
 	if j==5
 		if k==5
-			if whichsystem==1
-				println("B in u=$uu index: $i is $Bvalue with pecision $Bprec")
-			end
+			println("B in u=$uu index: $i is $Bvalue with pecision $Bprec")
 		end
 	end
 	#println("B in u=$uu index: $i is $Bvalue")
