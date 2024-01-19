@@ -19,7 +19,7 @@ grid = SpecCartGrid3D(
 
 
 id = AdS4_3_1.BoostedBBnumerical(
-    AH_pos = 1.0,
+    AH_pos = 0.83380973722709370480988054208238,
 )
 
 evoleq = AffineNull(
