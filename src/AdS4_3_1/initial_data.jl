@@ -66,6 +66,12 @@ Base.@kwdef struct BoostedBBnumerical{T} <: ID_ConstantAH
     ahf         :: AHF = AHF()
 end
 
+Base.@kwdef struct BBnumerical{T} <: ID_ConstantAH
+    #energy_dens :: T   = 5.0
+    AH_pos      :: T   = 1.0
+    ahf         :: AHF = AHF()
+end
+
 
 function (id::InitialData)(bulkconstrains, bulkevols, bulkderivs, boundary::Boundary,
                            gauge::Gauge, horizoncache::HorizonCache, systems::SystemPartition,
@@ -289,7 +295,9 @@ analytic_B(i, j, k, u, x, y, id::BlackBrane, whichsystem)  = 0
 analytic_G(i, j, k, u, x, y, id::BlackBrane, whichsystem)   = 0
 
 function init_data!(ff::Boundary, sys::System, id::BlackBrane)
-    a30 = -id.energy_dens/2
+    #a30 = -id.energy_dens/2
+    a30 = -1
+    
 
     a3  = geta3(ff)
     fx1 = getfx1(ff)
@@ -303,9 +311,11 @@ function init_data!(ff::Boundary, sys::System, id::BlackBrane)
 end
 
 function init_data!(ff::Gauge, sys::System, id::BlackBrane)
-    a30     = -id.energy_dens/2
+    #a30     = -id.energy_dens/2
+    a30 = -1
     AH_pos  = id.AH_pos
-    xi0     = (-a30)^0.25 - 1/AH_pos
+    #xi0     = (-a30)^0.25 - 1/AH_pos
+    xi0 = 0
 
     xi  = getxi(ff)
 
@@ -499,7 +509,7 @@ end
 #numerical boosted Black Brane
 function analytic_B(i, j, k, u, x, y, id::BoostedBBnumerical, whichsystem)
 	uu = u
-	initialB=h5open("/home/giulio/University/PhD/JeccoNewTest/Jecco_G/examples/InitialB.h5")
+	initialB=h5open("/home/giulio/University/PhD/JeccoNewTest/Jecco_G/examples/InitialB_BBB.h5")
 	system_index = string(whichsystem+1)
 	dset=initialB[system_index]
 	B=read(dset)
@@ -536,6 +546,62 @@ function init_data!(ff::Boundary, sys::System, id::BoostedBBnumerical)
 end
 
 function init_data!(ff::Gauge, sys::System, id::BoostedBBnumerical)
+    #epsilon = id.energy_dens
+    AH_pos  = id.AH_pos
+
+    a30 = (-5)/2
+    #a30 = -2
+
+    #xi0 = 0.19931437035694333
+    xi0 = 0
+
+    xi  = getxi(ff)
+
+    fill!(xi, xi0)
+
+    ff
+end
+
+#numerical Black Brane
+function analytic_B(i, j, k, u, x, y, id::BBnumerical, whichsystem)
+	uu = u
+	initialB=h5open("/home/giulio/University/PhD/JeccoNewTest/Jecco_G/examples/InitialB_BB.h5")
+	system_index = string(whichsystem+1)
+	dset=initialB[system_index]
+	B=read(dset)
+	Bvalue = B[i]
+	Bprec = precision(Bvalue)
+	if j==5
+		if k==5
+			if whichsystem==1
+				println("B in u=$uu index: $i is $Bvalue with pecision $Bprec")
+			end
+		end
+	end
+	#println("B in u=$uu index: $i is $Bvalue")
+	#println("THIS IS SYSTEM NUMBER $whichsystem")
+	Bvalue
+end
+analytic_G(i, j, k, u, x, y, id::BBnumerical,whichsystem)  = 0
+
+function init_data!(ff::Boundary, sys::System, id::BBnumerical)
+    a3  = geta3(ff)
+    fx1 = getfx1(ff)
+    fy1 = getfy1(ff)
+
+    #epsilon = id.energy_dens
+
+    a30 = (-5)/2
+    #a30 = -2
+
+    fill!(a3, a30)
+    fill!(fx1, -sqrt(2))
+    fill!(fy1, 0)
+
+    ff
+end
+
+function init_data!(ff::Gauge, sys::System, id::BBnumerical)
     #epsilon = id.energy_dens
     AH_pos  = id.AH_pos
 
