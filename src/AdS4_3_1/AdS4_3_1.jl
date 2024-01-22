@@ -19,7 +19,7 @@ include("system.jl")
 
 #include("potential.jl")
 
-include("initial_data.jl")
+include("initial_data.jl")		
 
 # Kreiss-Oliger dissipation and filtering
 include("dissipation.jl")
