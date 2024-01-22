@@ -570,6 +570,7 @@ end
 #numerical Black Brane
 function analytic_B(i, j, k, u, x, y, id::BBnumerical, whichsystem)
 	uu = u
+	Bprec = precision (uu)
 	initialB=h5open("/home/giulio/University/PhD/JeccoNewTest/Jecco_G/examples/InitialB_BB.h5")
 	system_index = string(whichsystem+1)
 	dset=initialB[system_index]
@@ -578,7 +579,7 @@ function analytic_B(i, j, k, u, x, y, id::BBnumerical, whichsystem)
 	Bprec = precision(Bvalue)
 	if j==5
 		if k==5
-			println("B in u=$uu index: $i is $Bvalue with pecision $Bprec")
+			println("u=$uu (precision $uprec), index: $i, B = $Bvalue with pecision $Bprec")
 		end
 	end
 	#println("B in u=$uu index: $i is $Bvalue")
