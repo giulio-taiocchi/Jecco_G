@@ -3,6 +3,7 @@ module Jecco
 using HDF5
 using LinearAlgebra
 using FFTW
+using DoubleFloats
 
 include("types.jl")
 include("fornberg.jl")

@@ -1,6 +1,6 @@
 module AdS4_3_1
 
-using DoubleFloats
+
 using Jecco
 using LinearAlgebra
 using SparseArrays: SparseMatrixCSC
