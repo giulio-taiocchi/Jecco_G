@@ -575,7 +575,7 @@ function analytic_B(i, j, k, u, x, y, id::BBnumerical, whichsystem)
 	system_index = string(whichsystem+1)
 	dset=initialB[system_index]
 	B=read(dset)
-	Bvalue = parse(Double64,B[i])
+	Bvalue = parse(Float128,B[i])
 	Bprec = precision(Bvalue)
 	if j==5
 		if k==5
