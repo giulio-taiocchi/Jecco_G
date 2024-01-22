@@ -7,6 +7,7 @@ using OrdinaryDiffEq
 using Interpolations
 using Random, Distributions
 using Printf
+using DoubleFloats
 
 import Base.Threads.@threads
 import Base.Threads.@spawn
