@@ -6,7 +6,7 @@ using SparseArrays: SparseMatrixCSC
 using OrdinaryDiffEq
 using Interpolations
 using Random, Distributions
-using printf
+using Printf
 
 import Base.Threads.@threads
 import Base.Threads.@spawn
