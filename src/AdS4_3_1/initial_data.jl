@@ -579,6 +579,8 @@ function analytic_B(i, j, k, u, x, y, id::BBnumerical, whichsystem)
 	Bprec = precision(Bvalue)
 	if j==5
 		if k==5
+			Base.show(IOContext(STDOUT, :compact=>false), "text/plain", Bvalue)
+			
 			println("u=$uu (precision $uprec), index: $i, B = $Bvalue with pecision $Bprec")
 		end
 	end
