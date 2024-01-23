@@ -3,7 +3,7 @@ module Jecco
 using HDF5
 using LinearAlgebra
 using FFTW
-using Quadmath
+
 
 include("types.jl")
 include("fornberg.jl")
