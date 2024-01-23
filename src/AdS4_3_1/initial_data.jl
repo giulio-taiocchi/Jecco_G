@@ -197,7 +197,7 @@ function init_data!(bulk::BulkEvolved, gauge::Gauge, sys::System{Inner},
                 aux3    = aux * aux * aux
                 u_old   = u / aux
                 if j==5
-			if k==5
+			if i==5
 				println("outside analytic  u=$uu, aux=%aux, xi=xi_ij")
 			end
 		end
@@ -210,7 +210,7 @@ function init_data!(bulk::BulkEvolved, gauge::Gauge, sys::System{Inner},
                 G[a,i,j]  = G_old / aux3
                 Baij = B[a,i,j]
                 if j==5
-			if k==5
+			if i==5
 			println("post B is $Baij")
 			end
 		end
