@@ -196,6 +196,11 @@ function init_data!(bulk::BulkEvolved, gauge::Gauge, sys::System{Inner},
                 aux     = 1 + xi_ij * u
                 aux3    = aux * aux * aux
                 u_old   = u / aux
+                if j==5
+			if k==5
+				println("outside analytic  u=$uu, aux=%aux, xi=xi_ij")
+			end
+		end
                 B_old   = analytic_B(a, i, j, u_old, x, y, id, counting)
                 G_old   = analytic_G(a, i, j, u_old, x, y, id, counting)
                 #B_old  = analytic_B(u_old, x, y, id)
@@ -203,6 +208,12 @@ function init_data!(bulk::BulkEvolved, gauge::Gauge, sys::System{Inner},
 
                 B[a,i,j]  = B_old / aux3
                 G[a,i,j]  = G_old / aux3
+                Baij = B[a,i,j]
+                if j==5
+			if k==5
+			println("post B is $Baij")
+			end
+		end
             end
         end
     end
@@ -233,6 +244,7 @@ function init_data!(bulk::BulkEvolved, gauge::Gauge, sys::System{Outer},
                 aux3      = aux * aux * aux
                 aux4      = aux * aux3
                 u_old     = u / aux
+                
                 B_old     = analytic_B(a, i, j, u_old, x, y, id, counting)
                 
                 G_old     = analytic_G(a, i, j, u_old, x, y, id, counting)
