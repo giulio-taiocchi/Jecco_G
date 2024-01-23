@@ -524,12 +524,20 @@ function analytic_B(i, j, k, u, x, y, id::BoostedBBnumerical, whichsystem)
 	Bvalue = B[i]
 	Bprec = precision(Bvalue)
 	if j==5
-		if k==5
-			if whichsystem==1
-				println("B in u=$uu index: $i is $Bvalue with pecision $Bprec")
-			end
+		if k==5					        
+			println("B in u=$uu index: $i is $Bvalue with pecision $Bprec")
 		end
 	end
+	
+	#if j==5
+	#	if k==5
+	#		if whichsystem==0
+	#		        
+	#			println("B in u=$uu index: $i is $Bvalue with pecision $Bprec")
+	#		end
+	#	end
+	#end
+	
 	#println("B in u=$uu index: $i is $Bvalue")
 	#println("THIS IS SYSTEM NUMBER $whichsystem")
 	Bvalue
