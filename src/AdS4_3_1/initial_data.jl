@@ -95,7 +95,9 @@ function (id::InitialData)(bulkconstrains, bulkevols, bulkderivs, boundary::Boun
     fill!(sigma, 1/AH_pos)  # initial guess
     find_AH!(sigma, bulkconstrains[end], bulkevols[end], bulkderivs[end], gauge,
              horizoncache, systems[end], id.ahf)
-
+    MaxAH=maximum(sigma)
+    println("The horizon found is r=$MaxAH")
+    println("AH_pos is $AH_pos")
     nothing
 end
 
