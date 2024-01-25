@@ -31,14 +31,14 @@ io = InOut(
     out_boundary_every  = 1,
     out_bulk_every      = 1,
     out_bulkconstrained_every = 1,
-    out_gauge_every     = 1,
+    #out_gauge_every     = 1,
     remove_existing     = true,
 )
 
 integration = Integration(
 
     dt              = 0.002,
-    tmax            = 0.0,
+    tmax            = 50,
     ODE_method      = AdS4_3_1.AB3(),
     filter_poststep = true,
 )

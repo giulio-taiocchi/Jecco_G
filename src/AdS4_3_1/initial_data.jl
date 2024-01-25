@@ -82,9 +82,9 @@ function (id::InitialData)(bulkconstrains, bulkevols, bulkderivs, boundary::Boun
     # function to solve the nested system
     nested = Nested(systems, bulkconstrains)
 
-    init_data!(boundary, systems[1],   id)
+    init_data!(boundary, systems[1], id)
 
-    init_data!(gauge,    systems[end], id)
+    init_data!(gauge, systems[end], id)
     init_data!(bulkevols, gauge, systems, id)
 
     # solve nested system for the constrained variables
@@ -129,10 +129,10 @@ function (id::ID_ConstantAH)(bulkconstrains, bulkevols, bulkderivs, boundary::Bo
 
     # function to solve the nested system
     nested = Nested(systems, bulkconstrains)
-
-    init_data!(boundary, systems[1],   id)
-
-    init_data!(gauge,    systems[end], id)
+    
+   
+    init_data!(boundary, systems[1], id)
+    init_data!(gauge, systems[end], id)
     init_data!(bulkevols, gauge, systems, id)
     
     # solve nested system for the constrained variables
@@ -530,70 +530,6 @@ function init_data!(ff::Gauge, sys::System, id::QNM_1D)
     ff
 end
 
-#numerical boosted Black Brane
-function analytic_B(i, j, k, u, x, y, id::BoostedBBnumerical, whichsystem)
-	uu = u
-	initialB=h5open("/home/giulio/University/PhD/JeccoNewTest/Jecco_G/examples/InitialB_BBB.h5")
-	system_index = string(whichsystem+1)
-	dset=initialB[system_index]
-	B=read(dset)
-	#Bvalue = parse(Float64,B[i])
-	Bvalue = B[i]
-	Bprec = precision(Bvalue)
-	if j==5
-		if k==5					        
-			println("B in u=$uu index: $i is $Bvalue with pecision $Bprec")
-		end
-	end
-	
-	#if j==5
-	#	if k==5
-	#		if whichsystem==0
-	#		        
-	#			println("B in u=$uu index: $i is $Bvalue with pecision $Bprec")
-	#		end
-	#	end
-	#end
-	
-	#println("B in u=$uu index: $i is $Bvalue")
-	#println("THIS IS SYSTEM NUMBER $whichsystem")
-	Bvalue
-end
-analytic_G(i, j, k, u, x, y, id::BoostedBBnumerical,whichsystem)  = 0
-
-function init_data!(ff::Boundary, sys::System, id::BoostedBBnumerical)
-    a3  = geta3(ff)
-    fx1 = getfx1(ff)
-    fy1 = getfy1(ff)
-
-    #epsilon = id.energy_dens
-
-    a30 = (-5)/2
-    #a30 = -2
-
-    fill!(a3, a30)
-    fill!(fx1, -sqrt(2))
-    fill!(fy1, 0)
-
-    ff
-end
-
-function init_data!(ff::Gauge, sys::System, id::BoostedBBnumerical)
-    #epsilon = id.energy_dens
-    AH_pos  = id.AH_pos
-
-    a30 = (-5)/2
-    #a30 = -2
-
-    #xi0 = 0.19931437035694333
-    xi0 = 0
-
-    xi  = getxi(ff)
-
-    fill!(xi, xi0)
-
-    ff
-end
 
 #numerical Black Brane
 function analytic_B(i, j, k, u, x, y, id::BBnumerical, whichsystem)
@@ -618,7 +554,7 @@ function analytic_B(i, j, k, u, x, y, id::BBnumerical, whichsystem)
 end
 analytic_G(i, j, k, u, x, y, id::BBnumerical,whichsystem)  = 0
 
-function init_data!(ff::Boundary, sys::System, id::BBnumerical)
+function init_data!(i, j, k, u, x, y,ff::Boundary, sys::System, id::BBnumerical)
     a3  = geta3(ff)
     fx1 = getfx1(ff)
     fy1 = getfy1(ff)
@@ -635,7 +571,7 @@ function init_data!(ff::Boundary, sys::System, id::BBnumerical)
     ff
 end
 
-function init_data!(ff::Gauge, sys::System, id::BBnumerical)
+function init_data!(i, j, k, u, x, y, ff::Gauge, sys::System, id::BBnumerical)
     #epsilon = id.energy_dens
     AH_pos  = id.AH_pos
 
@@ -651,3 +587,81 @@ function init_data!(ff::Gauge, sys::System, id::BBnumerical)
 
     ff
 end
+
+#numerical boosted Black Brane
+function analytic_B(i, j, k, u, x, y, id::BoostedBBnumerical, whichsystem)
+	uu = u
+	initialB=h5open("/home/giulio/University/PhD/JeccoNewTest/Jecco_G/examples/InitialB_BBB.h5")
+	system_index = string(whichsystem+1)
+	dset=initialB[system_index]
+	B=read(dset)
+	#Bvalue = parse(Float64,B[i])
+	Bvalue = B[i,j,k]
+	Bprec = precision(Bvalue)
+	#if j==5
+	#	if k==5					        
+	#		println("B in u=$uu index: $i is $Bvalue with pecision $Bprec")
+	#	end
+	#end
+	
+	#if j==5
+	#	if k==5
+	#		if whichsystem==0
+	#		        
+	#			println("B in u=$uu index: $i is $Bvalue with pecision $Bprec")
+	#		end
+	#	end
+	#end
+	
+	#println("B in u=$uu index: $i is $Bvalue")
+	#println("THIS IS SYSTEM NUMBER $whichsystem")
+	Bvalue
+end
+analytic_G(i, j, k, u, x, y, id::BoostedBBnumerical,whichsystem)  = 0
+
+
+
+function init_data!(ff::Boundary, sys::System, id::BoostedBBnumerical)
+    _, Nx, Ny = size(sys)
+    xx = sys.xcoord
+    yy = sys.ycoord
+    
+    a3  = geta3(ff)
+    fx1 = getfx1(ff)
+    fy1 = getfy1(ff)
+
+    fill!(a3, 0)
+    fill!(fx1, 0)
+    fill!(fy1, 0)
+    for j in 1:Ny
+        for i in 1:Nx      
+                x = xx[i]
+                y = yy[j]         
+                a3[1,i,j] = 1/4*(-7-3 * cos(4*π*x))
+                fx1[1,i,j] = cos(2*π*x)*(-sqrt(2))
+        end
+    end
+    ff
+end
+
+function init_data!(ff::Gauge, sys::System, id::BoostedBBnumerical)
+    _, Nx, Ny = size(sys)
+    xx = sys.xcoord
+    yy = sys.ycoord
+    AH_pos  = id.AH_pos
+    
+    xi  = getxi(ff)
+    fill!(xi, 0)
+    
+    
+    for j in 1:Ny
+        for i in 1:Nx      
+                x = xx[i]
+                y = yy[j]         
+                xi[1,i,j] = 1/4*(1-cos(2*π*x)*cos(2*π*x))
+        end
+    end
+    ff
+end
+
+
