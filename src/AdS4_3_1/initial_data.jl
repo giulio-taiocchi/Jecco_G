@@ -596,7 +596,9 @@ function analytic_B(i, j, k, u, x, y, id::BoostedBBnumerical, whichsystem)
 	dset=initialB[system_index]
 	B=read(dset)
 	#Bvalue = parse(Float64,B[i])
-	Bvalue = B[i,j,k]
+	# here the indecex have to be inverted since julia and mathematica input and output mechanism is the opposite
+	# should be B[i,j,k]
+	Bvalue = B[k,j,i]
 	Bprec = precision(Bvalue)
 	#if j==5
 	#	if k==5					        
@@ -637,7 +639,7 @@ function init_data!(ff::Boundary, sys::System, id::BoostedBBnumerical)
         for i in 1:Nx      
                 x = xx[i]
                 y = yy[j]         
-                a3[1,i,j] = 1/4*(-7-3 * cos(4*π*x))
+                a3[1,i,j] = 1/16*(-19-3 * cos(4*π*x))
                 fx1[1,i,j] = cos(2*π*x)*(-sqrt(2))
         end
     end
@@ -654,13 +656,13 @@ function init_data!(ff::Gauge, sys::System, id::BoostedBBnumerical)
     fill!(xi, 0)
     
     
-    for j in 1:Ny
-        for i in 1:Nx      
-                x = xx[i]
-                y = yy[j]         
-                xi[1,i,j] = 1/4*(1-cos(2*π*x)*cos(2*π*x))
-        end
-    end
+    #for j in 1:Ny
+    #    for i in 1:Nx      
+    #            x = xx[i]
+    #            y = yy[j]         
+    #            xi[1,i,j] = 1/4*(1-cos(2*π*x)*cos(2*π*x))
+    #    end
+    #end
     ff
 end
 
