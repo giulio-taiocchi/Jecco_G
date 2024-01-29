@@ -64,6 +64,9 @@ Base.@kwdef struct BoostedBBnumerical{T} <: InitialData
     #energy_dens :: T   = 5.0
     AH_pos      :: T   = 1.0
     ahf         :: AHF = AHF()
+    a3_ampx	:: T = 0.0
+    fx_amp	:: T = 0.0
+    a3_translx	:: T = 0.0
 end
 
 Base.@kwdef struct BBnumerical{T} <: InitialData
@@ -631,6 +634,10 @@ function init_data!(ff::Boundary, sys::System, id::BoostedBBnumerical)
     a3  = geta3(ff)
     fx1 = getfx1(ff)
     fy1 = getfy1(ff)
+    ampx = id.a3_ampx
+    transl = id.a3_translx
+    ampfx = id.fx_amp
+
 
     fill!(a3, 0)
     fill!(fx1, 0)
@@ -639,8 +646,8 @@ function init_data!(ff::Boundary, sys::System, id::BoostedBBnumerical)
         for i in 1:Nx      
                 x = xx[i]
                 y = yy[j]         
-                a3[1,i,j] = 1/16*(-19-3 * cos(4*π*x))
-                fx1[1,i,j] = cos(2*π*x)*(-sqrt(2))
+                a3[1,i,j] = transl + ampx * cos(4*π*x)
+                fx1[1,i,j] = -1/100 * cos(2*π*x) * sqrt(100+cos(2*π*x) *cos(2*π*x))
         end
     end
     ff
