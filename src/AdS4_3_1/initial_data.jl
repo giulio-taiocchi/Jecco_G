@@ -67,6 +67,8 @@ Base.@kwdef struct BoostedBBnumerical{T} <: InitialData
     a3_ampx	:: T = 0.0
     fx_amp	:: T = 0.0
     a3_translx	:: T = 0.0
+    A		:: T = 0.0
+    B		:: T = 0.0
 end
 
 Base.@kwdef struct BBnumerical{T} <: InitialData
@@ -637,6 +639,8 @@ function init_data!(ff::Boundary, sys::System, id::BoostedBBnumerical)
     ampx = id.a3_ampx
     transl = id.a3_translx
     ampfx = id.fx_amp
+    AA = id.A
+    BB = id.B
 
 
     fill!(a3, 0)
@@ -647,7 +651,7 @@ function init_data!(ff::Boundary, sys::System, id::BoostedBBnumerical)
                 x = xx[i]
                 y = yy[j]         
                 a3[1,i,j] = transl + ampx * cos(4*π*x)
-                fx1[1,i,j] = -1/100 * cos(2*π*x) * sqrt(100+cos(2*π*x) *cos(2*π*x))
+                fx1[1,i,j] = AA * cos(2*π*x) * sqrt(BB+cos(2*π*x) *cos(2*π*x))
         end
     end
     ff
