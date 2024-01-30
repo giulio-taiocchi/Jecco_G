@@ -22,8 +22,10 @@ id = AdS4_3_1.BoostedBBnumerical(
     AH_pos = 0.85,
     a3_ampx	= -7/4,
     a3_translx	= -3/4,
-    A = 1,
-    B = 1,
+    A = -1.0,
+    B = 1.0,
+    phase_a = 5.0,
+    phase_fx = 5.0,
 )
 
 evoleq = AffineNull(
