@@ -654,9 +654,8 @@ function init_data!(ff::Boundary, sys::System, id::BoostedBBnumerical)
         for i in 1:Nx      
                 x = xx[i]
                 y = yy[j]         
-                a3[1,i,j] = transl + ampx * cos(pha*π*x)
-                testing =a3[1,i,j]
-                fx1[1,i,j] = AA * cos(phfx*π*x) * sqrt(BB+cos(phfx*π*x) *cos(phfx*π*x))
+                a3[1,i,j] = transl + ampx * cos(pha*π*y)
+                fx1[1,i,j] = AA * cos(phfx*π*y) * sqrt(BB+cos(phfx*π*x) *cos(phfx*π*y))
         end
     end
     ff

@@ -2,11 +2,11 @@
 using Jecco.AdS4_3_1
 
 grid = SpecCartGrid3D(
-    x_min            = -2.0,
-    x_max            =  2.0,
+    x_min            = -1.0,
+    x_max            =  1.0,
     x_nodes          =  24,
-    y_min            = -2.0,
-    y_max            =  2.0,
+    y_min            = -1.0,
+    y_max            =  1.0,
     y_nodes          =  24,
     u_outer_min      =  0.1,
     u_outer_max      =  1.0,
@@ -24,8 +24,8 @@ id = AdS4_3_1.BoostedBBnumerical(
     a3_translx	= -7/4,
     A = -1.0,
     B = 1.0,
-    phase_a = 5/2,
-    phase_fx = 5/4,
+    phase_a = 1.0,
+    phase_fx = 0.5,
 )
 
 evoleq = AffineNull(
