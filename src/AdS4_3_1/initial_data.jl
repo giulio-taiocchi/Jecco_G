@@ -79,6 +79,11 @@ Base.@kwdef struct BBnumerical{T} <: InitialData
     ahf         :: AHF = AHF()
 end
 
+Base.@kwdef struct BB3Dnumerical{T} <: InitialData
+    #energy_dens :: T   = 5.0
+    AH_pos      :: T   = 1.0
+    ahf         :: AHF = AHF()
+end
 
 function (id::InitialData)(bulkconstrains, bulkevols, bulkderivs, boundary::Boundary,
                            gauge::Gauge, horizoncache::HorizonCache, systems::SystemPartition,
@@ -557,6 +562,54 @@ function analytic_B(i, j, k, u, x, y, id::BBnumerical, whichsystem)
 	end
 	#println("B in u=$uu index: $i is $Bvalue")
 	#println("THIS IS SYSTEM NUMBER $whichsystem")
+	Bvalue
+end
+analytic_G(i, j, k, u, x, y, id::BBnumerical,whichsystem)  = 0
+
+function init_data!(i, j, k, u, x, y,ff::Boundary, sys::System, id::BBnumerical)
+    a3  = geta3(ff)
+    fx1 = getfx1(ff)
+    fy1 = getfy1(ff)
+
+    #epsilon = id.energy_dens
+
+    a30 = -1
+    #a30 = -2
+
+    fill!(a3, a30)
+    fill!(fx1, 0)
+    fill!(fy1, 0)
+
+    ff
+end
+
+function init_data!(i, j, k, u, x, y, ff::Gauge, sys::System, id::BBnumerical)
+    #epsilon = id.energy_dens
+    AH_pos  = id.AH_pos
+
+    a30 = (-1)
+    #a30 = -2
+
+    #xi0 = 0.19931437035694333
+    xi0 = 0
+
+    xi  = getxi(ff)
+
+    fill!(xi, xi0)
+
+    ff
+end
+
+#numerical Black Brane 3D numerical initial data. Used for checking the 3D input system
+function analytic_B(i, j, k, u, x, y, id::BB3Dnumerical, whichsystem)
+	uu = u
+	uprec = precision(uu)
+	initialB=h5open("/home/giulio/University/PhD/JeccoNewTest/Jecco_G/examples/InitialB_BB.h5")
+	system_index = string(whichsystem+1)
+	dset=initialB[system_index]
+	B=read(dset)
+	Bvalue = B[k,j,i]-x
+	Bprec = precision(Bvalue)
 	Bvalue
 end
 analytic_G(i, j, k, u, x, y, id::BBnumerical,whichsystem)  = 0

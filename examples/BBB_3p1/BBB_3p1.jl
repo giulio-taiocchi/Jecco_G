@@ -4,7 +4,7 @@ using Jecco.AdS4_3_1
 grid = SpecCartGrid3D(
     x_min            = -1.0,
     x_max            =  1.0,
-    x_nodes          =  24,
+    x_nodes          =  12,
     y_min            = -1.0,
     y_max            =  1.0,
     y_nodes          =  24,
@@ -12,14 +12,14 @@ grid = SpecCartGrid3D(
     u_outer_max      =  1.0,
     u_outer_domains  =  1,
     u_outer_nodes    =  64,
-    u_inner_nodes    =  36,
+    u_inner_nodes    =  24,
     fd_order         =  4,
     sigma_diss       =  0.2,
 )
 
 
 id = AdS4_3_1.BoostedBBnumerical(
-    AH_pos = 0.85,
+    AH_pos = 0.7,
     a3_ampx	= -3/4,
     a3_translx	= -7/4,
     A = -1.0,
