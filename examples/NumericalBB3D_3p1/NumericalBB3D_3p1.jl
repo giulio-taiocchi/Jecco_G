@@ -18,7 +18,7 @@ grid = SpecCartGrid3D(
 )
 
 
-id = AdS4_3_1.BoostedBBnumerical(
+id = AdS4_3_1.BB3Dnumerical(
     AH_pos = 0.8,
     
 )
