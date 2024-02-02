@@ -612,7 +612,6 @@ function analytic_B(i, j, k, u, x, y, id::BB3Dnumerical, whichsystem)
 	#println("BID= $bkji , xGrid= $x")
 	#println(" ")
 	Bvalue = B[k,j,i]
-	Bprec = precision(Bvalue)
 	Bvalue
 end
 analytic_G(i, j, k, u, x, y, id::BB3Dnumerical,whichsystem)  = 0
