@@ -608,8 +608,8 @@ function analytic_B(i, j, k, u, x, y, id::BB3Dnumerical, whichsystem)
 	system_index = string(whichsystem+1)
 	dset=initialB[system_index]
 	B=read(dset)
-	bkij=B[k,i,j]
-	println("BID= $bkij , xGrid= $x")
+	bkji=B[k,j,i]
+	println("BID= $bkji , xGrid= $x")
 	println(" ")
 	Bvalue = B[k,j,i]-x
 	Bprec = precision(Bvalue)
