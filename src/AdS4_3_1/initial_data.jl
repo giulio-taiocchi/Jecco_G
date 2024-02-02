@@ -614,7 +614,7 @@ function analytic_B(i, j, k, u, x, y, id::BB3Dnumerical, whichsystem)
 end
 analytic_G(i, j, k, u, x, y, id::BBnumerical,whichsystem)  = 0
 
-function init_data!(i, j, k, u, x, y,ff::Boundary, sys::System, id::BBnumerical)
+function init_data!(i, j, k, u, x, y,ff::Boundary, sys::System, id::BB3Dnumerical)
     a3  = geta3(ff)
     fx1 = getfx1(ff)
     fy1 = getfy1(ff)
@@ -631,7 +631,7 @@ function init_data!(i, j, k, u, x, y,ff::Boundary, sys::System, id::BBnumerical)
     ff
 end
 
-function init_data!(i, j, k, u, x, y, ff::Gauge, sys::System, id::BBnumerical)
+function init_data!(i, j, k, u, x, y, ff::Gauge, sys::System, id::BB3Dnumerical)
     #epsilon = id.energy_dens
     AH_pos  = id.AH_pos
 
